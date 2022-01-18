@@ -18,7 +18,7 @@ format:
 
 build: format
 	mkdir -p bin
-	go build -ldflags="-X 'main.version=$(VERSION)'" -o bin ./...
+	go build -ldflags="-X 'main.VERSION=$(VERSION)'" -o bin ./...
 
 test: build
 	go test ./...
@@ -49,6 +49,9 @@ debug: build
 
 help: build
 	$(CLI) --debug help
+
+version: build
+	$(CLI) --debug version
 
 list-templates: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-templates

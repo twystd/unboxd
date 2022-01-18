@@ -7,8 +7,11 @@ import (
 	"os"
 
 	"github.com/twystd/boxd/box"
+	"github.com/twystd/boxd/box/credentials"
 	"github.com/twystd/boxd/cmd/boxd-cli/commands"
 )
+
+var VERSION = "v0.0.x"
 
 var options = struct {
 	credentials string
@@ -47,7 +50,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	credentials := Credentials{}
+	if cmd == "version" {
+		version()
+		os.Exit(0)
+	}
+
+	credentials := credentials.Credentials{}
 	if err := credentials.Load(options.credentials); err != nil {
 		log.Fatalf("Error reading credentials from %s (%v)", options.credentials, err)
 	}
@@ -82,4 +90,10 @@ func usage() {
 	for _, c := range cli {
 		fmt.Printf("     %v\n", c.Name())
 	}
+}
+
+func version() {
+	fmt.Println()
+	fmt.Printf("   boxd-cli %v\n", VERSION)
+	fmt.Println()
 }
