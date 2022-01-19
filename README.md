@@ -12,9 +12,9 @@ Go CLI for managing files and templates in Box:
 
 ### Raison d'être
 
-Mostly just because I needed a Go interface to the Box API for another project and it turned out to be
-convenient to create it as a separate library and then the CLI turned out to be useful. So it by no means
-supersedes the official Box API implementations - it just implements some of them in a way that was 
+Mostly just because another project needed a Go interface to the Box API and it turned out to be convenient
+to create it as a separate library and then the CLI turned out to be useful. So it by no means even vaguely
+supersedes the official Box API implementations - it just implements some functionality in a way that was 
 useful for a particular requirement.
 
 *IN DEVELOPMENT*
