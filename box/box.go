@@ -3,10 +3,12 @@ package box
 import (
 	"fmt"
 	"strings"
+
+	"github.com/twystd/boxd/box/credentials"
 )
 
 type Box struct {
-	token *AccessToken
+	token *credentials.AccessToken
 }
 
 type folders struct {
@@ -25,12 +27,12 @@ func NewBox() Box {
 
 const fetchSize = 128
 
-func (b *Box) Authenticate(clientID, secret, user, userID string) error {
+func (b *Box) Authenticate(credentials credentials.Credentials) error {
 	if b.token != nil && b.token.IsValid() {
 		return nil
 	}
 
-	token, err := authenticate(clientID, secret, user, userID)
+	token, err := credentials.Authenticate()
 	if err != nil {
 		return err
 	}
@@ -46,7 +48,7 @@ func (b *Box) ListFiles(folder string) ([]File, error) {
 
 loop:
 	for {
-		folders, err := listFolders(folderID, b.token.token)
+		folders, err := listFolders(folderID, b.token.Token)
 		if err != nil {
 			return nil, err
 		} else if len(folders) == 0 {
@@ -70,7 +72,7 @@ loop:
 		return nil, fmt.Errorf("no folder found matching '%v'", folder)
 	}
 
-	files, err := listFiles(folderID, b.token.token)
+	files, err := listFiles(folderID, b.token.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -79,21 +81,21 @@ loop:
 }
 
 func (b *Box) DeleteFile(fileID FileID) error {
-	return deleteFile(fileID, b.token.token)
+	return deleteFile(fileID, b.token.Token)
 }
 
 func (b *Box) ListTemplates() (map[string]TemplateKey, error) {
-	return listTemplates(b.token.token)
+	return listTemplates(b.token.Token)
 }
 
 func (b *Box) GetTemplate(key TemplateKey) (*Schema, error) {
-	return getTemplate(key, b.token.token)
+	return getTemplate(key, b.token.Token)
 }
 
 func (b *Box) CreateTemplate(schema Schema) (interface{}, error) {
-	return createTemplate(schema.Name, schema.Fields, b.token.token)
+	return createTemplate(schema.Name, schema.Fields, b.token.Token)
 }
 
 func (b *Box) DeleteTemplate(key TemplateKey) error {
-	return deleteTemplate(key, b.token.token)
+	return deleteTemplate(key, b.token.Token)
 }

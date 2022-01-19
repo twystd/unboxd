@@ -55,8 +55,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	credentials := credentials.Credentials{}
-	if err := credentials.Load(options.credentials); err != nil {
+	credentials, err := credentials.NewCredentials(options.credentials)
+	if err != nil {
 		log.Fatalf("Error reading credentials from %s (%v)", options.credentials, err)
 	}
 
@@ -73,7 +73,7 @@ func main() {
 	if f == nil {
 		usage()
 		os.Exit(1)
-	} else if err := box.Authenticate(credentials.ClientID, credentials.Secret, credentials.User, credentials.UserID); err != nil {
+	} else if err := box.Authenticate(credentials); err != nil {
 		log.Fatalf("%v", err)
 	} else if err := f.Execute(box); err != nil {
 		log.Fatalf("%v  %v", f.Name(), err)

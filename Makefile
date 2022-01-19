@@ -2,6 +2,8 @@ VERSION ?= v0.0.x
 DIST ?= development
 CLI = ./bin/boxd-cli
 CREDENTIALS ?= .credentials.dev
+APP ?= .credentials.app
+JWT ?= .credentials.jwt
 FILEID ?= 903401361197
 
 .PHONY: clean
@@ -45,7 +47,10 @@ release: build-all
 
 debug: build
 	# dlv test github.com/uhppoted/uhppoted-httpd/system/catalog
-	dlv exec ./bin/boxd-cli -- help
+	# dlv exec ./bin/boxd-cli -- help
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+	$(CLI) --debug --credentials $(APP) list-files /alpha/pending
+	$(CLI) --debug --credentials $(JWT) list-files /alpha/pending
 
 help: build
 	$(CLI) --debug help
