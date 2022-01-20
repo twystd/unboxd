@@ -2,7 +2,9 @@ package credentials
 
 import (
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
+	"github.com/youmark/pkcs8"
 )
 
 type jwt struct {
@@ -57,4 +59,18 @@ func (j *jwt) load(bytes []byte) error {
 	j.EnterpriseID = credentials.EnterpriseID
 
 	return nil
+}
+
+func (j *jwt) decrypt() error {
+	pwd := []byte(j.BoxAppSettings.AppAuth.Passphrase)
+	block, _ := pem.Decode([]byte(j.BoxAppSettings.AppAuth.PrivateKey))
+	if block == nil || block.Type != "ENCRYPTED PRIVATE KEY" {
+		return fmt.Errorf("Invalid private key")
+	}
+
+	key, err := pkcs8.ParsePKCS8PrivateKey(block.Bytes, pwd)
+	fmt.Printf(">>> KEY: %v\n", key)
+	fmt.Printf(">>> ERROR: %v\n", err)
+
+	return fmt.Errorf("NOT IMPLEMENTED")
 }

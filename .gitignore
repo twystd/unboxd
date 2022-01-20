@@ -2,3 +2,4 @@
 bin
 dist
 .credentials*
+box/credentials/config_test.json
