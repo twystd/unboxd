@@ -32,7 +32,7 @@ func NewCredentials(file string) (Credentials, error) {
 		return &a, nil
 	}
 
-	j := jwt{}
+	j := jwtx{}
 	if err := j.load(bytes); err == nil {
 		return &j, nil
 	} else {

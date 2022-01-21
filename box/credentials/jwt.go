@@ -1,13 +1,18 @@
 package credentials
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
+	"time"
+
+	"github.com/cristalhq/jwt/v4"
+	"github.com/google/uuid"
 	"github.com/youmark/pkcs8"
 )
 
-type jwt struct {
+type jwtx struct {
 	BoxAppSettings struct {
 		ClientID string `json:"clientID"`
 		Secret   string `json:"clientSecret"`
@@ -21,12 +26,22 @@ type jwt struct {
 	EnterpriseID string `json:"enterpriseID"`
 }
 
-func (j *jwt) Authenticate() (*AccessToken, error) {
+type claims struct {
+	jwt.RegisteredClaims
+	BoxSubType string `json:"box_sub_type,omitempty"`
+}
+
+func (j *jwtx) Authenticate() (*AccessToken, error) {
+	_, err := j.decrypt()
+	if err != nil {
+		return nil, err
+	}
+
 	return nil, fmt.Errorf("NOT IMPLEMENTED")
 }
 
-func (j *jwt) load(bytes []byte) error {
-	credentials := jwt{}
+func (j *jwtx) load(bytes []byte) error {
+	credentials := jwtx{}
 	if err := json.Unmarshal(bytes, &credentials); err != nil {
 		return err
 	}
@@ -61,16 +76,59 @@ func (j *jwt) load(bytes []byte) error {
 	return nil
 }
 
-func (j *jwt) decrypt() error {
+func (j *jwtx) authenticate() (*AccessToken, error) {
+	pk, err := j.decrypt()
+	if err != nil {
+		return nil, err
+	}
+
+	UUID, err := uuid.NewUUID()
+	if err != nil {
+		return nil, err
+	}
+
+	claims := claims{
+		RegisteredClaims: jwt.RegisteredClaims{
+			ID:        fmt.Sprintf("%v", UUID),
+			Audience:  []string{"https://api.box.com/oauth2/token"},
+			Issuer:    j.BoxAppSettings.ClientID,
+			Subject:   j.EnterpriseID,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Second)),
+		},
+		BoxSubType: "enterprise",
+	}
+
+	signer, err := jwt.NewSignerRS(jwt.RS512, pk)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := jwt.NewBuilder(signer, jwt.WithKeyID(j.BoxAppSettings.AppAuth.PublicKeyID)).Build(claims)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf(">>>>>>>>> algorithm: %#v\n", token.Header())
+	fmt.Printf(">>>>>>>>> claims:    %v\n", string(token.Claims()))
+
+	return nil, nil
+}
+
+func (j *jwtx) decrypt() (*rsa.PrivateKey, error) {
 	pwd := []byte(j.BoxAppSettings.AppAuth.Passphrase)
 	block, _ := pem.Decode([]byte(j.BoxAppSettings.AppAuth.PrivateKey))
 	if block == nil || block.Type != "ENCRYPTED PRIVATE KEY" {
-		return fmt.Errorf("Invalid private key")
+		return nil, fmt.Errorf("Invalid private key")
 	}
 
 	key, err := pkcs8.ParsePKCS8PrivateKey(block.Bytes, pwd)
-	fmt.Printf(">>> KEY: %v\n", key)
-	fmt.Printf(">>> ERROR: %v\n", err)
+	if err != nil {
+		return nil, err
+	}
 
-	return fmt.Errorf("NOT IMPLEMENTED")
+	if pk, ok := key.(*rsa.PrivateKey); !ok {
+		return nil, fmt.Errorf("Invalid private key")
+	} else {
+		return pk, nil
+	}
 }
