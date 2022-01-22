@@ -27,9 +27,9 @@ func NewCredentials(file string) (Credentials, error) {
 		return nil, err
 	}
 
-	a := app{}
-	if err := a.load(bytes); err == nil {
-		return &a, nil
+	c := client{}
+	if err := c.load(bytes); err == nil {
+		return &c, nil
 	}
 
 	j := jwt{}
