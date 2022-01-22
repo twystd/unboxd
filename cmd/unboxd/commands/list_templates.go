@@ -3,7 +3,7 @@ package commands
 import (
 	"fmt"
 
-	"github.com/twystd/boxd/box"
+	"github.com/twystd/unboxd/box"
 )
 
 type ListTemplates struct {

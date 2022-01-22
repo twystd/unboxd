@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type client struct {
+type Client struct {
 	clientID     string
 	secret       string
 	user         string
@@ -18,7 +18,7 @@ type client struct {
 	enterpriseID string
 }
 
-func (c *client) Authenticate() (*AccessToken, error) {
+func (c *Client) Authenticate() (*AccessToken, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}
@@ -68,46 +68,24 @@ func (c *client) Authenticate() (*AccessToken, error) {
 	}, nil
 }
 
-func (c *client) load(bytes []byte) error {
+func (c *Client) UnmarshalJSON(bytes []byte) error {
 	credentials := struct {
-		Client struct {
-			ClientID     string `json:"client-id"`
-			Secret       string `json:"secret"`
-			User         string `json:"user"`
-			UserID       string `json:"user-id"`
-			EnterpriseID string `json:"enterprise-id"`
-		} `json:"client"`
+		ClientID     string `json:"client-id"`
+		Secret       string `json:"secret"`
+		User         string `json:"user"`
+		UserID       string `json:"user-id"`
+		EnterpriseID string `json:"enterprise-id"`
 	}{}
 
 	if err := json.Unmarshal(bytes, &credentials); err != nil {
 		return err
 	}
 
-	if credentials.Client.ClientID == "" {
-		return fmt.Errorf("Invalid client ID (%v)", credentials.Client.ClientID)
-	}
-
-	if credentials.Client.Secret == "" {
-		return fmt.Errorf("Invalid secret (%v)", credentials.Client.Secret)
-	}
-
-	if credentials.Client.User == "" {
-		return fmt.Errorf("Invalid user (%v)", credentials.Client.User)
-	}
-
-	if credentials.Client.UserID == "" {
-		return fmt.Errorf("Invalid user ID (%v)", credentials.Client.UserID)
-	}
-
-	if credentials.Client.EnterpriseID == "" {
-		return fmt.Errorf("Invalid enterprise ID (%v)", credentials.Client.EnterpriseID)
-	}
-
-	c.clientID = credentials.Client.ClientID
-	c.secret = credentials.Client.Secret
-	c.user = credentials.Client.User
-	c.userID = credentials.Client.UserID
-	c.enterpriseID = credentials.Client.EnterpriseID
+	c.clientID = credentials.ClientID
+	c.secret = credentials.Secret
+	c.user = credentials.User
+	c.userID = credentials.UserID
+	c.enterpriseID = credentials.EnterpriseID
 
 	return nil
 }

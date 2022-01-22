@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	JWT "github.com/cristalhq/jwt/v4"
+	"github.com/cristalhq/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/youmark/pkcs8"
 )
 
-type jwt struct {
+type JWT struct {
 	clientID     string
 	secret       string
 	publicKeyID  string
@@ -26,11 +26,11 @@ type jwt struct {
 }
 
 type claims struct {
-	JWT.RegisteredClaims
+	jwt.RegisteredClaims
 	BoxSubType string `json:"box_sub_type,omitempty"`
 }
 
-func (j *jwt) Authenticate() (*AccessToken, error) {
+func (j *JWT) Authenticate() (*AccessToken, error) {
 	pk, err := j.decrypt()
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (j *jwt) Authenticate() (*AccessToken, error) {
 	return j.authenticate(token)
 }
 
-func (j *jwt) load(bytes []byte) error {
+func (j *JWT) UnmarshalJSON(bytes []byte) error {
 	credentials := struct {
 		BoxAppSettings struct {
 			ClientID string `json:"clientID"`
@@ -63,26 +63,6 @@ func (j *jwt) load(bytes []byte) error {
 		return err
 	}
 
-	if credentials.BoxAppSettings.ClientID == "" {
-		return fmt.Errorf("Invalid client ID (%v)", credentials.BoxAppSettings.ClientID)
-	}
-
-	if credentials.BoxAppSettings.Secret == "" {
-		return fmt.Errorf("Invalid secret (%v)", credentials.BoxAppSettings.Secret)
-	}
-
-	if credentials.BoxAppSettings.AppAuth.PublicKeyID == "" {
-		return fmt.Errorf("Invalid public key ID (%v)", credentials.BoxAppSettings.AppAuth.PublicKeyID)
-	}
-
-	if credentials.BoxAppSettings.AppAuth.PrivateKey == "" {
-		return fmt.Errorf("Invalid private key (%v)", credentials.BoxAppSettings.AppAuth.PrivateKey)
-	}
-
-	if credentials.EnterpriseID == "" {
-		return fmt.Errorf("Invalid enterprise ID (%v)", credentials.EnterpriseID)
-	}
-
 	j.clientID = credentials.BoxAppSettings.ClientID
 	j.secret = credentials.BoxAppSettings.Secret
 	j.publicKeyID = credentials.BoxAppSettings.AppAuth.PublicKeyID
@@ -93,7 +73,7 @@ func (j *jwt) load(bytes []byte) error {
 	return nil
 }
 
-func (j *jwt) decrypt() (*rsa.PrivateKey, error) {
+func (j *JWT) decrypt() (*rsa.PrivateKey, error) {
 	pwd := []byte(j.passphrase)
 	block, _ := pem.Decode([]byte(j.privateKey))
 	if block == nil || block.Type != "ENCRYPTED PRIVATE KEY" {
@@ -112,32 +92,32 @@ func (j *jwt) decrypt() (*rsa.PrivateKey, error) {
 	}
 }
 
-func (j *jwt) assert(pk *rsa.PrivateKey) (*JWT.Token, error) {
+func (j *JWT) assert(pk *rsa.PrivateKey) (*jwt.Token, error) {
 	UUID, err := uuid.NewUUID()
 	if err != nil {
 		return nil, err
 	}
 
 	claims := claims{
-		RegisteredClaims: JWT.RegisteredClaims{
+		RegisteredClaims: jwt.RegisteredClaims{
 			ID:        fmt.Sprintf("%v", UUID),
 			Audience:  []string{"https://api.box.com/oauth2/token"},
 			Issuer:    j.clientID,
 			Subject:   j.enterpriseID,
-			ExpiresAt: JWT.NewNumericDate(time.Now().Add(60 * time.Second)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Second)),
 		},
 		BoxSubType: "enterprise",
 	}
 
-	signer, err := JWT.NewSignerRS(JWT.RS512, pk)
+	signer, err := jwt.NewSignerRS(jwt.RS512, pk)
 	if err != nil {
 		return nil, err
 	}
 
-	return JWT.NewBuilder(signer, JWT.WithKeyID(j.publicKeyID)).Build(claims)
+	return jwt.NewBuilder(signer, jwt.WithKeyID(j.publicKeyID)).Build(claims)
 }
 
-func (j *jwt) authenticate(t *JWT.Token) (*AccessToken, error) {
+func (j *JWT) authenticate(t *jwt.Token) (*AccessToken, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

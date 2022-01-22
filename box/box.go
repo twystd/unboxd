@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/twystd/boxd/box/credentials"
+	"github.com/twystd/unboxd/box/credentials"
 )
 
 type Box struct {

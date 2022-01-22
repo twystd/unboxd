@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/twystd/boxd/box"
+	"github.com/twystd/unboxd/box"
 )
 
 type CreateTemplate struct {

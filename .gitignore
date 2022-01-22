@@ -2,5 +2,5 @@
 bin
 dist
 .credentials*
-box/credentials/jwt_test.*
+box/credentials/auth_test.*
 

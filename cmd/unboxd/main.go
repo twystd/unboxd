@@ -6,9 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/twystd/boxd/box"
-	"github.com/twystd/boxd/box/credentials"
-	"github.com/twystd/boxd/cmd/boxd-cli/commands"
+	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/cmd/unboxd/commands"
 )
 
 var VERSION = "v0.0.x"
@@ -55,7 +54,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	credentials, err := credentials.NewCredentials(options.credentials)
+	credentials, err := NewCredentials(options.credentials)
 	if err != nil {
 		log.Fatalf("Error reading credentials from %s (%v)", options.credentials, err)
 	}

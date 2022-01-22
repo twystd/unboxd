@@ -1,6 +1,6 @@
 VERSION ?= v0.0.x
 DIST ?= development
-CLI = ./bin/boxd-cli
+CLI = ./bin/unboxd
 CREDENTIALS ?= .credentials.dev
 CLIENT ?= .credentials.client
 JWT ?= .credentials.jwt

@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/twystd/boxd/box"
+	"github.com/twystd/unboxd/box"
 )
 
 type Command interface {

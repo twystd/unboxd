@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/twystd/boxd/box"
+	"github.com/twystd/unboxd/box"
 )
 
 type DeleteTemplate struct {

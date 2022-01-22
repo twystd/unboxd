@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/twystd/boxd/box"
+	"github.com/twystd/unboxd/box"
 )
 
 type DeleteFile struct {

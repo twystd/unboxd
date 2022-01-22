@@ -1,21 +1,22 @@
 ![build](https://github.com/twystd/boxd/workflows/build/badge.svg)
 
 # boxd
-Go CLI for managing files and templates in Box: 
 
-- list-templates
-- create-template
-- delete-template
-- get-template
+Somewhat eclectic Go CLI for managing files and templates in Box: 
+
 - list-files
 - delete-file
+- list-templates
+- create-template
+- get-template
+- delete-template
 
 ### Raison d'être
 
 Mostly just because another project needed a Go interface to the Box API and it turned out to be convenient
-to create it as a separate library and then the CLI turned out to be useful. So it by no means even vaguely
-supersedes the official Box API implementations - it just implements some functionality in a way that was 
-useful for a particular requirement.
+to create it as a separate library and then the CLI turned out to be occasionally useful. So it by no means
+even vaguely approximates the official Box API implementations - it just implements some functionality in a 
+way that was useful for a particular requirement.
 
 *IN DEVELOPMENT*
 

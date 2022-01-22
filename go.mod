@@ -1,4 +1,4 @@
-module github.com/twystd/boxd
+module github.com/twystd/unboxd
 
 go 1.17
 

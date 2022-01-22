@@ -1,8 +1,6 @@
 package credentials
 
 import (
-	"fmt"
-	"os"
 	"time"
 )
 
@@ -19,23 +17,4 @@ func (t AccessToken) IsValid() bool {
 	renew := time.Now().Add(10 * time.Minute)
 
 	return t.Token != "" && t.Expiry.After(renew)
-}
-
-func NewCredentials(file string) (Credentials, error) {
-	bytes, err := os.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-
-	c := client{}
-	if err := c.load(bytes); err == nil {
-		return &c, nil
-	}
-
-	j := jwt{}
-	if err := j.load(bytes); err == nil {
-		return &j, nil
-	}
-
-	return nil, fmt.Errorf("%v - invalid credentials", file)
 }
