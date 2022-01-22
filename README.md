@@ -53,6 +53,9 @@ go build -o bin/ ./...
 
 ## Notes
 
+1. https://github.com/golang/go/issues/8860
+
+
 ## References
 
 ## Attribution

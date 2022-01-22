@@ -2,8 +2,8 @@
 
 - [ ] JWT auth
       - [ ] `Load` unit tests
-      - [ ] Decrypt key
-            - https://github.com/golang/go/issues/8860
+      - [ ] Token refresh
+      - [x] Authenticate
             - https://github.com/youmark/pkcs8
             - https://github.com/smallstep/crypto/blob/v0.9.2/pemutil/pkcs8.go#L189
 

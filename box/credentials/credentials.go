@@ -32,11 +32,9 @@ func NewCredentials(file string) (Credentials, error) {
 		return &a, nil
 	}
 
-	j := jwtx{}
+	j := jwt{}
 	if err := j.load(bytes); err == nil {
 		return &j, nil
-	} else {
-		fmt.Printf(">>>>>>>>>>>>>>> %v\n", err)
 	}
 
 	return nil, fmt.Errorf("%v - invalid credentials", file)

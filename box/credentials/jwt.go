@@ -5,43 +5,60 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
-	"github.com/cristalhq/jwt/v4"
+	JWT "github.com/cristalhq/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/youmark/pkcs8"
 )
 
-type jwtx struct {
-	BoxAppSettings struct {
-		ClientID string `json:"clientID"`
-		Secret   string `json:"clientSecret"`
-		AppAuth  struct {
-			PublicKeyID string `json:"publicKeyID"`
-			PrivateKey  string `json:"privateKey"`
-			Passphrase  string `json:"passphrase"`
-		} `json:"appAuth"`
-	} `json:"boxAppSettings"`
-
-	EnterpriseID string `json:"enterpriseID"`
+type jwt struct {
+	clientID     string
+	secret       string
+	publicKeyID  string
+	privateKey   string
+	passphrase   string
+	enterpriseID string
 }
 
 type claims struct {
-	jwt.RegisteredClaims
+	JWT.RegisteredClaims
 	BoxSubType string `json:"box_sub_type,omitempty"`
 }
 
-func (j *jwtx) Authenticate() (*AccessToken, error) {
-	_, err := j.decrypt()
+func (j *jwt) Authenticate() (*AccessToken, error) {
+	pk, err := j.decrypt()
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, fmt.Errorf("NOT IMPLEMENTED")
+	token, err := j.assert(pk)
+	if err != nil {
+		return nil, err
+	}
+
+	return j.authenticate(token)
 }
 
-func (j *jwtx) load(bytes []byte) error {
-	credentials := jwtx{}
+func (j *jwt) load(bytes []byte) error {
+	credentials := struct {
+		BoxAppSettings struct {
+			ClientID string `json:"clientID"`
+			Secret   string `json:"clientSecret"`
+			AppAuth  struct {
+				PublicKeyID string `json:"publicKeyID"`
+				PrivateKey  string `json:"privateKey"`
+				Passphrase  string `json:"passphrase"`
+			} `json:"appAuth"`
+		} `json:"boxAppSettings"`
+
+		EnterpriseID string `json:"enterpriseID"`
+	}{}
+
 	if err := json.Unmarshal(bytes, &credentials); err != nil {
 		return err
 	}
@@ -66,57 +83,19 @@ func (j *jwtx) load(bytes []byte) error {
 		return fmt.Errorf("Invalid enterprise ID (%v)", credentials.EnterpriseID)
 	}
 
-	j.BoxAppSettings.ClientID = credentials.BoxAppSettings.ClientID
-	j.BoxAppSettings.Secret = credentials.BoxAppSettings.Secret
-	j.BoxAppSettings.AppAuth.PublicKeyID = credentials.BoxAppSettings.AppAuth.PublicKeyID
-	j.BoxAppSettings.AppAuth.PrivateKey = credentials.BoxAppSettings.AppAuth.PrivateKey
-	j.BoxAppSettings.AppAuth.Passphrase = credentials.BoxAppSettings.AppAuth.Passphrase
-	j.EnterpriseID = credentials.EnterpriseID
+	j.clientID = credentials.BoxAppSettings.ClientID
+	j.secret = credentials.BoxAppSettings.Secret
+	j.publicKeyID = credentials.BoxAppSettings.AppAuth.PublicKeyID
+	j.privateKey = credentials.BoxAppSettings.AppAuth.PrivateKey
+	j.passphrase = credentials.BoxAppSettings.AppAuth.Passphrase
+	j.enterpriseID = credentials.EnterpriseID
 
 	return nil
 }
 
-func (j *jwtx) authenticate() (*AccessToken, error) {
-	pk, err := j.decrypt()
-	if err != nil {
-		return nil, err
-	}
-
-	UUID, err := uuid.NewUUID()
-	if err != nil {
-		return nil, err
-	}
-
-	claims := claims{
-		RegisteredClaims: jwt.RegisteredClaims{
-			ID:        fmt.Sprintf("%v", UUID),
-			Audience:  []string{"https://api.box.com/oauth2/token"},
-			Issuer:    j.BoxAppSettings.ClientID,
-			Subject:   j.EnterpriseID,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Second)),
-		},
-		BoxSubType: "enterprise",
-	}
-
-	signer, err := jwt.NewSignerRS(jwt.RS512, pk)
-	if err != nil {
-		return nil, err
-	}
-
-	token, err := jwt.NewBuilder(signer, jwt.WithKeyID(j.BoxAppSettings.AppAuth.PublicKeyID)).Build(claims)
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf(">>>>>>>>> algorithm: %#v\n", token.Header())
-	fmt.Printf(">>>>>>>>> claims:    %v\n", string(token.Claims()))
-
-	return nil, nil
-}
-
-func (j *jwtx) decrypt() (*rsa.PrivateKey, error) {
-	pwd := []byte(j.BoxAppSettings.AppAuth.Passphrase)
-	block, _ := pem.Decode([]byte(j.BoxAppSettings.AppAuth.PrivateKey))
+func (j *jwt) decrypt() (*rsa.PrivateKey, error) {
+	pwd := []byte(j.passphrase)
+	block, _ := pem.Decode([]byte(j.privateKey))
 	if block == nil || block.Type != "ENCRYPTED PRIVATE KEY" {
 		return nil, fmt.Errorf("Invalid private key")
 	}
@@ -131,4 +110,80 @@ func (j *jwtx) decrypt() (*rsa.PrivateKey, error) {
 	} else {
 		return pk, nil
 	}
+}
+
+func (j *jwt) assert(pk *rsa.PrivateKey) (*JWT.Token, error) {
+	UUID, err := uuid.NewUUID()
+	if err != nil {
+		return nil, err
+	}
+
+	claims := claims{
+		RegisteredClaims: JWT.RegisteredClaims{
+			ID:        fmt.Sprintf("%v", UUID),
+			Audience:  []string{"https://api.box.com/oauth2/token"},
+			Issuer:    j.clientID,
+			Subject:   j.enterpriseID,
+			ExpiresAt: JWT.NewNumericDate(time.Now().Add(60 * time.Second)),
+		},
+		BoxSubType: "enterprise",
+	}
+
+	signer, err := JWT.NewSignerRS(JWT.RS512, pk)
+	if err != nil {
+		return nil, err
+	}
+
+	return JWT.NewBuilder(signer, JWT.WithKeyID(j.publicKeyID)).Build(claims)
+}
+
+func (j *jwt) authenticate(t *JWT.Token) (*AccessToken, error) {
+	client := http.Client{
+		Timeout: 60 * time.Second,
+	}
+
+	assertion := string(t.Bytes())
+
+	form := url.Values{
+		"client_id":     []string{j.clientID},
+		"client_secret": []string{j.secret},
+		"grant_type":    []string{"urn:ietf:params:oauth:grant-type:jwt-bearer"},
+		"assertion":     []string{assertion},
+	}
+
+	rq, err := http.NewRequest("POST", "https://api.box.com/oauth2/token", strings.NewReader(form.Encode()))
+	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	rq.Header.Set("Accepts", "application/json")
+
+	response, err := client.Do(rq)
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("authorization request failed (%s)", response.Status)
+	}
+
+	token := struct {
+		AccessToken  string   `json:"access_token"`
+		ExpiresIn    int      `json:"expires_in"`
+		RestrictedTo []string `json:"restricted_to"`
+		TokenType    string   `json:"token_type"`
+	}{}
+
+	if err := json.Unmarshal(body, &token); err != nil {
+		return nil, err
+	}
+
+	return &AccessToken{
+		Token:  token.AccessToken,
+		Expiry: time.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
+	}, nil
 }
