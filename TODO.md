@@ -2,8 +2,14 @@
 
 ## IN PROGRESS
 
+- [ ] Tags
+      - [x] list
+      - [ ] add
+      - [ ] update
+      - [ ] delete
+
 - [ ] Make public
-- [ ] List file tags
+
 - [x] Authenticate with JWT credentials
 - [x] Github workflow
 - [x] `version` command
@@ -17,9 +23,11 @@
             - https://github.com/youmark/pkcs8
             - https://github.com/smallstep/crypto/blob/v0.9.2/pemutil/pkcs8.go#L189
 
+- [ ] Upload file
 - [ ] List folders by ID/name
 - [ ] Add file tag
 - [ ] Delete file tag
+- [ ] Templates for output
 
 - [ ] Include CHANGELOG in CLI
       - https://bhupesh-v.github.io/why-how-add-changelog-in-your-next-cli/

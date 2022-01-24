@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/twystd/unboxd/box"
 )
@@ -34,12 +35,13 @@ func (cmd ListFiles) Execute(b box.Box) error {
 
 	sort.Slice(files, func(i, j int) bool { return files[i].Filename < files[j].Filename })
 
-	widths := []int{0, 0}
-	table := [][2]string{}
+	widths := []int{0, 0, 0}
+	table := [][3]string{}
 
 	for _, f := range files {
 		id := fmt.Sprintf("%v", f.ID)
 		filename := fmt.Sprintf("%v", f.Filename)
+		tags := strings.Join(f.Tags, ",")
 
 		if N := len(id); N > widths[0] {
 			widths[0] = N
@@ -49,12 +51,16 @@ func (cmd ListFiles) Execute(b box.Box) error {
 			widths[1] = N
 		}
 
-		table = append(table, [2]string{id, filename})
+		if N := len(tags); N > widths[2] {
+			widths[2] = N
+		}
+
+		table = append(table, [3]string{id, filename, tags})
 	}
 
-	format := fmt.Sprintf("%%-%vv  %%-%vv\n", widths[0], widths[1])
+	format := fmt.Sprintf("%%-%vv  %%-%vv  %%-%vv\n", widths[0], widths[1], widths[2])
 	for _, row := range table {
-		fmt.Printf(format, row[0], row[1])
+		fmt.Printf(format, row[0], row[1], row[2])
 	}
 
 	return nil

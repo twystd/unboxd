@@ -15,6 +15,11 @@ all: test      \
 clean:
 	rm -rf bin/*
 
+update:
+	go get -u github.com/cristalhq/jwt/v4
+	go get -u github.com/google/uuid
+	go get -u github.com/youmark/pkcs8
+
 format: 
 	go fmt ./...
 
@@ -49,8 +54,6 @@ debug: build
 	# dlv test github.com/uhppoted/uhppoted-httpd/system/catalog
 	# dlv exec ./bin/boxd-cli -- help
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
-	$(CLI) --debug --credentials $(CLIENT) list-files /alpha/pending
-	$(CLI) --debug --credentials $(JWT) list-files /alpha/pending
 
 help: build
 	$(CLI) --debug help
@@ -72,6 +75,8 @@ get-template: build
 
 list-files: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+	$(CLI) --debug --credentials $(CLIENT) list-files /alpha/pending
+	$(CLI) --debug --credentials $(JWT) list-files /alpha/pending
 
 delete-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) delete-file $(FILEID)

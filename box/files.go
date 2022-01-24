@@ -13,6 +13,7 @@ type FileID string
 type File struct {
 	ID       FileID
 	Filename string
+	Tags     []string
 }
 
 func listFiles(folderID FolderID, token string) ([]File, error) {
@@ -22,7 +23,7 @@ func listFiles(folderID FolderID, token string) ([]File, error) {
 		Timeout: 60 * time.Second,
 	}
 
-	uri := fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,sha1&limit=%[2]v&usemarker=true", folderID, fetchSize)
+	uri := fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,sha1,tags&limit=%[2]v&usemarker=true", folderID, fetchSize)
 
 	for {
 		rq, err := http.NewRequest("GET", uri, nil)
@@ -49,9 +50,10 @@ func listFiles(folderID FolderID, token string) ([]File, error) {
 		reply := struct {
 			TotalCount int `json:"total_count"`
 			Entries    []struct {
-				Type string `json:"type"`
-				ID   string `json:"id"`
-				Name string `json:"name"`
+				Type string   `json:"type"`
+				ID   string   `json:"id"`
+				Name string   `json:"name"`
+				Tags []string `json:"tags"`
 			} `json:"entries"`
 			NextMarker string `json:"next_marker,omitempty"`
 		}{}
@@ -65,6 +67,7 @@ func listFiles(folderID FolderID, token string) ([]File, error) {
 				files = append(files, File{
 					ID:       FileID(e.ID),
 					Filename: e.Name,
+					Tags:     e.Tags,
 				})
 			}
 		}
