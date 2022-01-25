@@ -72,6 +72,10 @@ loop:
 	return files, nil
 }
 
+func (b *Box) UploadFile(file string, folder string) (string, error) {
+	return files.UploadFile(file, folder, b.token.Token)
+}
+
 func (b *Box) DeleteFile(fileID string) error {
 	return files.DeleteFile(fileID, b.token.Token)
 }

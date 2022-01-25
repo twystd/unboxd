@@ -4,7 +4,12 @@
 
 - [x] Move file funcs to `files` package
 - [x] Move folders funcs to `folders` package
-- [ ] Upload file
+- [ ] Move template funcs to `templates` package
+- [x] Upload file
+      - [x] With folder ID
+      - [ ] With folder name
+      - [ ] (?) Byte streaming for uploading large files
+
 - [ ] Make public
 
 - [ ] Tags
@@ -13,9 +18,12 @@
       - [x] delete
       - [ ] update
 
-
 - [ ] (MAYBE) Reinstate FileID and FolderID types so that maps are typed
       - (OR) Just return list of File and Folder
+      - (OR) At minimum make file and folder ID `uint64`
+
+- [ ] (MAYBE) Provide file and folder ID lookup functions and externalise 
+      the list/upload logic
 
 - [x] Replace FileID type with string
 - [x] Authenticate with JWT credentials

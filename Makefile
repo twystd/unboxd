@@ -4,7 +4,9 @@ CLI = ./bin/unboxd
 CREDENTIALS ?= .credentials.dev
 CLIENT ?= .credentials.client
 JWT ?= .credentials.jwt
+FOLDERID ?= 147495046780
 FILEID ?= 903401361197
+FILE ?= ./runtime/kandinsky.jpg
 
 .PHONY: clean
 
@@ -78,6 +80,9 @@ list-files: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
 	$(CLI) --debug --credentials $(CLIENT) list-files /alpha/pending
 	$(CLI) --debug --credentials $(JWT) list-files /alpha/pending
+
+upload-file: build
+	$(CLI) --debug --credentials $(CREDENTIALS) upload-file $(FILE) $(FOLDERID)
 
 delete-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) delete-file $(FILEID)
