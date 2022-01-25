@@ -4,15 +4,21 @@
 
 Somewhat eclectic Go CLI for managing files and templates in Box: 
 
-- list-folders
-- list-files
-- upload-file
-- delete-file
-- tag/untag-file
-- list-templates
-- create-template
-- get-template
-- delete-template
+- folders
+  - list
+
+- files
+  - list
+  - upload
+  - delete
+  - tag
+  - untag
+
+- templates  
+  - list
+  - create
+  - get
+  - delete
 
 Currently supports authentication and authorisation using either Box _client_ or _JWT_ credentials.
 
