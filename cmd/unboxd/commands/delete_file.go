@@ -44,7 +44,7 @@ func (cmd DeleteFile) Execute(b box.Box) error {
 }
 
 func (cmd DeleteFile) exec(b box.Box, fileID uint64) error {
-	file := box.FileID(fmt.Sprintf("%v", fileID))
+	file := fmt.Sprintf("%v", fileID)
 
 	return b.DeleteFile(file)
 }

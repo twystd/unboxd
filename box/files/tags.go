@@ -10,15 +10,13 @@ import (
 	"time"
 )
 
-type FileID string
-
 type File struct {
-	ID       FileID
+	ID       string
 	Filename string
 	Tags     []string
 }
 
-func TagFile(fileID FileID, tag string, token string) error {
+func TagFile(fileID string, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err
@@ -48,7 +46,7 @@ func TagFile(fileID FileID, tag string, token string) error {
 	return put(fileID, info, token)
 }
 
-func UntagFile(fileID FileID, tag string, token string) error {
+func UntagFile(fileID string, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err
@@ -76,7 +74,7 @@ func UntagFile(fileID FileID, tag string, token string) error {
 	return put(fileID, info, token)
 }
 
-func get(fileID FileID, token string) (*File, error) {
+func get(fileID string, token string) (*File, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}
@@ -117,13 +115,13 @@ func get(fileID FileID, token string) (*File, error) {
 	}
 
 	return &File{
-		ID:       FileID(reply.ID),
+		ID:       reply.ID,
 		Filename: reply.Name,
 		Tags:     reply.Tags,
 	}, nil
 }
 
-func put(fileID FileID, content interface{}, token string) error {
+func put(fileID string, content interface{}, token string) error {
 	encoded, err := json.Marshal(content)
 	if err != nil {
 		return err

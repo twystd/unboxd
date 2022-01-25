@@ -8,10 +8,8 @@ import (
 	"time"
 )
 
-type FileID string
-
 type File struct {
-	ID       FileID
+	ID       string
 	Filename string
 	Tags     []string
 }
@@ -65,7 +63,7 @@ func listFiles(folderID FolderID, token string) ([]File, error) {
 		for _, e := range reply.Entries {
 			if e.Type == "file" {
 				files = append(files, File{
-					ID:       FileID(e.ID),
+					ID:       e.ID,
 					Filename: e.Name,
 					Tags:     e.Tags,
 				})
@@ -82,7 +80,7 @@ func listFiles(folderID FolderID, token string) ([]File, error) {
 	return files, nil
 }
 
-func deleteFile(fileID FileID, token string) error {
+func deleteFile(fileID string, token string) error {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

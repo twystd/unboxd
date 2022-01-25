@@ -45,7 +45,7 @@ func (cmd UntagFile) Execute(b box.Box) error {
 }
 
 func (cmd UntagFile) exec(b box.Box, fileID uint64, tag string) error {
-	file := box.FileID(fmt.Sprintf("%v", fileID))
+	file := fmt.Sprintf("%v", fileID)
 
 	return b.UntagFile(file, tag)
 }

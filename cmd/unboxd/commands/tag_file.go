@@ -45,7 +45,7 @@ func (cmd TagFile) Execute(b box.Box) error {
 }
 
 func (cmd TagFile) exec(b box.Box, fileID uint64, tag string) error {
-	file := box.FileID(fmt.Sprintf("%v", fileID))
+	file := fmt.Sprintf("%v", fileID)
 
 	return b.TagFile(file, tag)
 }

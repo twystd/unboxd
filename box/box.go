@@ -18,7 +18,7 @@ type folders struct {
 }
 
 type BoxFile struct {
-	ID   FileID
+	ID   string
 	Name string
 }
 
@@ -81,16 +81,16 @@ loop:
 	return files, nil
 }
 
-func (b *Box) DeleteFile(fileID FileID) error {
+func (b *Box) DeleteFile(fileID string) error {
 	return deleteFile(fileID, b.token.Token)
 }
 
-func (b *Box) TagFile(fileID FileID, tag string) error {
-	return files.TagFile(files.FileID(fileID), tag, b.token.Token)
+func (b *Box) TagFile(fileID string, tag string) error {
+	return files.TagFile(fileID, tag, b.token.Token)
 }
 
-func (b *Box) UntagFile(fileID FileID, tag string) error {
-	return files.UntagFile(files.FileID(fileID), tag, b.token.Token)
+func (b *Box) UntagFile(fileID string, tag string) error {
+	return files.UntagFile(fileID, tag, b.token.Token)
 }
 
 func (b *Box) ListTemplates() (map[string]TemplateKey, error) {
