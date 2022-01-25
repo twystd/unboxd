@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/templates"
 )
 
 type CreateTemplate struct {
@@ -29,7 +30,7 @@ func (cmd CreateTemplate) Execute(b box.Box) error {
 		return err
 	}
 
-	schema := box.Schema{}
+	schema := templates.Schema{}
 	if err := json.Unmarshal(bytes, &schema); err != nil {
 		return err
 	}
@@ -43,7 +44,7 @@ func (cmd CreateTemplate) Execute(b box.Box) error {
 	return nil
 }
 
-func (cmd CreateTemplate) exec(b box.Box, schema box.Schema) error {
+func (cmd CreateTemplate) exec(b box.Box, schema templates.Schema) error {
 	if _, err := b.CreateTemplate(schema); err != nil {
 		return err
 	}

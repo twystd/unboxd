@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/templates"
 )
 
 type ListTemplates struct {
@@ -27,6 +28,6 @@ func (cmd ListTemplates) Execute(b box.Box) error {
 	return nil
 }
 
-func (cmd ListTemplates) exec(b box.Box) (map[string]box.TemplateKey, error) {
+func (cmd ListTemplates) exec(b box.Box) (map[string]templates.TemplateKey, error) {
 	return b.ListTemplates()
 }

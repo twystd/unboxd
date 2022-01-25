@@ -1,5 +1,7 @@
 github.com/cristalhq/jwt/v4 v4.0.0-beta h1:TSNUSW7CCvMtX+Rg3vj706BwqIEt9HMvVv6Syifq5mU=
 github.com/cristalhq/jwt/v4 v4.0.0-beta/go.mod h1:HnYraSNKDRag1DZP92rYHyrjyQHnVEHPNqesmzs+miQ=
+github.com/cristalhq/jwt/v4 v4.0.0-beta1 h1:S3rZZn2e2SoarnTJqGlV7RUmhLbIO8SqRO7wTsG4kLY=
+github.com/cristalhq/jwt/v4 v4.0.0-beta1/go.mod h1:HnYraSNKDRag1DZP92rYHyrjyQHnVEHPNqesmzs+miQ=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a h1:fZHgsYlfvtyqToslyjUt3VOPF4J7aK/3MPcK7xp3PDk=

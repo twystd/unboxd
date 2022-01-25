@@ -4,7 +4,7 @@
 
 - [x] Move file funcs to `files` package
 - [x] Move folders funcs to `folders` package
-- [ ] Move template funcs to `templates` package
+- [x] Move template funcs to `templates` package
 - [x] Upload file
       - [x] With folder ID
       - [ ] With folder name

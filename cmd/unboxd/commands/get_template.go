@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/templates"
 )
 
 type GetTemplate struct {
@@ -67,15 +68,15 @@ func (cmd GetTemplate) Execute(b box.Box) error {
 		return fmt.Errorf("missing template name argument")
 	}
 
-	templates, err := b.ListTemplates()
+	list, err := b.ListTemplates()
 	if err != nil {
 		return err
-	} else if templates == nil {
+	} else if list == nil {
 		return fmt.Errorf("invalid template list")
 	}
 
-	keys := []box.TemplateKey{}
-	for k, v := range templates {
+	keys := []templates.TemplateKey{}
+	for k, v := range list {
 		switch {
 		case exactMatch:
 			if template == k {
@@ -122,7 +123,7 @@ func (cmd GetTemplate) Execute(b box.Box) error {
 	}
 }
 
-func (cmd GetTemplate) exec(b box.Box, t box.TemplateKey) (*box.Schema, error) {
+func (cmd GetTemplate) exec(b box.Box, t templates.TemplateKey) (*templates.Schema, error) {
 	if schema, err := b.GetTemplate(t); err != nil {
 		return nil, err
 	} else if schema == nil {
@@ -132,7 +133,7 @@ func (cmd GetTemplate) exec(b box.Box, t box.TemplateKey) (*box.Schema, error) {
 	}
 }
 
-func (cmd GetTemplate) save(schema *box.Schema, file string) error {
+func (cmd GetTemplate) save(schema *templates.Schema, file string) error {
 	if bytes, err := json.MarshalIndent(schema, "  ", "  "); err != nil {
 		return err
 	} else {
@@ -140,7 +141,7 @@ func (cmd GetTemplate) save(schema *box.Schema, file string) error {
 	}
 }
 
-func (cmd GetTemplate) print(schema *box.Schema) error {
+func (cmd GetTemplate) print(schema *templates.Schema) error {
 	if bytes, err := json.MarshalIndent(schema, "  ", "  "); err != nil {
 		return err
 	} else {

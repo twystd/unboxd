@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/templates"
 )
 
 type DeleteTemplate struct {
@@ -39,15 +40,15 @@ func (cmd DeleteTemplate) Execute(b box.Box) error {
 		return fmt.Errorf("missing template name argument")
 	}
 
-	templates, err := b.ListTemplates()
+	list, err := b.ListTemplates()
 	if err != nil {
 		return err
-	} else if templates == nil {
+	} else if list == nil {
 		return fmt.Errorf("invalid template list")
 	}
 
-	keys := []box.TemplateKey{}
-	for k, v := range templates {
+	keys := []templates.TemplateKey{}
+	for k, v := range list {
 		switch {
 		case exactMatch:
 			if template == k {
@@ -87,6 +88,6 @@ func (cmd DeleteTemplate) Execute(b box.Box) error {
 	}
 }
 
-func (cmd DeleteTemplate) exec(b box.Box, t box.TemplateKey) error {
+func (cmd DeleteTemplate) exec(b box.Box, t templates.TemplateKey) error {
 	return b.DeleteTemplate(t)
 }

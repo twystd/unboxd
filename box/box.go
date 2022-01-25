@@ -7,6 +7,7 @@ import (
 	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/box/files"
 	"github.com/twystd/unboxd/box/folders"
+	"github.com/twystd/unboxd/box/templates"
 )
 
 type Box struct {
@@ -88,18 +89,18 @@ func (b *Box) UntagFile(fileID string, tag string) error {
 	return files.UntagFile(fileID, tag, b.token.Token)
 }
 
-func (b *Box) ListTemplates() (map[string]TemplateKey, error) {
-	return listTemplates(b.token.Token)
+func (b *Box) ListTemplates() (map[string]templates.TemplateKey, error) {
+	return templates.ListTemplates(b.token.Token)
 }
 
-func (b *Box) GetTemplate(key TemplateKey) (*Schema, error) {
-	return getTemplate(key, b.token.Token)
+func (b *Box) GetTemplate(key templates.TemplateKey) (*templates.Schema, error) {
+	return templates.GetTemplate(key, b.token.Token)
 }
 
-func (b *Box) CreateTemplate(schema Schema) (interface{}, error) {
-	return createTemplate(schema.Name, schema.Fields, b.token.Token)
+func (b *Box) CreateTemplate(schema templates.Schema) (interface{}, error) {
+	return templates.CreateTemplate(schema.Name, schema.Fields, b.token.Token)
 }
 
-func (b *Box) DeleteTemplate(key TemplateKey) error {
-	return deleteTemplate(key, b.token.Token)
+func (b *Box) DeleteTemplate(key templates.TemplateKey) error {
+	return templates.DeleteTemplate(key, b.token.Token)
 }
