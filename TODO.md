@@ -3,7 +3,17 @@
 ## IN PROGRESS
 
 - [x] Move file funcs to `files` package
+      - [ ] Cleanify function names
+      - [ ] (MAYBE) Reinstate FileID type so that maps are typed
+            - (OR) at minimum make file ID `uint64`
+            - (OR) just return list of File
+
 - [x] Move folders funcs to `folders` package
+      - [ ] Cleanify function names
+      - [ ] (MAYBE) Reinstate FolderID type so that maps are typed
+            - (OR) at minimum make folder ID `uint64`
+            - (OR) just return list of Folder
+
 - [x] Move template funcs to `templates` package
 - [x] Upload file
       - [x] With folder ID
@@ -18,12 +28,8 @@
       - [x] delete
       - [ ] update
 
-- [ ] (MAYBE) Reinstate FileID and FolderID types so that maps are typed
-      - (OR) Just return list of File and Folder
-      - (OR) At minimum make file and folder ID `uint64`
 
-- [ ] (MAYBE) Provide file and folder ID lookup functions and externalise 
-      the list/upload logic
+- [ ] (MAYBE) Provide file and folder ID lookup functions and externalise the list/upload logic
 
 - [x] Replace FileID type with string
 - [x] Authenticate with JWT credentials
