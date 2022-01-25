@@ -5,10 +5,12 @@
 - [ ] Tags
       - [x] list
       - [x] add
-      - [ ] delete
+      - [x] delete
       - [ ] update
 
 - [ ] Make public
+- [ ] Replace FileID type with string
+- [ ] Move file funcs to `files` package
 
 - [x] Authenticate with JWT credentials
 - [x] Github workflow

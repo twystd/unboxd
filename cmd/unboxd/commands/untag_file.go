@@ -8,14 +8,14 @@ import (
 	"github.com/twystd/unboxd/box"
 )
 
-type TagFile struct {
+type UntagFile struct {
 }
 
-func (cmd TagFile) Name() string {
-	return "tag-file"
+func (cmd UntagFile) Name() string {
+	return "untag-file"
 }
 
-func (cmd TagFile) Execute(b box.Box) error {
+func (cmd UntagFile) Execute(b box.Box) error {
 	var fileID uint64
 	var tag string
 
@@ -39,13 +39,13 @@ func (cmd TagFile) Execute(b box.Box) error {
 		return err
 	}
 
-	log.Printf("%v  %v added tag %v\n", cmd.Name(), fileID, tag)
+	log.Printf("%v  %v removed tag %v\n", cmd.Name(), fileID, tag)
 
 	return nil
 }
 
-func (cmd TagFile) exec(b box.Box, fileID uint64, tag string) error {
+func (cmd UntagFile) exec(b box.Box, fileID uint64, tag string) error {
 	file := box.FileID(fmt.Sprintf("%v", fileID))
 
-	return b.TagFile(file, tag)
+	return b.UntagFile(file, tag)
 }

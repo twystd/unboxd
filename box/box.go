@@ -89,6 +89,10 @@ func (b *Box) TagFile(fileID FileID, tag string) error {
 	return files.TagFile(files.FileID(fileID), tag, b.token.Token)
 }
 
+func (b *Box) UntagFile(fileID FileID, tag string) error {
+	return files.UntagFile(files.FileID(fileID), tag, b.token.Token)
+}
+
 func (b *Box) ListTemplates() (map[string]TemplateKey, error) {
 	return listTemplates(b.token.Token)
 }

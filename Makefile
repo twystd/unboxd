@@ -53,7 +53,7 @@ release: build-all
 debug: build
 	# dlv test github.com/uhppoted/uhppoted-httpd/system/catalog
 	# dlv exec ./bin/boxd-cli -- help
-	$(CLI) --debug --credentials $(CREDENTIALS) tag-file 907642054572 'woot'
+	$(CLI) --debug --credentials $(CREDENTIALS) untag-file 907642054572 'woot'
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
 
 help: build
@@ -84,3 +84,8 @@ delete-file: build
 
 tag-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) tag-file 907642054572 'woot'
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+
+untag-file: build
+	$(CLI) --debug --credentials $(CREDENTIALS) untag-file 907642054572 'woot'
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -25,16 +26,51 @@ func TagFile(fileID FileID, tag string, token string) error {
 		return fmt.Errorf("invalid file returned for %v", fileID)
 	}
 
+	tags := []string{}
 	for _, t := range file.Tags {
-		if t == tag {
-			return nil
+		if t != tag {
+			tags = append(tags, t)
 		}
+	}
+
+	tags = append(tags, tag)
+
+	if equal(tags, file.Tags) {
+		return nil
 	}
 
 	info := struct {
 		Tags []string `json:"tags"`
 	}{
-		Tags: append(file.Tags, tag),
+		Tags: tags,
+	}
+
+	return put(fileID, info, token)
+}
+
+func UntagFile(fileID FileID, tag string, token string) error {
+	file, err := get(fileID, token)
+	if err != nil {
+		return err
+	} else if file == nil {
+		return fmt.Errorf("invalid file returned for %v", fileID)
+	}
+
+	tags := []string{}
+	for _, t := range file.Tags {
+		if t != tag {
+			tags = append(tags, t)
+		}
+	}
+
+	if equal(tags, file.Tags) {
+		return nil
+	}
+
+	info := struct {
+		Tags []string `json:"tags"`
+	}{
+		Tags: tags,
 	}
 
 	return put(fileID, info, token)
@@ -121,4 +157,21 @@ func put(fileID FileID, content interface{}, token string) error {
 	}
 
 	return nil
+}
+
+func equal(p, q []string) bool {
+	if len(p) != len(q) {
+		return false
+	}
+
+	sort.Strings(p)
+	sort.Strings(q)
+
+	for i, u := range p {
+		if u != q[i] {
+			return false
+		}
+	}
+
+	return true
 }
