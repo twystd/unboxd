@@ -23,6 +23,7 @@ var options = struct {
 var cli = []commands.Command{
 	commands.ListFiles{},
 	commands.DeleteFile{},
+	commands.TagFile{},
 
 	commands.ListTemplates{},
 	commands.GetTemplate{},

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/twystd/unboxd/box/credentials"
+	"github.com/twystd/unboxd/box/files"
 )
 
 type Box struct {
@@ -82,6 +83,10 @@ loop:
 
 func (b *Box) DeleteFile(fileID FileID) error {
 	return deleteFile(fileID, b.token.Token)
+}
+
+func (b *Box) TagFile(fileID FileID, tag string) error {
+	return files.TagFile(files.FileID(fileID), tag, b.token.Token)
 }
 
 func (b *Box) ListTemplates() (map[string]TemplateKey, error) {

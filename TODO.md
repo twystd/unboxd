@@ -4,9 +4,9 @@
 
 - [ ] Tags
       - [x] list
-      - [ ] add
-      - [ ] update
+      - [x] add
       - [ ] delete
+      - [ ] update
 
 - [ ] Make public
 
