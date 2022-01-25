@@ -43,13 +43,13 @@ func (b *Box) Authenticate(credentials credentials.Credentials) error {
 	return nil
 }
 
-func (b *Box) ListFiles(folder string) ([]File, error) {
+func (b *Box) ListFiles(folder string) ([]files.File, error) {
 	prefix := ""
-	folderID := FolderID("0")
+	folderID := "0"
 
 loop:
 	for {
-		folders, err := listFolders(folderID, b.token.Token)
+		folders, err := ListFolders(folderID, b.token.Token)
 		if err != nil {
 			return nil, err
 		} else if len(folders) == 0 {
@@ -73,7 +73,7 @@ loop:
 		return nil, fmt.Errorf("no folder found matching '%v'", folder)
 	}
 
-	files, err := listFiles(folderID, b.token.Token)
+	files, err := files.ListFiles(folderID, b.token.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ loop:
 }
 
 func (b *Box) DeleteFile(fileID string) error {
-	return deleteFile(fileID, b.token.Token)
+	return files.DeleteFile(fileID, b.token.Token)
 }
 
 func (b *Box) TagFile(fileID string, tag string) error {

@@ -10,12 +10,6 @@ import (
 	"time"
 )
 
-type File struct {
-	ID       string
-	Filename string
-	Tags     []string
-}
-
 func TagFile(fileID string, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {

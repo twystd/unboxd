@@ -8,10 +8,8 @@ import (
 	"time"
 )
 
-type FolderID string
-
-func listFolders(folderID FolderID, token string) (map[FolderID]string, error) {
-	items := map[FolderID]string{}
+func ListFolders(folderID string, token string) (map[string]string, error) {
+	items := map[string]string{}
 	auth := fmt.Sprintf("Bearer %s", token)
 	client := http.Client{
 		Timeout: 60 * time.Second,
@@ -57,7 +55,7 @@ func listFolders(folderID FolderID, token string) (map[FolderID]string, error) {
 
 		for _, e := range reply.Entries {
 			if e.Type == "folder" {
-				items[FolderID(e.ID)] = e.Name
+				items[e.ID] = e.Name
 			}
 		}
 

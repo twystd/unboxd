@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/files"
 )
 
 type ListFiles struct {
@@ -66,6 +67,6 @@ func (cmd ListFiles) Execute(b box.Box) error {
 	return nil
 }
 
-func (cmd ListFiles) exec(b box.Box, folder string) ([]box.File, error) {
+func (cmd ListFiles) exec(b box.Box, folder string) ([]files.File, error) {
 	return b.ListFiles(folder)
 }

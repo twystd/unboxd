@@ -2,7 +2,8 @@
 
 ## IN PROGRESS
 
-- [ ] Move file funcs to `files` package
+- [x] Move file funcs to `files` package
+- [ ] Move folders funcs to `folders` package
 - [ ] Upload file
 - [ ] Make public
 
@@ -12,6 +13,8 @@
       - [x] delete
       - [ ] update
 
+
+- [ ] (MAYBE) reinstate FileID and FolderID types so that maps are typed
 
 - [x] Replace FileID type with string
 - [x] Authenticate with JWT credentials
