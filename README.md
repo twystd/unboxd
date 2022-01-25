@@ -1,15 +1,19 @@
-![build](https://github.com/twystd/boxd/workflows/build/badge.svg)
+![build](https://github.com/twystd/unboxd/workflows/build/badge.svg)
 
-# boxd
+# unboxd
 
 Somewhat eclectic Go CLI for managing files and templates in Box: 
 
+- list-folders
 - list-files
 - delete-file
+- tag/untag-file
 - list-templates
 - create-template
 - get-template
 - delete-template
+
+Currently supports authentication and authorisation using either Box _client_ or _JWT_ credentials.
 
 ### Raison d'être
 
@@ -18,9 +22,9 @@ to create it as a separate library and then the CLI turned out to be occasionall
 even vaguely approximates the official Box API implementations - it just implements some functionality in a 
 way that was useful for a particular requirement.
 
-*IN DEVELOPMENT*
-
 ## Releases
+
+*EARLY DEVELOPMENT*
 
 | *Version* | *Description*               |
 | --------- | ----------------------------|
@@ -34,23 +38,25 @@ way that was useful for a particular requirement.
 Assuming you have `Go v1.17+` and `make` installed:
 
 ```
-git clone https://github.com/twystd/boxd.git
-cd boxd
+git clone https://github.com/twystd/unboxd.git
+cd unboxd
 make build
 ```
 
 If you prefer not to use `make`:
 ```
-git clone https://github.com/twystd/boxd.git
-cd boxd
+git clone https://github.com/twystd/unboxd.git
+cd unboxd
 go build -o bin/ ./...
 ```
 
 #### Dependencies
 
-| *Module*                                   | *Version*  |
-| -------------------------------------------| ---------- |
-|                                            |            |
+| *Module*                                             | *Version*  |
+| -----------------------------------------------------| ---------- |
+| [youmark:PKCS8](https://github.com/youmark/pkcs8)    | (latest)   |
+| [cristalhq:JWT](https://github.com/cristalhq/jwt/v4) | v4         |
+
 
 ## Notes
 

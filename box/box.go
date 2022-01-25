@@ -6,20 +6,11 @@ import (
 
 	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/box/files"
+	"github.com/twystd/unboxd/box/folders"
 )
 
 type Box struct {
 	token *credentials.AccessToken
-}
-
-type folders struct {
-	photos  string
-	pending string
-}
-
-type BoxFile struct {
-	ID   string
-	Name string
 }
 
 func NewBox() Box {
@@ -49,7 +40,7 @@ func (b *Box) ListFiles(folder string) ([]files.File, error) {
 
 loop:
 	for {
-		folders, err := ListFolders(folderID, b.token.Token)
+		folders, err := folders.ListFolders(folderID, b.token.Token)
 		if err != nil {
 			return nil, err
 		} else if len(folders) == 0 {
