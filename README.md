@@ -6,6 +6,7 @@ Somewhat eclectic Go CLI for managing files and templates in Box:
 
 - list-folders
 - list-files
+- upload-file
 - delete-file
 - tag/untag-file
 - list-templates
