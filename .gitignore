@@ -2,7 +2,6 @@
 bin
 runtime
 dist
-yacc
 .credentials*
 box/credentials/auth_test.*
 
