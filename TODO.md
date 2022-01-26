@@ -43,6 +43,8 @@
       - [ ] Marshal/unmarshal unit tests
       - [ ] Token refresh
       - [x] Authenticate
+      - [ ] Cache tokens
+            - With encryption (? GPG)
     
 - [ ] Oauth2
 - [ ] App auth    
