@@ -41,7 +41,7 @@ func (b *Box) ListFiles(folder string) ([]files.File, error) {
 
 loop:
 	for {
-		folders, err := folders.ListFolders(folderID, b.token.Token)
+		folders, err := folders.List(folderID, b.token.Token)
 		if err != nil {
 			return nil, err
 		} else if len(folders) == 0 {
@@ -65,7 +65,7 @@ loop:
 		return nil, fmt.Errorf("no folder found matching '%v'", folder)
 	}
 
-	files, err := files.ListFiles(folderID, b.token.Token)
+	files, err := files.List(folderID, b.token.Token)
 	if err != nil {
 		return nil, err
 	}
@@ -74,33 +74,37 @@ loop:
 }
 
 func (b *Box) UploadFile(file string, folder string) (string, error) {
-	return files.UploadFile(file, folder, b.token.Token)
+	return files.Upload(file, folder, b.token.Token)
 }
 
 func (b *Box) DeleteFile(fileID string) error {
-	return files.DeleteFile(fileID, b.token.Token)
+	return files.Delete(fileID, b.token.Token)
 }
 
 func (b *Box) TagFile(fileID string, tag string) error {
-	return files.TagFile(fileID, tag, b.token.Token)
+	return files.Tag(fileID, tag, b.token.Token)
 }
 
 func (b *Box) UntagFile(fileID string, tag string) error {
-	return files.UntagFile(fileID, tag, b.token.Token)
+	return files.Untag(fileID, tag, b.token.Token)
+}
+
+func (b *Box) RetagFile(fileID string, oldTag, newTag string) error {
+	return files.Retag(fileID, oldTag, newTag, b.token.Token)
 }
 
 func (b *Box) ListTemplates() (map[string]templates.TemplateKey, error) {
-	return templates.ListTemplates(b.token.Token)
+	return templates.List(b.token.Token)
 }
 
 func (b *Box) GetTemplate(key templates.TemplateKey) (*templates.Schema, error) {
-	return templates.GetTemplate(key, b.token.Token)
+	return templates.Get(key, b.token.Token)
 }
 
 func (b *Box) CreateTemplate(schema templates.Schema) (interface{}, error) {
-	return templates.CreateTemplate(schema.Name, schema.Fields, b.token.Token)
+	return templates.Create(schema.Name, schema.Fields, b.token.Token)
 }
 
 func (b *Box) DeleteTemplate(key templates.TemplateKey) error {
-	return templates.DeleteTemplate(key, b.token.Token)
+	return templates.Delete(key, b.token.Token)
 }

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func DeleteFile(fileID string, token string) error {
+func Delete(fileID string, token string) error {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

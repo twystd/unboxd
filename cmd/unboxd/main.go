@@ -26,6 +26,7 @@ var cli = []commands.Command{
 	commands.DeleteFile{},
 	commands.TagFile{},
 	commands.UntagFile{},
+	commands.RetagFile{},
 
 	commands.ListTemplates{},
 	commands.GetTemplate{},

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func DeleteTemplate(key TemplateKey, token string) error {
+func Delete(key TemplateKey, token string) error {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

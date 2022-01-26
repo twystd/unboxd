@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func CreateTemplate(name string, fields []Field, token string) (TemplateKey, error) {
+func Create(name string, fields []Field, token string) (TemplateKey, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

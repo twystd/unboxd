@@ -2,7 +2,7 @@
 
 # unboxd
 
-Somewhat eclectic Go CLI for managing files and templates in Box: 
+A somewhat eclectic Go CLI for managing files and templates in [Box](box.com): 
 
 - list-folders
 
@@ -68,6 +68,4 @@ go build -o bin/ ./...
 
 
 ## References
-
-## Attribution
 

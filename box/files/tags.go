@@ -1,16 +1,11 @@
 package files
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"sort"
-	"time"
 )
 
-func TagFile(fileID string, tag string, token string) error {
+func Tag(fileID string, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err
@@ -26,7 +21,6 @@ func TagFile(fileID string, tag string, token string) error {
 	}
 
 	tags = append(tags, tag)
-
 	if equal(tags, file.Tags) {
 		return nil
 	}
@@ -40,7 +34,7 @@ func TagFile(fileID string, tag string, token string) error {
 	return put(fileID, info, token)
 }
 
-func UntagFile(fileID string, tag string, token string) error {
+func Untag(fileID string, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err
@@ -68,87 +62,43 @@ func UntagFile(fileID string, tag string, token string) error {
 	return put(fileID, info, token)
 }
 
-func get(fileID string, token string) (*File, error) {
-	client := http.Client{
-		Timeout: 60 * time.Second,
-	}
-
-	auth := fmt.Sprintf("Bearer %s", token)
-	uri := fmt.Sprintf("https://api.box.com/2.0/files/%[1]v?fields=id,type,name,sha1,tags", fileID)
-
-	rq, err := http.NewRequest("GET", uri, nil)
-	rq.Header.Set("Authorization", auth)
-	rq.Header.Set("Content-Type", "application/json")
-	rq.Header.Set("Accepts", "application/json")
-
-	response, err := client.Do(rq)
+func Retag(fileID string, oldTag, newTag string, token string) error {
+	file, err := get(fileID, token)
 	if err != nil {
-		return nil, err
+		return err
+	} else if file == nil {
+		return fmt.Errorf("invalid file returned for %v", fileID)
 	}
 
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
+	tags := []string{}
+	for _, t := range file.Tags {
+		if t != oldTag {
+			tags = append(tags, t)
+		}
 	}
 
-	if response.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("%v: error retrieving file information (%v)", fileID, response.Status)
+	if equal(tags, file.Tags) {
+		return fmt.Errorf("file %v does not have tag '%v'", fileID, oldTag)
 	}
 
-	reply := struct {
-		Type string   `json:"type"`
-		ID   string   `json:"id"`
-		Name string   `json:"name"`
+	for _, t := range file.Tags {
+		if t == newTag {
+			return fmt.Errorf("file %v already has tag '%v'", fileID, newTag)
+		}
+	}
+
+	tags = append(tags, newTag)
+	if equal(tags, file.Tags) {
+		return nil
+	}
+
+	info := struct {
 		Tags []string `json:"tags"`
-	}{}
-
-	if err := json.Unmarshal(body, &reply); err != nil {
-		return nil, err
+	}{
+		Tags: tags,
 	}
 
-	return &File{
-		ID:       reply.ID,
-		Filename: reply.Name,
-		Tags:     reply.Tags,
-	}, nil
-}
-
-func put(fileID string, content interface{}, token string) error {
-	encoded, err := json.Marshal(content)
-	if err != nil {
-		return err
-	}
-
-	auth := fmt.Sprintf("Bearer %s", token)
-	uri := fmt.Sprintf("https://api.box.com/2.0/files/%[1]v?fields=id,type,name,sha1,tags", fileID)
-
-	rq, err := http.NewRequest("PUT", uri, bytes.NewBuffer(encoded))
-	rq.Header.Set("Authorization", auth)
-	rq.Header.Set("Content-Type", "application/json")
-	rq.Header.Set("Accepts", "application/json")
-
-	client := http.Client{
-		Timeout: 60 * time.Second,
-	}
-
-	response, err := client.Do(rq)
-	if err != nil {
-		return err
-	}
-
-	defer response.Body.Close()
-
-	if _, err := io.ReadAll(response.Body); err != nil {
-		return err
-	}
-
-	if response.StatusCode != http.StatusOK {
-		return fmt.Errorf("error tagging file (%v)", response.Status)
-	}
-
-	return nil
+	return put(fileID, info, token)
 }
 
 func equal(p, q []string) bool {

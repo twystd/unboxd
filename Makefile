@@ -94,3 +94,7 @@ tag-file: build
 untag-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) untag-file 907642054572 'woot'
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+
+retag-file: build
+	$(CLI) --debug --credentials $(CREDENTIALS) retag-file 907642054572 'woot' 'woot2'
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending

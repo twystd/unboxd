@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func GetTemplate(template TemplateKey, token string) (*Schema, error) {
+func Get(template TemplateKey, token string) (*Schema, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

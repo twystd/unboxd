@@ -2,35 +2,36 @@
 
 ## IN PROGRESS
 
-- [x] Move file funcs to `files` package
-      - [ ] Cleanify function names
-      - [ ] (MAYBE) Reinstate FileID type so that maps are typed
-            - (OR) at minimum make file ID `uint64`
-            - (OR) just return list of File
-
-- [x] Move folders funcs to `folders` package
-      - [ ] Cleanify function names
-      - [ ] (MAYBE) Reinstate FolderID type so that maps are typed
-            - (OR) at minimum make folder ID `uint64`
-            - (OR) just return list of Folder
-
-- [x] Move template funcs to `templates` package
-- [x] Upload file
-      - [x] With folder ID
-      - [ ] With folder name
-      - [ ] (?) Byte streaming for uploading large files
-
-- [ ] Make public
-
 - [ ] Tags
       - [x] list
       - [x] add
       - [x] delete
-      - [ ] update
+      - [x] update
 
+- [x] Upload file
+      - [x] With folder ID
+      - [ ] With folder name
+      - [ ] Display file ID,name
+      - [ ] (?) Byte streaming for uploading large files
 
-- [ ] (MAYBE) Provide file and folder ID lookup functions and externalise the list/upload logic
+- [ ] Walk folder tree
+      - [ ] (MAYBE) Provide file and folder ID lookup functions and externalise the list/upload logic
 
+- [x] Move file funcs to `files` package
+      - [x] Cleanify function names
+      - [ ] (MAYBE) Reinstate FileID type so that maps are typed
+            - (OR) at minimum make file ID `uint64`
+            - (OR) just return list of File
+            - (OR) generalised BoxID
+
+- [x] Move folders funcs to `folders` package
+      - [x] Cleanify function names
+      - [ ] (MAYBE) Reinstate FolderID type so that maps are typed
+            - (OR) at minimum make folder ID `uint64`
+            - (OR) just return list of Folder
+
+- [x] Make public
+- [x] Move template funcs to `templates` package
 - [x] Replace FileID type with string
 - [x] Authenticate with JWT credentials
 - [x] Github workflow
@@ -39,17 +40,18 @@
 
 ## TODO
 - [ ] JWT auth
-      - [ ] `Load` unit tests
+      - [ ] Marshal/unmarshal unit tests
       - [ ] Token refresh
       - [x] Authenticate
     
+- [ ] Oauth2
+- [ ] App auth    
 - [ ] List folders by ID/name
-- [ ] Add file tag
-- [ ] Delete file tag
 - [ ] Templates for output
 - [ ] Include CHANGELOG in CLI
       - https://bhupesh-v.github.io/why-how-add-changelog-in-your-next-cli/
       - http://keepachangelog.com/en/1.0.0
+
 
 ## NOTES
 

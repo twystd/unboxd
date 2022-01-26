@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ListTemplates(token string) (map[string]TemplateKey, error) {
+func List(token string) (map[string]TemplateKey, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}

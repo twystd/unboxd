@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ListFolders(folderID string, token string) (map[string]string, error) {
+func List(folderID string, token string) (map[string]string, error) {
 	items := map[string]string{}
 	auth := fmt.Sprintf("Bearer %s", token)
 	client := http.Client{

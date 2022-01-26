@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func UploadFile(file string, folder string, token string) (string, error) {
+func Upload(file string, folder string, token string) (string, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}
