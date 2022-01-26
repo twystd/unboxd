@@ -8,4 +8,7 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a
 )
 
-require golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
+require (
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
+	golang.org/x/tools v0.1.9 // indirect
+)
