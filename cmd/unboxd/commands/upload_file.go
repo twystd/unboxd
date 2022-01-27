@@ -28,19 +28,20 @@ func (cmd UploadFile) Execute(b box.Box) error {
 	file := args[0]
 	folder := args[1]
 
-	if err := cmd.exec(b, file, folder); err != nil {
+	fileID, err := cmd.exec(b, file, folder)
+	if err != nil {
 		return err
 	}
 
-	log.Printf("%v  %v uploaded to %v\n", cmd.Name(), file, folder)
+	log.Printf("%[1]v  %[2]v  %[3]v  uploaded", cmd.Name(), fileID, file)
 
 	return nil
 }
 
-func (cmd UploadFile) exec(b box.Box, file string, folder string) error {
-	if _, err := b.UploadFile(file, folder); err != nil {
-		return err
+func (cmd UploadFile) exec(b box.Box, file string, folder string) (string, error) {
+	if fileID, err := b.UploadFile(file, folder); err != nil {
+		return "", err
+	} else {
+		return fileID, nil
 	}
-
-	return nil
 }

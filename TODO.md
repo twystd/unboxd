@@ -2,34 +2,28 @@
 
 ## IN PROGRESS
 
-- [ ] Tags
-      - [x] list
-      - [x] add
-      - [x] delete
-      - [x] update
-
 - [x] Upload file
-      - [x] With folder ID
-      - [ ] With folder name
-      - [ ] Display file ID,name
+      - [x] Display file ID,name
+      - [ ] Using folder name
       - [ ] (?) Byte streaming for uploading large files
 
-- [ ] Walk folder tree
+- [ ] list-folders: walk folder tree
       - [ ] (MAYBE) Provide file and folder ID lookup functions and externalise the list/upload logic
 
+- [ ] list-files: walk folder tree
+
 - [x] Move file funcs to `files` package
-      - [x] Cleanify function names
       - [ ] (MAYBE) Reinstate FileID type so that maps are typed
             - (OR) at minimum make file ID `uint64`
             - (OR) just return list of File
             - (OR) generalised BoxID
 
 - [x] Move folders funcs to `folders` package
-      - [x] Cleanify function names
       - [ ] (MAYBE) Reinstate FolderID type so that maps are typed
             - (OR) at minimum make folder ID `uint64`
             - (OR) just return list of Folder
 
+- [x] File tags
 - [x] Make public
 - [x] Move template funcs to `templates` package
 - [x] Replace FileID type with string
@@ -46,7 +40,7 @@
       - [ ] Cache tokens
             - With encryption (? GPG)
     
-- [ ] Oauth2
+- [ ] OAuth2
 - [ ] App auth    
 - [ ] List folders by ID/name
 - [ ] Templates for output
