@@ -18,3 +18,7 @@ build: format
 
 run: build
 	$(CLI)
+
+debug:
+	goyacc -o cmd/unboxd/example.go grammar/example.y
+# 	go build -o bin ./...
