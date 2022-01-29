@@ -68,7 +68,7 @@ func List(folderID string, token string) ([]File, error) {
 			break
 		}
 
-		uri = fmt.Sprintf("https://api.box.com/2.0/folders/%v/items?fields=id,type,name,sha1&limit=5&marker=%v&usemarker=true", folderID, reply.NextMarker)
+		uri = fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,sha1&limit=%[2]v&marker=%[3]v&usemarker=true", folderID, fetchSize, reply.NextMarker)
 	}
 
 	return files, nil
