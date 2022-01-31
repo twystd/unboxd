@@ -21,6 +21,8 @@ var options = struct {
 }
 
 var cli = []commands.Command{
+	commands.ListFolders{},
+
 	commands.ListFiles{},
 	commands.UploadFile{},
 	commands.DeleteFile{},

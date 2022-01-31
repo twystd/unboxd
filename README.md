@@ -21,10 +21,10 @@ Currently supports authentication and authorisation using either Box _client_ or
 
 ### Raison d'être
 
-Mostly just because another project needed a Go interface to the Box API and it turned out to be convenient
-to create it as a separate library and then the CLI turned out to be occasionally useful. So it by no means
-even vaguely approximates the official Box API implementations - it just implements some functionality in a 
-way that was useful for a particular requirement.
+Mostly because another project needed a Go interface to the Box [Content API](https://developer.box.com/reference/)
+and it turned out to be convenient to create it as a separate library and then the CLI turned out to be occasionally
+useful. So it by no means even vaguely approximates the official Box API implementations - it just implements some
+functionality in a way that was useful for a particular requirement.
 
 ## Releases
 
@@ -62,6 +62,76 @@ go build -o bin/ ./...
 | [cristalhq:JWT](https://github.com/cristalhq/jwt/v4) | v4         |
 
 
+## unboxd
+
+Usage: ```unboxd [options] <command> <arguments>```
+
+General_ commands:
+
+- `help`
+- `version`
+
+Folder commands:
+
+- [`list-folders`](#list-folders)
+
+
+### General
+
+#### `help`
+
+Displays the usage information and a list of available commands. Command specific help displays the detailed usage for that command.
+
+```
+unboxd help
+
+  Examples:
+
+  unboxd help
+  uhboxd help list-folders
+```
+
+#### `version`
+
+Displays the current application version.
+
+```
+unboxd version
+
+  Example:
+
+  unboxd version
+```
+
+### Folder commands
+
+The folder commands wrap the Box _Folder_ API:
+```
+unboxd list-folders
+```
+
+#### `list-folders`
+
+Retrieves a list of folders matching the (optionally) supplied path
+
+```
+unboxd [options] list-folders [path]
+
+  Options: 
+  --credentials <file> Sets the file containing the Box API credentials
+  --debug              Displays verbose debugging information
+
+  Example:
+
+  unboxd --debug --credentials .credentials  list-folders /
+  
+  123456789 /unboxd
+  987654321 /unboxd/photos
+  876543219 /unboxd/docs
+  765432198 /unboxd/docs/public
+  …
+
+```
 ## Notes
 
 1. https://github.com/golang/go/issues/8860

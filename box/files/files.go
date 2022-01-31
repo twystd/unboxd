@@ -15,7 +15,7 @@ type File struct {
 	Tags     []string
 }
 
-const fetchSize = 128
+const fetchSize = 500
 
 func get(fileID string, token string) (*File, error) {
 	client := http.Client{

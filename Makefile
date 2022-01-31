@@ -64,6 +64,13 @@ help: build
 version: build
 	$(CLI) --debug version
 
+list-folders: build
+	$(CLI) --debug --credentials $(CLIENT) list-folders
+	$(CLI) --debug --credentials $(CLIENT) list-folders /alpha
+	$(CLI) --debug --credentials $(CLIENT) list-folders /alpha/pending
+# 	$(CLI) --debug --credentials $(CREDENTIALS) list-folders /alpha/pending
+	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
+
 list-templates: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-templates
 

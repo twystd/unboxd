@@ -2,15 +2,19 @@
 
 ## IN PROGRESS
 
+- [ ] list-folders
+      - [ ] Walk the whole tree
+      - [ ] glob
+      - [ ] Match tree path to glob
+      - (?) by folder ID
+
 - [x] Upload file
       - [x] Display file ID,name
       - [ ] Using folder name
       - [ ] (?) Byte streaming for uploading large files
 
-- [ ] list-folders: walk folder tree
-      - [ ] (MAYBE) Provide file and folder ID lookup functions and externalise the list/upload logic
-
-- [ ] list-files: walk folder tree
+- [ ] list-files
+      - [ ] glob
 
 - [x] Move file funcs to `files` package
       - [ ] (MAYBE) Reinstate FileID type so that maps are typed
