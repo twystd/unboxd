@@ -55,8 +55,10 @@ release: build-all
 debug: build
 	# dlv test github.com/uhppoted/uhppoted-httpd/system/catalog
 	# dlv exec ./bin/boxd-cli -- help
-	$(CLI) --debug --credentials $(CREDENTIALS) untag-file 907642054572 'woot'
-	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/*'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
 
 help: build
 	$(CLI) --debug help
@@ -66,9 +68,11 @@ version: build
 
 list-folders: build
 	$(CLI) --debug --credentials $(CLIENT) list-folders
-	$(CLI) --debug --credentials $(CLIENT) list-folders /alpha
-	$(CLI) --debug --credentials $(CLIENT) list-folders /alpha/pending
-# 	$(CLI) --debug --credentials $(CREDENTIALS) list-folders /alpha/pending
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/pending'
 	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
 
 list-templates: build

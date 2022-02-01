@@ -3,8 +3,9 @@
 ## IN PROGRESS
 
 - [ ] list-folders
-      - [ ] Walk the whole tree
+      - [x] Walk the whole tree
       - [ ] glob
+            - (?) should return 0 folder
       - [ ] Match tree path to glob
       - (?) by folder ID
 

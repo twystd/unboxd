@@ -1,8 +1,6 @@
 package box
 
 import (
-	"regexp"
-
 	"github.com/twystd/unboxd/box/folders"
 )
 
@@ -12,24 +10,10 @@ func (b *Box) ListFolders(glob string) ([]folders.Folder, error) {
 		return nil, err
 	}
 
-	match := func(p string) bool {
-		if ok, err := regexp.MatchString(".*", p); err != nil {
-			return false
-		} else {
-			return ok
-		}
-	}
-
-	if glob != "" {
-		match = func(p string) bool {
-			return p == glob
-		}
-	}
-
+	g := NewGlob(glob)
 	matched := []folders.Folder{}
-
 	for _, f := range list {
-		if match(f.Path) {
+		if g.Match(f.Path) {
 			matched = append(matched, f)
 		}
 	}
