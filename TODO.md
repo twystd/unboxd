@@ -5,6 +5,7 @@
 - [ ] list-folders
       - [x] Walk the whole tree
       - [ ] glob
+            - [ ] `/alpha/**/today`
             - (?) should return 0 folder
       - [ ] Match tree path to glob
       - (?) by folder ID
