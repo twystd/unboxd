@@ -2,6 +2,7 @@ package box
 
 import (
 	"github.com/twystd/unboxd/box/folders"
+	"github.com/twystd/unboxd/box/lib"
 )
 
 func (b *Box) ListFolders(glob string) ([]folders.Folder, error) {
@@ -10,7 +11,7 @@ func (b *Box) ListFolders(glob string) ([]folders.Folder, error) {
 		return nil, err
 	}
 
-	g := NewGlob(glob)
+	g := lib.NewGlob(glob)
 	matched := []folders.Folder{}
 	for _, f := range list {
 		if g.Match(f.Path) {
