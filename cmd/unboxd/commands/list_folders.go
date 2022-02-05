@@ -6,10 +6,16 @@ import (
 	"sort"
 
 	"github.com/twystd/unboxd/box"
-	"github.com/twystd/unboxd/box/folders"
+	"github.com/twystd/unboxd/box/lib"
 )
 
 type ListFolders struct {
+}
+
+type folder struct {
+	ID   uint64
+	Name string
+	Path string
 }
 
 func (cmd ListFolders) Name() string {
@@ -61,6 +67,48 @@ func (cmd ListFolders) Execute(b box.Box) error {
 	return nil
 }
 
-func (cmd ListFolders) exec(b box.Box, folder string) ([]folders.Folder, error) {
-	return b.ListFolders(folder)
+func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
+	list := []folder{}
+
+	folders, err := listFolders(b, 0, "")
+	if err != nil {
+		return nil, err
+	}
+
+	g := lib.NewGlob(glob)
+	for _, f := range folders {
+		if g.Match(f.Path) {
+			list = append(list, f)
+		}
+	}
+
+	return list, nil
+}
+
+func listFolders(b box.Box, folderID uint64, prefix string) ([]folder, error) {
+	folders := []folder{}
+
+	l, err := b.ListFolders(folderID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, f := range l {
+		path := prefix + "/" + f.Name
+		folders = append(folders, folder{
+			ID:   f.ID,
+			Name: f.Name,
+			Path: path,
+		})
+	}
+
+	for _, f := range folders {
+		if l, err := listFolders(b, f.ID, f.Path); err != nil {
+			return nil, err
+		} else {
+			folders = append(folders, l...)
+		}
+	}
+
+	return folders, nil
 }

@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
-func List(folderID string, token string) (map[string]string, error) {
-	items := map[string]string{}
+func List(folderID uint64, token string) ([]Folder, error) {
+	folders := []Folder{}
 	auth := fmt.Sprintf("Bearer %s", token)
 	client := http.Client{
 		Timeout: 60 * time.Second,
@@ -55,7 +56,12 @@ func List(folderID string, token string) (map[string]string, error) {
 
 		for _, e := range reply.Entries {
 			if e.Type == "folder" {
-				items[e.ID] = e.Name
+				if id, err := strconv.ParseUint(e.ID, 10, 64); err == nil {
+					folders = append(folders, Folder{
+						ID:   id,
+						Name: e.Name,
+					})
+				}
 			}
 		}
 
@@ -66,5 +72,5 @@ func List(folderID string, token string) (map[string]string, error) {
 		uri = fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,sha1&limit=%[2]v&marker=%[3]v&usemarker=true", folderID, fetchSize, reply.NextMarker)
 	}
 
-	return items, nil
+	return folders, nil
 }

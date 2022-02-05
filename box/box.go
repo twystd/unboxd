@@ -35,9 +35,13 @@ func (b *Box) Authenticate(credentials credentials.Credentials) error {
 	return nil
 }
 
+func (b *Box) ListFolders(folderID uint64) ([]folders.Folder, error) {
+	return folders.List(folderID, b.token.Token)
+}
+
 func (b *Box) ListFiles(folder string) ([]files.File, error) {
 	prefix := ""
-	folderID := "0"
+	folderID := uint64(0)
 
 loop:
 	for {
@@ -48,16 +52,16 @@ loop:
 			return nil, fmt.Errorf("no folder found matching '%v'", folder)
 		}
 
-		for k, v := range folders {
-			path := prefix + "/" + v
+		for _, f := range folders {
+			path := prefix + "/" + f.Name
 			switch {
 			case path == folder:
-				folderID = k
+				folderID = f.ID
 				break loop
 
 			case strings.HasPrefix(folder, path):
-				folderID = k
-				prefix = path
+				folderID = f.ID
+				prefix = f.Name
 				continue loop
 			}
 		}

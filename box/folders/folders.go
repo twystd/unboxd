@@ -3,7 +3,6 @@ package folders
 const fetchSize = 500
 
 type Folder struct {
-	ID   string
+	ID   uint64
 	Name string
-	Path string
 }
