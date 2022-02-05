@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-func Tag(fileID string, tag string, token string) error {
+func Tag(fileID uint64, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func Tag(fileID string, tag string, token string) error {
 	return put(fileID, info, token)
 }
 
-func Untag(fileID string, tag string, token string) error {
+func Untag(fileID uint64, tag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func Untag(fileID string, tag string, token string) error {
 	return put(fileID, info, token)
 }
 
-func Retag(fileID string, oldTag, newTag string, token string) error {
+func Retag(fileID uint64, oldTag, newTag string, token string) error {
 	file, err := get(fileID, token)
 	if err != nil {
 		return err

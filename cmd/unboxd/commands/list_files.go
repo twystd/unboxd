@@ -7,10 +7,17 @@ import (
 	"strings"
 
 	"github.com/twystd/unboxd/box"
-	"github.com/twystd/unboxd/box/files"
+	"github.com/twystd/unboxd/box/lib"
 )
 
 type ListFiles struct {
+}
+
+type file struct {
+	ID       uint64
+	FileName string
+	FilePath string
+	Tags     []string
 }
 
 func (cmd ListFiles) Name() string {
@@ -34,14 +41,14 @@ func (cmd ListFiles) Execute(b box.Box) error {
 		return fmt.Errorf("no files")
 	}
 
-	sort.Slice(files, func(i, j int) bool { return files[i].Filename < files[j].Filename })
+	sort.Slice(files, func(i, j int) bool { return files[i].FileName < files[j].FileName })
 
 	widths := []int{0, 0, 0}
 	table := [][3]string{}
 
 	for _, f := range files {
 		id := fmt.Sprintf("%v", f.ID)
-		filename := fmt.Sprintf("%v", f.Filename)
+		filename := fmt.Sprintf("%v", f.FileName)
 		tags := strings.Join(f.Tags, ",")
 
 		if N := len(id); N > widths[0] {
@@ -67,6 +74,52 @@ func (cmd ListFiles) Execute(b box.Box) error {
 	return nil
 }
 
-func (cmd ListFiles) exec(b box.Box, folder string) ([]files.File, error) {
-	return b.ListFiles(folder)
+func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
+	folders, err := listFolders(b, 0, "")
+	if err != nil {
+		return nil, err
+	}
+
+	files := []file{}
+
+	for _, f := range folders {
+		l, err := listFiles(b, f.ID, f.Path)
+		if err != nil {
+			return nil, err
+		}
+
+		files = append(files, l...)
+	}
+
+	list := []file{}
+
+	g := lib.NewGlob(glob + "/")
+	for _, f := range files {
+		if g.Match(f.FilePath) {
+			list = append(list, f)
+		}
+	}
+
+	return list, nil
+}
+
+func listFiles(b box.Box, folderID uint64, prefix string) ([]file, error) {
+	files := []file{}
+
+	l, err := b.ListFiles(folderID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, f := range l {
+		path := prefix + "/" + f.Name
+		files = append(files, file{
+			ID:       f.ID,
+			FileName: f.Name,
+			FilePath: path,
+			Tags:     f.Tags,
+		})
+	}
+
+	return files, nil
 }

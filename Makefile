@@ -75,18 +75,6 @@ list-folders: build
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/pending'
 	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
 
-list-templates: build
-	$(CLI) --debug --credentials $(CREDENTIALS) list-templates
-
-create-template: build
-	$(CLI) --debug --credentials $(CREDENTIALS) create-template
-
-delete-template: build
-	$(CLI) --debug --credentials $(CREDENTIALS) delete-template XXX
-
-get-template: build
-	$(CLI) --debug --credentials $(CREDENTIALS) get-template PWA
-
 list-files: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
 	$(CLI) --debug --credentials $(CLIENT) list-files /alpha/pending
@@ -109,3 +97,16 @@ untag-file: build
 retag-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) retag-file 907642054572 'woot' 'woot2'
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+
+list-templates: build
+	$(CLI) --debug --credentials $(CREDENTIALS) list-templates
+
+create-template: build
+	$(CLI) --debug --credentials $(CREDENTIALS) create-template
+
+delete-template: build
+	$(CLI) --debug --credentials $(CREDENTIALS) delete-template XXX
+
+get-template: build
+	$(CLI) --debug --credentials $(CREDENTIALS) get-template PWA
+

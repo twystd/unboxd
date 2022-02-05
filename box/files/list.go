@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -56,11 +57,13 @@ func List(folderID uint64, token string) ([]File, error) {
 
 		for _, e := range reply.Entries {
 			if e.Type == "file" {
-				files = append(files, File{
-					ID:       e.ID,
-					Filename: e.Name,
-					Tags:     e.Tags,
-				})
+				if id, err := strconv.ParseUint(e.ID, 10, 64); err == nil {
+					files = append(files, File{
+						ID:   id,
+						Name: e.Name,
+						Tags: e.Tags,
+					})
+				}
 			}
 		}
 

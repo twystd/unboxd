@@ -6,18 +6,19 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 type File struct {
-	ID       string
-	Filename string
-	Tags     []string
+	ID   uint64
+	Name string
+	Tags []string
 }
 
 const fetchSize = 500
 
-func get(fileID string, token string) (*File, error) {
+func get(fileID uint64, token string) (*File, error) {
 	client := http.Client{
 		Timeout: 60 * time.Second,
 	}
@@ -57,14 +58,18 @@ func get(fileID string, token string) (*File, error) {
 		return nil, err
 	}
 
-	return &File{
-		ID:       reply.ID,
-		Filename: reply.Name,
-		Tags:     reply.Tags,
-	}, nil
+	if id, err := strconv.ParseUint(reply.ID, 10, 64); err != nil {
+		return nil, err
+	} else {
+		return &File{
+			ID:   id,
+			Name: reply.Name,
+			Tags: reply.Tags,
+		}, nil
+	}
 }
 
-func put(fileID string, content interface{}, token string) error {
+func put(fileID uint64, content interface{}, token string) error {
 	encoded, err := json.Marshal(content)
 	if err != nil {
 		return err

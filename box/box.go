@@ -1,9 +1,6 @@
 package box
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/box/files"
 	"github.com/twystd/unboxd/box/folders"
@@ -39,42 +36,8 @@ func (b *Box) ListFolders(folderID uint64) ([]folders.Folder, error) {
 	return folders.List(folderID, b.token.Token)
 }
 
-func (b *Box) ListFiles(folder string) ([]files.File, error) {
-	prefix := ""
-	folderID := uint64(0)
-
-loop:
-	for {
-		folders, err := folders.List(folderID, b.token.Token)
-		if err != nil {
-			return nil, err
-		} else if len(folders) == 0 {
-			return nil, fmt.Errorf("no folder found matching '%v'", folder)
-		}
-
-		for _, f := range folders {
-			path := prefix + "/" + f.Name
-			switch {
-			case path == folder:
-				folderID = f.ID
-				break loop
-
-			case strings.HasPrefix(folder, path):
-				folderID = f.ID
-				prefix = f.Name
-				continue loop
-			}
-		}
-
-		return nil, fmt.Errorf("no folder found matching '%v'", folder)
-	}
-
-	files, err := files.List(folderID, b.token.Token)
-	if err != nil {
-		return nil, err
-	}
-
-	return files, nil
+func (b *Box) ListFiles(folderID uint64) ([]files.File, error) {
+	return files.List(folderID, b.token.Token)
 }
 
 func (b *Box) UploadFile(file string, folder string) (string, error) {
@@ -85,15 +48,15 @@ func (b *Box) DeleteFile(fileID string) error {
 	return files.Delete(fileID, b.token.Token)
 }
 
-func (b *Box) TagFile(fileID string, tag string) error {
+func (b *Box) TagFile(fileID uint64, tag string) error {
 	return files.Tag(fileID, tag, b.token.Token)
 }
 
-func (b *Box) UntagFile(fileID string, tag string) error {
+func (b *Box) UntagFile(fileID uint64, tag string) error {
 	return files.Untag(fileID, tag, b.token.Token)
 }
 
-func (b *Box) RetagFile(fileID string, oldTag, newTag string) error {
+func (b *Box) RetagFile(fileID uint64, oldTag, newTag string) error {
 	return files.Retag(fileID, oldTag, newTag, b.token.Token)
 }
 

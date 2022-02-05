@@ -52,7 +52,5 @@ func (cmd RetagFile) Execute(b box.Box) error {
 }
 
 func (cmd RetagFile) exec(b box.Box, fileID uint64, oldTag, newTag string) error {
-	file := fmt.Sprintf("%v", fileID)
-
-	return b.RetagFile(file, oldTag, newTag)
+	return b.RetagFile(fileID, oldTag, newTag)
 }

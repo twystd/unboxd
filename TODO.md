@@ -2,33 +2,36 @@
 
 ## IN PROGRESS
 
+- [ ] Restructure so that Box is just a wrapper around the API and the complexity devolves on
+      e.g. the command implementation.
+      - [x] list-folders
+      - [ ] list-files
+            - Glob.HasPrefix or somesuch
+      - [ ] Make IDs uint64
+      - [ ] return error if strconv.ParseUint fails for ID
+
+
+- [ ] glob
+      - [ ] Rework to rather match on tokenised strings
+      - [ ] `/alpha/**/today`
+
 - [ ] list-folders
-      - [x] Walk the whole tree
-      - [ ] glob
-            - [ ] `/alpha/**/today`
-            - (?) should return 0 folder
-      - [ ] Match tree path to glob
+      - [ ] (?) should return 0 folder
       - (?) by folder ID
 
+- [ ] list-files
+      - (?) by file ID
+      - [ ] just return list of File
+      - [ ] List files in root dir
+
 - [x] Upload file
-      - [x] Display file ID,name
       - [ ] Using folder name
       - [ ] (?) Byte streaming for uploading large files
 
-- [ ] list-files
-      - [ ] glob
-
 - [x] Move file funcs to `files` package
       - [ ] (MAYBE) Reinstate FileID type so that maps are typed
-            - (OR) at minimum make file ID `uint64`
-            - (OR) just return list of File
-            - (OR) generalised BoxID
 
 - [x] Move folders funcs to `folders` package
-      - [ ] (MAYBE) Reinstate FolderID type so that maps are typed
-            - (OR) at minimum make folder ID `uint64`
-            - (OR) just return list of Folder
-
 - [x] File tags
 - [x] Make public
 - [x] Move template funcs to `templates` package
@@ -43,8 +46,9 @@
       - [ ] Marshal/unmarshal unit tests
       - [ ] Token refresh
       - [x] Authenticate
-      - [ ] Cache tokens
+      - (?) Cache tokens to disk
             - With encryption (? GPG)
+            - --no-cache option
     
 - [ ] OAuth2
 - [ ] App auth    
