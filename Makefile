@@ -55,10 +55,11 @@ release: build-all
 debug: build
 	# dlv test github.com/uhppoted/uhppoted-httpd/system/catalog
 	# dlv exec ./bin/boxd-cli -- help
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/*'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
+# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
+# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/*'
+# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
+# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
+	$(CLI) --debug --credentials .credentials.bcmt list-folders '/**'
 
 help: build
 	$(CLI) --debug help

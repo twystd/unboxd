@@ -4,5 +4,7 @@ runtime
 dist
 yacc
 .credentials*
+bcmt.log
+folders.bcmt
 box/credentials/auth_test.*
 
