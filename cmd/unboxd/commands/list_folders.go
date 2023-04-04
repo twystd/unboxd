@@ -4,12 +4,18 @@ import (
 	"flag"
 	"fmt"
 	"sort"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/box/lib"
 )
 
+var ListFoldersCmd = ListFolders{
+	delay: 500 * time.Millisecond,
+}
+
 type ListFolders struct {
+	delay time.Duration
 }
 
 type folder struct {
@@ -70,7 +76,7 @@ func (cmd ListFolders) Execute(b box.Box) error {
 func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 	list := []folder{}
 
-	folders, err := listFolders(b, 0, "")
+	folders, err := listFolders(b, 0, "", cmd.delay)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +91,7 @@ func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 	return list, nil
 }
 
-func listFolders(b box.Box, folderID uint64, prefix string) ([]folder, error) {
+func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration) ([]folder, error) {
 	folders := []folder{}
 	pipe := []uint64{}
 	tail := 0
@@ -93,11 +99,13 @@ func listFolders(b box.Box, folderID uint64, prefix string) ([]folder, error) {
 	pipe = append(pipe, folderID)
 
 	for tail < len(pipe) {
+		time.Sleep(delay)
+
 		l, err := b.ListFolders(pipe[tail])
 
 		if err != nil {
 			if errx := checkpoint("./runtime/.checkpoint", pipe[tail:], folders); errx != nil {
-				fmt.Printf("*** ERROR CHECKPOINTING list-folders (%v)\n", errx)
+				warnf("list-folders", "%v", errx)
 			}
 
 			return folders, err

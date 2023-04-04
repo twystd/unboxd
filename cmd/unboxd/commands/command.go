@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/log"
 )
 
 type Command interface {
@@ -26,4 +27,10 @@ func getFileID(arg string) (uint64, error) {
 	} else {
 		return uint64(v), nil
 	}
+}
+
+func warnf(tag string, format string, args ...any) {
+	f := fmt.Sprintf("%-20v %v", tag, format)
+
+	log.Warnf(f, args...)
 }

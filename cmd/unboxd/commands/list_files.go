@@ -5,12 +5,18 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/box/lib"
 )
 
+var ListFilesCmd = ListFolders{
+	delay: 500 * time.Millisecond,
+}
+
 type ListFiles struct {
+	delay time.Duration
 }
 
 type file struct {
@@ -75,7 +81,7 @@ func (cmd ListFiles) Execute(b box.Box) error {
 }
 
 func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
-	folders, err := listFolders(b, 0, "")
+	folders, err := listFolders(b, 0, "", cmd.delay)
 	if err != nil {
 		return nil, err
 	}

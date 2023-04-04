@@ -1,6 +1,6 @@
 module github.com/twystd/unboxd
 
-go 1.17
+go 1.20
 
 require (
 	github.com/cristalhq/jwt/v4 v4.0.2

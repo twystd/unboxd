@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/cmd/unboxd/commands"
@@ -14,16 +15,18 @@ var VERSION = "v0.0.x"
 
 var options = struct {
 	credentials string
+	delay       time.Duration
 	debug       bool
 }{
 	credentials: ".credentials.json",
+	delay:       500 * time.Millisecond,
 	debug:       false,
 }
 
 var cli = []commands.Command{
-	commands.ListFolders{},
+	commands.ListFoldersCmd,
 
-	commands.ListFiles{},
+	commands.ListFilesCmd,
 	commands.UploadFile{},
 	commands.DeleteFile{},
 	commands.TagFile{},
@@ -38,6 +41,7 @@ var cli = []commands.Command{
 
 func main() {
 	flag.StringVar(&options.credentials, "credentials", options.credentials, "(required) JSON file with Box credentials")
+	flag.DurationVar(&options.delay, "delay", options.delay, "(optional) delay between multiple requests to reduce traffic to Box API")
 	flag.BoolVar(&options.debug, "debug", options.debug, "(optional) enables debug mode")
 	flag.Parse()
 
