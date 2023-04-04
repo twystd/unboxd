@@ -92,48 +92,61 @@ func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 }
 
 func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration) ([]folder, error) {
-	folders := []folder{}
-	pipe := []uint64{}
+	chkpt := "./runtime/.checkpoint"
 	tail := 0
 
-	pipe = append(pipe, folderID)
+	if pipe, folders, err := resume(chkpt); err != nil {
+		return nil, err
+	} else {
+		if len(pipe) > 0 {
+			infof("list-folders", "Resuming last operation")
+		}
 
-	for tail < len(pipe) {
-		time.Sleep(delay)
+		if len(pipe) == 0 {
+			pipe = append(pipe, folderID)
+		}
 
-		l, err := b.ListFolders(pipe[tail])
+		for tail < len(pipe) {
+			time.Sleep(delay)
 
-		if err != nil {
-			if errx := checkpoint("./runtime/.checkpoint", pipe[tail:], folders); errx != nil {
-				warnf("list-folders", "%v", errx)
+			l, err := b.ListFolders(pipe[tail])
+
+			if err != nil {
+				if errx := checkpoint(chkpt, pipe[tail:], folders); errx != nil {
+					warnf("list-folders", "%v", errx)
+				}
+
+				return folders, err
 			}
 
+			for _, f := range l {
+				path := prefix + "/" + f.Name
+				folders = append(folders, folder{
+					ID:   f.ID,
+					Name: f.Name,
+					Path: path,
+				})
+
+				pipe = append(pipe, f.ID)
+			}
+
+			tail++
+		}
+
+		// ... incomplete?
+		if len(pipe[tail:]) > 0 {
+			if err := checkpoint(chkpt, pipe[tail:], folders); err != nil {
+				return folders, err
+			} else {
+				return folders, fmt.Errorf("interrupted")
+			}
+		}
+
+		// ... complete!
+		if err := checkpoint(chkpt, []uint64{}, []folder{}); err != nil {
 			return folders, err
 		}
 
-		for _, f := range l {
-			path := prefix + "/" + f.Name
-			folders = append(folders, folder{
-				ID:   f.ID,
-				Name: f.Name,
-				Path: path,
-			})
-
-			pipe = append(pipe, f.ID)
-		}
-
-		tail++
+		return folders, nil
 	}
-
-	if len(pipe[tail:]) > 0 {
-		if err := checkpoint("./runtime/.checkpoint", pipe[tail:], folders); err != nil {
-			return folders, err
-		}
-	} else {
-		if err := checkpoint(".checkpoint", pipe[tail:], []folder{}); err != nil {
-			return folders, err
-		}
-	}
-
-	return folders, nil
 }

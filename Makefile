@@ -60,6 +60,7 @@ release: build-all
 
 debug: build
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
+#	cat runtime/.checkpoint
 
 help: build
 	$(CLI) --debug help

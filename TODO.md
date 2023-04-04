@@ -3,11 +3,14 @@
 ## IN PROGRESS
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
-      - [ ] Use logger for reporting errors, progress etc
+      - [x] Resume from last checkpoint
+      - [x] Use logger for reporting errors, progress etc
+      - [ ] Checkpoint by base file ID
+      - [ ] Store list-folders to TSV
+
       - [ ] Dedupe folders list
       - [ ] Configurable interval between requests
       - [ ] Backoff and retry on HTTP error
-      - [ ] Store list-folders to TSV
       - [ ] Store list-folders to DB
       - [ ] Store list-files to TSV
       - [ ] Store list-files to DB

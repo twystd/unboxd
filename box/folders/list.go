@@ -65,7 +65,7 @@ func List(folderID uint64, token string) ([]Folder, error) {
 			}
 		}
 
-		fmt.Printf(">> folder:%v  total:%v entries:%v  folders:%v\n", folderID, reply.TotalCount, len(reply.Entries), len(folders))
+		fmt.Printf(">> folder:%v  total:%-4v entries:%-4v  folders:%-4v\n", folderID, reply.TotalCount, len(reply.Entries), len(folders))
 
 		if reply.NextMarker == "" {
 			break
