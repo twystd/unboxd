@@ -13,9 +13,9 @@ type ListFolders struct {
 }
 
 type folder struct {
-	ID   uint64
-	Name string
-	Path string
+	ID   uint64 `json:"ID"`
+	Name string `json:"name"`
+	Path string `json:"path"`
 }
 
 func (cmd ListFolders) Name() string {
@@ -87,26 +87,43 @@ func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 
 func listFolders(b box.Box, folderID uint64, prefix string) ([]folder, error) {
 	folders := []folder{}
+	pipe := []uint64{}
+	tail := 0
 
-	l, err := b.ListFolders(folderID)
-	if err != nil {
-		return nil, err
+	pipe = append(pipe, folderID)
+
+	for tail < len(pipe) {
+		l, err := b.ListFolders(pipe[tail])
+
+		if err != nil {
+			if errx := checkpoint("./runtime/.checkpoint", pipe[tail:], folders); errx != nil {
+				fmt.Printf("*** ERROR CHECKPOINTING list-folders (%v)\n", errx)
+			}
+
+			return folders, err
+		}
+
+		for _, f := range l {
+			path := prefix + "/" + f.Name
+			folders = append(folders, folder{
+				ID:   f.ID,
+				Name: f.Name,
+				Path: path,
+			})
+
+			pipe = append(pipe, f.ID)
+		}
+
+		tail++
 	}
 
-	for _, f := range l {
-		path := prefix + "/" + f.Name
-		folders = append(folders, folder{
-			ID:   f.ID,
-			Name: f.Name,
-			Path: path,
-		})
-	}
-
-	for _, f := range folders {
-		if l, err := listFolders(b, f.ID, f.Path); err != nil {
-			return nil, err
-		} else {
-			folders = append(folders, l...)
+	if len(pipe[tail:]) > 0 {
+		if err := checkpoint("./runtime/.checkpoint", pipe[tail:], folders); err != nil {
+			return folders, err
+		}
+	} else {
+		if err := checkpoint(".checkpoint", pipe[tail:], []folder{}); err != nil {
+			return folders, err
 		}
 	}
 

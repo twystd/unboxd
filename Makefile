@@ -22,7 +22,7 @@ update:
 	go get -u github.com/google/uuid
 	go get -u github.com/youmark/pkcs8
 
-format: 
+format:
 	go fmt ./...
 
 build: format
@@ -53,13 +53,7 @@ build-all: test vet
 release: build-all
 
 debug: build
-	# dlv test github.com/uhppoted/uhppoted-httpd/system/catalog
-	# dlv exec ./bin/boxd-cli -- help
-# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
-# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/*'
-# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
-# 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
-	$(CLI) --debug --credentials .credentials.bcmt list-folders '/**'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
 
 help: build
 	$(CLI) --debug help
@@ -78,8 +72,8 @@ list-folders: build
 
 list-files: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
-	$(CLI) --debug --credentials $(CLIENT) list-files /alpha/pending
-	$(CLI) --debug --credentials $(JWT) list-files /alpha/pending
+	$(CLI) --debug --credentials $(CLIENT)      list-files /alpha/pending
+	$(CLI) --debug --credentials $(JWT)         list-files /alpha/pending
 
 upload-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) upload-file $(FILE) $(FOLDERID)
@@ -110,4 +104,3 @@ delete-template: build
 
 get-template: build
 	$(CLI) --debug --credentials $(CREDENTIALS) get-template PWA
-

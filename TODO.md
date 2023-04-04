@@ -2,6 +2,16 @@
 
 ## IN PROGRESS
 
+- [ ] Implement checkpointable pipeline that can be serialized and resumed
+      - [ ] Use logger for reporting errors, progress etc
+      - [ ] Dedupe folders list
+      - [ ] Configurable interval between requests
+      - [ ] Backoff and retry on HTTP error
+      - [ ] Store list-folders to TSV
+      - [ ] Store list-folders to DB
+      - [ ] Store list-files to TSV
+      - [ ] Store list-files to DB
+
 - [ ] Restructure so that Box is just a wrapper around the API and the complexity devolves on
       e.g. the command implementation.
       - [x] list-folders
@@ -49,18 +59,18 @@
       - (?) Cache tokens to disk
             - With encryption (? GPG)
             - --no-cache option
-    
+
 - [ ] OAuth2
-- [ ] App auth    
+- [ ] App auth
 - [ ] List folders by ID/name
 - [ ] Templates for output
 - [ ] Include CHANGELOG in CLI
       - https://bhupesh-v.github.io/why-how-add-changelog-in-your-next-cli/
       - http://keepachangelog.com/en/1.0.0
 
-- [ ] (?) Photo gallery 
+- [ ] (?) Photo gallery
       https://github.com/anvaka/panzoom
-      
+
 ## NOTES
 
 1. https://github.com/youmark/pkcs8
