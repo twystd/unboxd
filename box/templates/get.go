@@ -16,7 +16,7 @@ func Get(template TemplateKey, token string) (*Schema, error) {
 	auth := fmt.Sprintf("Bearer %s", token)
 	uri := fmt.Sprintf("https://api.box.com/2.0/metadata_templates/enterprise/%v/schema", template)
 
-	rq, err := http.NewRequest("GET", uri, nil)
+	rq, _ := http.NewRequest("GET", uri, nil)
 	rq.Header.Set("Authorization", auth)
 	rq.Header.Set("Content-Type", "application/json")
 	rq.Header.Set("Accepts", "application/json")

@@ -29,5 +29,5 @@ func NewCredentials(file string) (credentials.Credentials, error) {
 		return credentials.JWT, nil
 	}
 
-	return nil, fmt.Errorf("No valid credentials in file %v", file)
+	return nil, fmt.Errorf("no valid credentials in file %v", file)
 }

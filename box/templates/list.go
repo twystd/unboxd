@@ -14,9 +14,9 @@ func List(token string) (map[string]TemplateKey, error) {
 	}
 
 	auth := fmt.Sprintf("Bearer %s", token)
-	uri := fmt.Sprintf("https://api.box.com/2.0/metadata_templates/enterprise")
+	uri := "https://api.box.com/2.0/metadata_templates/enterprise"
 
-	rq, err := http.NewRequest("GET", uri, nil)
+	rq, _ := http.NewRequest("GET", uri, nil)
 	rq.Header.Set("Authorization", auth)
 	rq.Header.Set("Content-Type", "application/json")
 	rq.Header.Set("Accepts", "application/json")

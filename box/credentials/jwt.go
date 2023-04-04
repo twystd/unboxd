@@ -77,7 +77,7 @@ func (j *JWT) decrypt() (*rsa.PrivateKey, error) {
 	pwd := []byte(j.passphrase)
 	block, _ := pem.Decode([]byte(j.privateKey))
 	if block == nil || block.Type != "ENCRYPTED PRIVATE KEY" {
-		return nil, fmt.Errorf("Invalid private key")
+		return nil, fmt.Errorf("invalid private key")
 	}
 
 	key, err := pkcs8.ParsePKCS8PrivateKey(block.Bytes, pwd)
@@ -86,7 +86,7 @@ func (j *JWT) decrypt() (*rsa.PrivateKey, error) {
 	}
 
 	if pk, ok := key.(*rsa.PrivateKey); !ok {
-		return nil, fmt.Errorf("Invalid private key")
+		return nil, fmt.Errorf("invalid private key")
 	} else {
 		return pk, nil
 	}
@@ -131,7 +131,7 @@ func (j *JWT) authenticate(t *jwt.Token) (*AccessToken, error) {
 		"assertion":     []string{assertion},
 	}
 
-	rq, err := http.NewRequest("POST", "https://api.box.com/oauth2/token", strings.NewReader(form.Encode()))
+	rq, _ := http.NewRequest("POST", "https://api.box.com/oauth2/token", strings.NewReader(form.Encode()))
 	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rq.Header.Set("Accepts", "application/json")
 

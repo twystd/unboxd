@@ -60,7 +60,7 @@ func Upload(file string, folder string, token string) (string, error) {
 		return "", err
 	}
 
-	rq, err := http.NewRequest("POST", "https://upload.box.com/api/2.0/files/content", body)
+	rq, _ := http.NewRequest("POST", "https://upload.box.com/api/2.0/files/content", body)
 	rq.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	rq.Header.Set("Accepts", "application/json")
 	rq.Header.Set("Content-Type", writer.FormDataContentType())

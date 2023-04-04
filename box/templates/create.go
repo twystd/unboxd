@@ -15,7 +15,7 @@ func Create(name string, fields []Field, token string) (TemplateKey, error) {
 	}
 
 	auth := fmt.Sprintf("Bearer %s", token)
-	uri := fmt.Sprintf("https://api.box.com/2.0/metadata_templates/schema")
+	uri := "https://api.box.com/2.0/metadata_templates/schema"
 
 	template := struct {
 		Scope  string  `json:"scope"`
@@ -32,7 +32,7 @@ func Create(name string, fields []Field, token string) (TemplateKey, error) {
 		return "", err
 	}
 
-	rq, err := http.NewRequest("POST", uri, bytes.NewBuffer(encoded))
+	rq, _ := http.NewRequest("POST", uri, bytes.NewBuffer(encoded))
 	rq.Header.Set("Authorization", auth)
 	rq.Header.Set("Content-Type", "application/json")
 	rq.Header.Set("Accepts", "application/json")

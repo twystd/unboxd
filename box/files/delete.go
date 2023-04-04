@@ -15,7 +15,7 @@ func Delete(fileID string, token string) error {
 	auth := fmt.Sprintf("Bearer %s", token)
 	uri := fmt.Sprintf("https://api.box.com/2.0/files/%v", fileID)
 
-	rq, err := http.NewRequest("DELETE", uri, nil)
+	rq, _ := http.NewRequest("DELETE", uri, nil)
 	rq.Header.Set("Authorization", auth)
 	rq.Header.Set("Content-Type", "application/json")
 	rq.Header.Set("Accepts", "application/json")

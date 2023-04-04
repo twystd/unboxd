@@ -26,7 +26,7 @@ func get(fileID uint64, token string) (*File, error) {
 	auth := fmt.Sprintf("Bearer %s", token)
 	uri := fmt.Sprintf("https://api.box.com/2.0/files/%[1]v?fields=id,type,name,sha1,tags", fileID)
 
-	rq, err := http.NewRequest("GET", uri, nil)
+	rq, _ := http.NewRequest("GET", uri, nil)
 	rq.Header.Set("Authorization", auth)
 	rq.Header.Set("Content-Type", "application/json")
 	rq.Header.Set("Accepts", "application/json")
@@ -78,7 +78,7 @@ func put(fileID uint64, content interface{}, token string) error {
 	auth := fmt.Sprintf("Bearer %s", token)
 	uri := fmt.Sprintf("https://api.box.com/2.0/files/%[1]v?fields=id,type,name,sha1,tags", fileID)
 
-	rq, err := http.NewRequest("PUT", uri, bytes.NewBuffer(encoded))
+	rq, _ := http.NewRequest("PUT", uri, bytes.NewBuffer(encoded))
 	rq.Header.Set("Authorization", auth)
 	rq.Header.Set("Content-Type", "application/json")
 	rq.Header.Set("Accepts", "application/json")

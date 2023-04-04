@@ -31,7 +31,7 @@ func (c *Client) Authenticate() (*AccessToken, error) {
 		"box_subject_id":   []string{c.enterpriseID},
 	}
 
-	rq, err := http.NewRequest("POST", "https://api.box.com/oauth2/token", strings.NewReader(form.Encode()))
+	rq, _ := http.NewRequest("POST", "https://api.box.com/oauth2/token", strings.NewReader(form.Encode()))
 	rq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	rq.Header.Set("Accepts", "application/json")
 

@@ -8,7 +8,7 @@ FOLDERID ?= 147495046780
 FILEID ?= 903401361197
 FILE ?= ./runtime/kandinsky.jpg
 
-.DEFAULT_TARGET = build
+.DEFAULT_GOAL = build-all
 .PHONY: clean
 
 all: test      \
@@ -47,7 +47,7 @@ lint:
 	env GOOS=linux   GOARCH=amd64 staticcheck ./...
 	env GOOS=windows GOARCH=amd64 staticcheck ./...
 
-build-all: test vet
+build-all: test vet lint
 	mkdir -p dist/$(DIST)/linux
 	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/windows

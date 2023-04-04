@@ -15,8 +15,6 @@ func NewBox() Box {
 	return Box{}
 }
 
-const fetchSize = 128
-
 func (b *Box) Authenticate(credentials credentials.Credentials) error {
 	if b.token != nil && b.token.IsValid() {
 		return nil

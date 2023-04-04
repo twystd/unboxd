@@ -19,7 +19,7 @@ func List(folderID uint64, token string) ([]File, error) {
 	uri := fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,sha1,tags&limit=%[2]v&usemarker=true", folderID, fetchSize)
 
 	for {
-		rq, err := http.NewRequest("GET", uri, nil)
+		rq, _ := http.NewRequest("GET", uri, nil)
 		rq.Header.Set("Authorization", auth)
 		rq.Header.Set("Content-Type", "application/json")
 		rq.Header.Set("Accepts", "application/json")
