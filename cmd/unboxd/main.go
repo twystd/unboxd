@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
-	"github.com/twystd/unboxd/cmd/unboxd/commands"
+	"github.com/twystd/unboxd/commands"
 )
 
 var VERSION = "v0.0.x"
@@ -24,19 +24,19 @@ var options = struct {
 }
 
 var cli = []commands.Command{
-	commands.ListFoldersCmd,
+	&commands.ListFoldersCmd,
 
-	commands.ListFilesCmd,
-	commands.UploadFile{},
-	commands.DeleteFile{},
-	commands.TagFile{},
-	commands.UntagFile{},
-	commands.RetagFile{},
+	&commands.ListFilesCmd,
+	&commands.UploadFile{},
+	&commands.DeleteFile{},
+	&commands.TagFile{},
+	&commands.UntagFile{},
+	&commands.RetagFile{},
 
-	commands.ListTemplates{},
-	commands.GetTemplate{},
-	commands.CreateTemplate{},
-	commands.DeleteTemplate{},
+	&commands.ListTemplates{},
+	&commands.GetTemplate{},
+	&commands.CreateTemplate{},
+	&commands.DeleteTemplate{},
 }
 
 func main() {

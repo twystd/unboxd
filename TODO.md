@@ -5,8 +5,9 @@
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Resume from last checkpoint
       - [x] Use logger for reporting errors, progress etc
-      - [ ] Checkpoint by base file ID
       - [ ] Store list-folders to TSV
+      - [ ] --tags
+      - [ ] Checkpoint by base file ID
 
       - [ ] Dedupe folders list
       - [ ] Configurable interval between requests
