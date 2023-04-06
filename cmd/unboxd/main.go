@@ -34,6 +34,10 @@ var cli = []commands.Command{
 	&commands.GetTemplate{},
 	&commands.CreateTemplate{},
 	&commands.DeleteTemplate{},
+
+	&commands.Version{
+		Version: VERSION,
+	},
 }
 
 func main() {
@@ -57,6 +61,9 @@ func main() {
 	if cmd == nil {
 		usage()
 		os.Exit(1)
+	} else if cmd.Name() == "version" {
+		cmd.Execute(flagset, box.Box{})
+		os.Exit(0)
 	}
 
 	credentials, err := NewCredentials(options.credentials)
@@ -86,12 +93,6 @@ func usage() {
 	fmt.Println()
 }
 
-func version() {
-	fmt.Println()
-	fmt.Printf("   boxd-cli %v\n", VERSION)
-	fmt.Println()
-}
-
 func parse() (commands.Command, *flag.FlagSet, error) {
 	flagset := flag.NewFlagSet("unboxd", flag.ExitOnError)
 
@@ -100,7 +101,8 @@ func parse() (commands.Command, *flag.FlagSet, error) {
 	flagset.Parse(os.Args[1:])
 
 	args := flagset.Args()
-	if len(args) > 1 {
+
+	if len(args) > 0 {
 		for _, c := range cli {
 			if c.Name() == args[0] {
 				cmd := c

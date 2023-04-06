@@ -18,6 +18,14 @@ type Command interface {
 	Help()
 }
 
+type command struct {
+	name string
+}
+
+func (cmd command) Name() string {
+	return cmd.name
+}
+
 func clean(s string) string {
 	return regexp.MustCompile(`[\s\t]+`).ReplaceAllString(strings.ToLower(s), "")
 }

@@ -11,12 +11,17 @@ import (
 )
 
 var ListFoldersCmd = ListFolders{
+	command: command{
+		name: "list-folders",
+	},
+
 	file:  "",
 	tags:  false,
 	delay: 500 * time.Millisecond,
 }
 
 type ListFolders struct {
+	command
 	file  string
 	tags  bool
 	delay time.Duration
@@ -26,10 +31,6 @@ type folder struct {
 	ID   uint64 `json:"ID"`
 	Name string `json:"name"`
 	Path string `json:"path"`
-}
-
-func (cmd ListFolders) Name() string {
-	return "list-folders"
 }
 
 func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

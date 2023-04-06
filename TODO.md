@@ -4,7 +4,7 @@
 
 - [ ] help
 - [ ] help command
-- [ ] version
+- [x] version
 - [ ] Restructure commands with embedded struct
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed

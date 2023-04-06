@@ -63,10 +63,10 @@ debug: build
 #	cat runtime/.checkpoint
 
 help: build
-	$(CLI) --debug help
+	$(CLI) help
 
 version: build
-	$(CLI) --debug version
+	$(CLI) version
 
 list-folders: build
 	$(CLI) --debug --credentials $(CLIENT) list-folders
