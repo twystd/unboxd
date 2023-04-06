@@ -2,11 +2,18 @@
 
 ## IN PROGRESS
 
+- [ ] help
+- [ ] help command
+- [ ] version
+- [ ] Restructure commands with embedded struct
+
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Resume from last checkpoint
       - [x] Use logger for reporting errors, progress etc
       - [ ] Store list-folders to TSV
       - [ ] --tags
+      - [ ] --checkpoint-file
+      - [ ] --no-resume
       - [ ] Checkpoint by base file ID
 
       - [ ] Dedupe folders list
