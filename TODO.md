@@ -10,7 +10,8 @@
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Resume from last checkpoint
       - [x] Use logger for reporting errors, progress etc
-      - [ ] Store list-folders to TSV
+      - [x] Store list-folders to TSV
+      - [x] Fix path concatenation
       - [ ] --tags
       - [ ] --checkpoint-file
       - [ ] --no-resume

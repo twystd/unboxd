@@ -1,8 +1,11 @@
 package commands
 
 import (
+	"encoding/csv"
 	"flag"
 	"fmt"
+	"os"
+	"path/filepath"
 	"sort"
 	"time"
 
@@ -12,19 +15,18 @@ import (
 
 var ListFoldersCmd = ListFolders{
 	command: command{
-		name: "list-folders",
+		name:  "list-folders",
+		delay: 500 * time.Millisecond,
 	},
 
-	file:  "",
-	tags:  false,
-	delay: 500 * time.Millisecond,
+	file: "",
+	tags: false,
 }
 
 type ListFolders struct {
 	command
-	file  string
-	tags  bool
-	delay time.Duration
+	file string
+	tags bool
 }
 
 type folder struct {
@@ -47,7 +49,7 @@ func (cmd ListFolders) Help() {
 func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 	folder := ""
 
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 	if len(args) > 0 {
 		folder = args[0]
 	}
@@ -64,8 +66,34 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
 	if cmd.file != "" {
-		infof("list-folders", "saving %v folders to TSV file %v\n", len(folders), cmd.file)
+		return cmd.save(folders)
+	} else {
+		return cmd.print(folders)
 	}
+}
+
+func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
+	list := []folder{}
+
+	folders, err := listFolders(b, 0, "", cmd.delay)
+	if err != nil {
+		return nil, err
+	}
+
+	g := lib.NewGlob(glob)
+	for _, f := range folders {
+		if g.Match(f.Path) {
+			list = append(list, f)
+		}
+	}
+
+	return list, nil
+}
+
+func (cmd ListFolders) print(folders []folder) error {
+	infof("list-folders", "saving %v folders to TSV file %v\n", len(folders), cmd.file)
+
+	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
 	widths := []int{0, 0}
 	table := [][2]string{}
@@ -93,22 +121,30 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 	return nil
 }
 
-func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
-	list := []folder{}
+func (cmd ListFolders) save(folders []folder) error {
+	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
-	folders, err := listFolders(b, 0, "", cmd.delay)
-	if err != nil {
-		return nil, err
+	records := [][]string{
+		[]string{"ID", "Path"},
 	}
 
-	g := lib.NewGlob(glob)
 	for _, f := range folders {
-		if g.Match(f.Path) {
-			list = append(list, f)
-		}
+		id := fmt.Sprintf("%v", f.ID)
+		path := fmt.Sprintf("%v", f.Path)
+
+		records = append(records, []string{id, path})
 	}
 
-	return list, nil
+	if err := os.MkdirAll(filepath.Dir(cmd.file), 0750); err != nil {
+		return err
+	} else if f, err := os.Create(cmd.file); err != nil {
+		return err
+	} else {
+		w := csv.NewWriter(f)
+		w.WriteAll(records)
+
+		return w.Error()
+	}
 }
 
 func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration) ([]folder, error) {
@@ -123,13 +159,14 @@ func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration)
 		}
 
 		if len(pipe) == 0 {
-			pipe = append(pipe, folderID)
+			pipe = append(pipe, QueueItem{ID: folderID, Path: prefix})
 		}
 
 		for tail < len(pipe) {
 			time.Sleep(delay)
 
-			l, err := b.ListFolders(pipe[tail])
+			item := pipe[tail]
+			l, err := b.ListFolders(item.ID)
 
 			if err != nil {
 				if errx := checkpoint(chkpt, pipe[tail:], folders); errx != nil {
@@ -140,14 +177,14 @@ func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration)
 			}
 
 			for _, f := range l {
-				path := prefix + "/" + f.Name
+				path := item.Path + "/" + f.Name
 				folders = append(folders, folder{
 					ID:   f.ID,
 					Name: f.Name,
 					Path: path,
 				})
 
-				pipe = append(pipe, f.ID)
+				pipe = append(pipe, QueueItem{ID: f.ID, Path: path})
 			}
 
 			tail++
@@ -163,7 +200,7 @@ func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration)
 		}
 
 		// ... complete!
-		if err := checkpoint(chkpt, []uint64{}, []folder{}); err != nil {
+		if err := checkpoint(chkpt, []QueueItem{}, []folder{}); err != nil {
 			return folders, err
 		}
 

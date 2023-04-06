@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/log"
@@ -19,7 +20,8 @@ type Command interface {
 }
 
 type command struct {
-	name string
+	name  string
+	delay time.Duration
 }
 
 func (cmd command) Name() string {

@@ -8,11 +8,18 @@ import (
 	"path/filepath"
 )
 
-func checkpoint(file string, queue []uint64, folders []folder) error {
-	checkpoint := struct {
-		Queue   []uint64 `json:"queue"`
-		Folders []folder `json:"folders"`
-	}{
+type Checkpoint struct {
+	Queue   []QueueItem `json:"queue"`
+	Folders []folder    `json:"folders"`
+}
+
+type QueueItem struct {
+	ID   uint64 `json:"ID"`
+	Path string `json:"path"`
+}
+
+func checkpoint(file string, queue []QueueItem, folders []folder) error {
+	checkpoint := Checkpoint{
 		Queue:   queue,
 		Folders: folders,
 	}
@@ -30,16 +37,13 @@ func checkpoint(file string, queue []uint64, folders []folder) error {
 	return nil
 }
 
-func resume(file string) ([]uint64, []folder, error) {
-	checkpoint := struct {
-		Queue   []uint64 `json:"queue"`
-		Folders []folder `json:"folders"`
-	}{}
+func resume(file string) ([]QueueItem, []folder, error) {
+	checkpoint := Checkpoint{}
 
 	if _, err := os.Stat(file); err != nil && !errors.Is(err, fs.ErrNotExist) {
 		return nil, nil, err
 	} else if err != nil {
-		return []uint64{}, []folder{}, nil
+		return []QueueItem{}, []folder{}, nil
 	}
 
 	if bytes, err := os.ReadFile(file); err != nil {

@@ -3,11 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/commands"
+	"github.com/twystd/unboxd/log"
 )
 
 var VERSION = "v0.0.x"
@@ -64,6 +64,10 @@ func main() {
 	} else if cmd.Name() == "version" {
 		cmd.Execute(flagset, box.Box{})
 		os.Exit(0)
+	}
+
+	if options.debug {
+		log.SetLevel("debug")
 	}
 
 	credentials, err := NewCredentials(options.credentials)

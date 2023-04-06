@@ -11,7 +11,7 @@ import (
 	"github.com/twystd/unboxd/box/lib"
 )
 
-var ListFilesCmd = ListFolders{
+var ListFilesCmd = ListFiles{
 	delay: 500 * time.Millisecond,
 }
 
@@ -28,6 +28,9 @@ type file struct {
 
 func (cmd ListFiles) Name() string {
 	return "list-files"
+}
+
+func (cmd ListFiles) Help() {
 }
 
 func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

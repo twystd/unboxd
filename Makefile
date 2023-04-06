@@ -60,7 +60,7 @@ release: build-all
 
 debug: build
 	$(CLI) --debug --credentials $(CLIENT) list-folders --file "./runtime/folders.tsv" '/**'
-#	cat runtime/.checkpoint
+	cat ./runtime/folders.tsv
 
 help: build
 	$(CLI) help
