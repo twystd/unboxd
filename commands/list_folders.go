@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/twystd/unboxd/box"
@@ -30,9 +31,10 @@ type ListFolders struct {
 }
 
 type folder struct {
-	ID   uint64 `json:"ID"`
-	Name string `json:"name"`
-	Path string `json:"path"`
+	ID   uint64   `json:"ID"`
+	Name string   `json:"name"`
+	Path string   `json:"path"`
+	Tags []string `json:"tags,omitempty"`
 }
 
 func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
@@ -95,12 +97,15 @@ func (cmd ListFolders) print(folders []folder) error {
 
 	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
-	widths := []int{0, 0}
-	table := [][2]string{}
+	widths := []int{0, 0, 0}
+	table := [][]string{
+		[]string{"ID", "Path", "Tags"},
+	}
 
 	for _, f := range folders {
 		id := fmt.Sprintf("%v", f.ID)
 		path := fmt.Sprintf("%v", f.Path)
+		tags := fmt.Sprintf("%v", strings.Join(f.Tags, ";"))
 
 		if N := len(id); N > widths[0] {
 			widths[0] = N
@@ -110,12 +115,30 @@ func (cmd ListFolders) print(folders []folder) error {
 			widths[1] = N
 		}
 
-		table = append(table, [2]string{id, path})
+		if cmd.tags {
+			if N := len(tags); N > widths[2] {
+				widths[2] = N
+			}
+		}
+
+		table = append(table, []string{id, path, tags})
 	}
 
-	format := fmt.Sprintf("%%-%vv  %%-%vv\n", widths[0], widths[1])
-	for _, row := range table {
-		fmt.Printf(format, row[0], row[1])
+	var format string
+	if cmd.tags {
+		format = fmt.Sprintf("%%-%vv  %%-%vv  %%-%vv\n", widths[0], widths[1], widths[2])
+	} else {
+		format = fmt.Sprintf("%%-%vv  %%-%vv\n", widths[0], widths[1])
+	}
+
+	if cmd.tags {
+		for _, row := range table {
+			fmt.Printf(format, row[0], row[1], row[2])
+		}
+	} else {
+		for _, row := range table {
+			fmt.Printf(format, row[0], row[1])
+		}
 	}
 
 	return nil
@@ -128,11 +151,22 @@ func (cmd ListFolders) save(folders []folder) error {
 		[]string{"ID", "Path"},
 	}
 
+	if cmd.tags {
+		records = [][]string{
+			[]string{"ID", "Path", "Tags"},
+		}
+	}
+
 	for _, f := range folders {
 		id := fmt.Sprintf("%v", f.ID)
 		path := fmt.Sprintf("%v", f.Path)
+		tags := fmt.Sprintf("%v", strings.Join(f.Tags, ";"))
 
-		records = append(records, []string{id, path})
+		if cmd.tags {
+			records = append(records, []string{id, path, tags})
+		} else {
+			records = append(records, []string{id, path})
+		}
 	}
 
 	if err := os.MkdirAll(filepath.Dir(cmd.file), 0750); err != nil {
@@ -181,6 +215,7 @@ func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration)
 				folders = append(folders, folder{
 					ID:   f.ID,
 					Name: f.Name,
+					Tags: f.Tags,
 					Path: path,
 				})
 

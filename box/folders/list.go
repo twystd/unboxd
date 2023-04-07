@@ -16,7 +16,7 @@ func List(folderID uint64, token string) ([]Folder, error) {
 		Timeout: 60 * time.Second,
 	}
 
-	uri := fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,sha1&limit=%[2]v&usemarker=true", folderID, fetchSize)
+	uri := fmt.Sprintf("https://api.box.com/2.0/folders/%[1]v/items?fields=id,type,name,tags,sha1&limit=%[2]v&usemarker=true", folderID, fetchSize)
 
 	for {
 		rq, _ := http.NewRequest("GET", uri, nil)
@@ -43,9 +43,10 @@ func List(folderID uint64, token string) ([]Folder, error) {
 		reply := struct {
 			TotalCount int `json:"total_count"`
 			Entries    []struct {
-				Type string `json:"type"`
-				ID   string `json:"id"`
-				Name string `json:"name"`
+				Type string   `json:"type"`
+				ID   string   `json:"id"`
+				Name string   `json:"name"`
+				Tags []string `json:"tags"`
 			} `json:"entries"`
 			NextMarker string `json:"next_marker,omitempty"`
 		}{}
@@ -60,6 +61,7 @@ func List(folderID uint64, token string) ([]Folder, error) {
 					folders = append(folders, Folder{
 						ID:   id,
 						Name: e.Name,
+						Tags: e.Tags,
 					})
 				}
 			}

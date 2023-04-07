@@ -32,7 +32,7 @@ var cli = []commands.Command{
 
 	&commands.ListTemplates{},
 	&commands.GetTemplate{},
-	&commands.CreateTemplate{},
+	&commands.CreateTemplateCmd,
 	&commands.DeleteTemplate{},
 
 	&commands.Version{

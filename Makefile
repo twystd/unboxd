@@ -59,7 +59,8 @@ build-all: test vet lint
 release: build-all
 
 debug: build
-	$(CLI) --debug --credentials $(CLIENT) list-folders --file "./runtime/folders.tsv" '/**'
+	$(CLI) --debug --credentials $(CLIENT) list-folders --tags '/**'
+	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --file "./runtime/folders.tsv" '/**'
 	cat ./runtime/folders.tsv
 
 help: build

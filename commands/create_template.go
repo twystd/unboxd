@@ -6,16 +6,21 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/box/templates"
 )
 
-type CreateTemplate struct {
+var CreateTemplateCmd = CreateTemplate{
+	command: command{
+		name:  "create-template",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd CreateTemplate) Name() string {
-	return "create-template"
+type CreateTemplate struct {
+	command
 }
 
 func (cmd *CreateTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

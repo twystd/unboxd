@@ -12,7 +12,7 @@
       - [x] Use logger for reporting errors, progress etc
       - [x] Store list-folders to TSV
       - [x] Fix path concatenation
-      - [ ] --tags
+      - [x] --tags
       - [ ] --checkpoint-file
       - [ ] --no-resume
       - [ ] Checkpoint by base file ID
@@ -34,7 +34,7 @@
 
 
 - [ ] glob
-      - [ ] Rework to rather match on tokenised strings
+      - [ ] Rework to rather match on tokenised strings/DFA
       - [ ] `/alpha/**/today`
 
 - [ ] list-folders
