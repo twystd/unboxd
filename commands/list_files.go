@@ -18,11 +18,13 @@ var ListFilesCmd = ListFiles{
 	},
 
 	checkpoint: ".checkpoint",
+	restart:    false,
 }
 
 type ListFiles struct {
 	command
 	checkpoint string
+	restart    bool
 }
 
 type file struct {
@@ -38,6 +40,7 @@ func (cmd ListFiles) Help() {
 func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "(optional) specifies the path for the checkpoint file")
 	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "(optional) delay between multiple requests to reduce traffic to Box API")
+	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "(optional) retrieves folder list from the beginning")
 
 	return flagset
 }
@@ -93,7 +96,7 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 }
 
 func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
-	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay)
+	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart)
 	if err != nil {
 		return nil, err
 	}

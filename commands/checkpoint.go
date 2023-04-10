@@ -3,7 +3,6 @@ package commands
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -20,7 +19,6 @@ type QueueItem struct {
 }
 
 func checkpoint(file string, queue []QueueItem, folders []folder) error {
-	fmt.Printf(">>>>>>>>>>>>> CHECKPOINT: %v\n", file)
 	checkpoint := Checkpoint{
 		Queue:   queue,
 		Folders: folders,
@@ -41,12 +39,10 @@ func checkpoint(file string, queue []QueueItem, folders []folder) error {
 	return nil
 }
 
-func resume(file string) ([]QueueItem, []folder, error) {
-	fmt.Printf(">>>>>>>>>>>>> RESUME: %v\n", file)
-
+func resume(file string, restart bool) ([]QueueItem, []folder, error) {
 	checkpoint := Checkpoint{}
 
-	if file != "" {
+	if file != "" && !restart {
 		if _, err := os.Stat(file); err != nil && !errors.Is(err, fs.ErrNotExist) {
 			return nil, nil, err
 		} else if err != nil {

@@ -14,7 +14,8 @@
       - [x] Fix path concatenation
       - [x] --tags
       - [x] --checkpoint-file
-      - [ ] --no-resume
+      - [x] --no-resume
+      - [ ] list-files
       - (?) Default checkpoint by account ID + base file ID
 
       - [ ] Dedupe folders list
