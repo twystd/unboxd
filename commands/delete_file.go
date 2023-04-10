@@ -6,15 +6,20 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 )
 
-type DeleteFile struct {
+var DeleteFileCmd = DeleteFile{
+	command: command{
+		name:  "delete-file",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd DeleteFile) Name() string {
-	return "delete-file"
+type DeleteFile struct {
+	command
 }
 
 func (cmd *DeleteFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

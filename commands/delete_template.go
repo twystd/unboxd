@@ -4,16 +4,21 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/box/templates"
 )
 
-type DeleteTemplate struct {
+var DeleteTemplateCmd = DeleteTemplate{
+	command: command{
+		name:  "delete-template",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd DeleteTemplate) Name() string {
-	return "delete-template"
+type DeleteTemplate struct {
+	command
 }
 
 func (cmd *DeleteTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

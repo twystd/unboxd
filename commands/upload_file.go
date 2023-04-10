@@ -4,15 +4,20 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 )
 
-type UploadFile struct {
+var UploadFileCmd = UploadFile{
+	command: command{
+		name:  "upload-file",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd UploadFile) Name() string {
-	return "upload-file"
+type UploadFile struct {
+	command
 }
 
 func (cmd *UploadFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

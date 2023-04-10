@@ -2,10 +2,10 @@
 
 ## IN PROGRESS
 
-- [ ] help
+- [x] help
 - [ ] help command
 - [x] version
-- [ ] Restructure commands with embedded struct
+- [x] Restructure commands with embedded struct
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Resume from last checkpoint

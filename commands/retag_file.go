@@ -4,15 +4,20 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 )
 
-type RetagFile struct {
+var RetagFileCmd = TagFile{
+	command: command{
+		name:  "retag-file",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd RetagFile) Name() string {
-	return "retag-file"
+type RetagFile struct {
+	command
 }
 
 func (cmd *RetagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

@@ -4,15 +4,20 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 )
 
-type UntagFile struct {
+var UntagFileCmd = TagFile{
+	command: command{
+		name:  "untag-file",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd UntagFile) Name() string {
-	return "untag-file"
+type UntagFile struct {
+	command
 }
 
 func (cmd *UntagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

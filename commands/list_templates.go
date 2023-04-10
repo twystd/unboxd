@@ -3,16 +3,21 @@ package commands
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/box/templates"
 )
 
-type ListTemplates struct {
+var ListTemplatesCmd = ListTemplates{
+	command: command{
+		name:  "list-templates",
+		delay: 500 * time.Millisecond,
+	},
 }
 
-func (cmd ListTemplates) Name() string {
-	return "list-templates"
+type ListTemplates struct {
+	command
 }
 
 func (cmd *ListTemplates) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

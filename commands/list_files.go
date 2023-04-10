@@ -12,13 +12,17 @@ import (
 )
 
 var ListFilesCmd = ListFiles{
+	command: command{
+		name:  "list-files",
+		delay: 500 * time.Millisecond,
+	},
+
 	checkpoint: ".checkpoint",
-	delay:      500 * time.Millisecond,
 }
 
 type ListFiles struct {
+	command
 	checkpoint string
-	delay      time.Duration
 }
 
 type file struct {
@@ -26,10 +30,6 @@ type file struct {
 	FileName string
 	FilePath string
 	Tags     []string
-}
-
-func (cmd ListFiles) Name() string {
-	return "list-files"
 }
 
 func (cmd ListFiles) Help() {

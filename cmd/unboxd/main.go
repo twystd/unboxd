@@ -24,16 +24,16 @@ var cli = []commands.Command{
 	&commands.ListFoldersCmd,
 
 	&commands.ListFilesCmd,
-	&commands.UploadFile{},
-	&commands.DeleteFile{},
-	&commands.TagFile{},
-	&commands.UntagFile{},
-	&commands.RetagFile{},
+	&commands.UploadFileCmd,
+	&commands.DeleteFileCmd,
+	&commands.TagFileCmd,
+	&commands.UntagFileCmd,
+	&commands.RetagFileCmd,
 
-	&commands.ListTemplates{},
-	&commands.GetTemplate{},
+	&commands.ListTemplatesCmd,
+	&commands.GetTemplateCmd,
 	&commands.CreateTemplateCmd,
-	&commands.DeleteTemplate{},
+	&commands.DeleteTemplateCmd,
 
 	&commands.Version{
 		Version: VERSION,
