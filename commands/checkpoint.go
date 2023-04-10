@@ -3,6 +3,7 @@ package commands
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -19,38 +20,47 @@ type QueueItem struct {
 }
 
 func checkpoint(file string, queue []QueueItem, folders []folder) error {
+	fmt.Printf(">>>>>>>>>>>>> CHECKPOINT: %v\n", file)
 	checkpoint := Checkpoint{
 		Queue:   queue,
 		Folders: folders,
 	}
 
-	if err := os.MkdirAll(filepath.Dir(file), 0750); err != nil && !os.IsExist(err) {
-		return err
-	}
+	if file != "" {
+		if err := os.MkdirAll(filepath.Dir(file), 0750); err != nil && !os.IsExist(err) {
+			return err
+		}
 
-	if bytes, err := json.MarshalIndent(checkpoint, "", "  "); err != nil {
-		return err
-	} else if err := os.WriteFile(file, bytes, 0666); err != nil {
-		return err
+		if bytes, err := json.MarshalIndent(checkpoint, "", "  "); err != nil {
+			return err
+		} else if err := os.WriteFile(file, bytes, 0666); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func resume(file string) ([]QueueItem, []folder, error) {
+	fmt.Printf(">>>>>>>>>>>>> RESUME: %v\n", file)
+
 	checkpoint := Checkpoint{}
 
-	if _, err := os.Stat(file); err != nil && !errors.Is(err, fs.ErrNotExist) {
-		return nil, nil, err
-	} else if err != nil {
-		return []QueueItem{}, []folder{}, nil
+	if file != "" {
+		if _, err := os.Stat(file); err != nil && !errors.Is(err, fs.ErrNotExist) {
+			return nil, nil, err
+		} else if err != nil {
+			return []QueueItem{}, []folder{}, nil
+		}
+
+		if bytes, err := os.ReadFile(file); err != nil {
+			return nil, nil, err
+		} else if err := json.Unmarshal(bytes, &checkpoint); err != nil {
+			return nil, nil, err
+		} else {
+			return checkpoint.Queue, checkpoint.Folders, nil
+		}
 	}
 
-	if bytes, err := os.ReadFile(file); err != nil {
-		return nil, nil, err
-	} else if err := json.Unmarshal(bytes, &checkpoint); err != nil {
-		return nil, nil, err
-	} else {
-		return checkpoint.Queue, checkpoint.Folders, nil
-	}
+	return []QueueItem{}, []folder{}, nil
 }

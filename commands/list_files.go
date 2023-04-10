@@ -12,11 +12,13 @@ import (
 )
 
 var ListFilesCmd = ListFiles{
-	delay: 500 * time.Millisecond,
+	checkpoint: ".checkpoint",
+	delay:      500 * time.Millisecond,
 }
 
 type ListFiles struct {
-	delay time.Duration
+	checkpoint string
+	delay      time.Duration
 }
 
 type file struct {
@@ -34,6 +36,9 @@ func (cmd ListFiles) Help() {
 }
 
 func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
+	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "(optional) specifies the path for the checkpoint file")
+	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "(optional) delay between multiple requests to reduce traffic to Box API")
+
 	return flagset
 }
 
@@ -88,7 +93,7 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 }
 
 func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
-	folders, err := listFolders(b, 0, "", cmd.delay)
+	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay)
 	if err != nil {
 		return nil, err
 	}

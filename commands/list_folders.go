@@ -20,14 +20,16 @@ var ListFoldersCmd = ListFolders{
 		delay: 500 * time.Millisecond,
 	},
 
-	file: "",
-	tags: false,
+	file:       "",
+	checkpoint: ".checkpoint",
+	tags:       false,
 }
 
 type ListFolders struct {
 	command
-	file string
-	tags bool
+	file       string
+	checkpoint string
+	tags       bool
 }
 
 type folder struct {
@@ -40,6 +42,7 @@ type folder struct {
 func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "(optional) include tags in folder information")
 	flagset.StringVar(&cmd.file, "file", cmd.file, "(optional) TSV file to which to write folder information")
+	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "(optional) specifies the path for the checkpoint file")
 	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "(optional) delay between multiple requests to reduce traffic to Box API")
 
 	return flagset
@@ -77,7 +80,7 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 	list := []folder{}
 
-	folders, err := listFolders(b, 0, "", cmd.delay)
+	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay)
 	if err != nil {
 		return nil, err
 	}
@@ -181,8 +184,7 @@ func (cmd ListFolders) save(folders []folder) error {
 	}
 }
 
-func listFolders(b box.Box, folderID uint64, prefix string, delay time.Duration) ([]folder, error) {
-	chkpt := "./runtime/.checkpoint"
+func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration) ([]folder, error) {
 	tail := 0
 
 	if pipe, folders, err := resume(chkpt); err != nil {

@@ -13,9 +13,9 @@
       - [x] Store list-folders to TSV
       - [x] Fix path concatenation
       - [x] --tags
-      - [ ] --checkpoint-file
+      - [x] --checkpoint-file
       - [ ] --no-resume
-      - [ ] Checkpoint by base file ID
+      - (?) Default checkpoint by account ID + base file ID
 
       - [ ] Dedupe folders list
       - [ ] Configurable interval between requests

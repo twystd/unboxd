@@ -4,7 +4,7 @@ runtime
 dist
 yacc
 .credentials*
+.checkpoint*
 bcmt.log
 folders.bcmt
 box/credentials/auth_test.*
-

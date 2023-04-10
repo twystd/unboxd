@@ -59,8 +59,8 @@ build-all: test vet lint
 release: build-all
 
 debug: build
-	$(CLI) --debug --credentials $(CLIENT) list-folders --tags '/**'
-	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --file "./runtime/folders.tsv" '/**'
+#	$(CLI) --debug --credentials $(CLIENT) list-folders --tags '/**'
+	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --checkpoint ./runtime/.checkpoint --file "./runtime/folders.tsv" '/**'
 	cat ./runtime/folders.tsv
 
 help: build
@@ -70,13 +70,15 @@ version: build
 	$(CLI) version
 
 list-folders: build
+	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
 	$(CLI) --debug --credentials $(CLIENT) list-folders
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
+	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha'
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/'
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
 	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/pending'
-	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
+	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --file "./runtime/folders.tsv" '/**'
 
 list-files: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
