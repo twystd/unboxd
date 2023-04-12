@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/twystd/unboxd/log"
 )
 
 type File struct {
@@ -103,4 +105,10 @@ func put(fileID uint64, content interface{}, token string) error {
 	}
 
 	return nil
+}
+
+func debugf(tag string, format string, args ...any) {
+	f := fmt.Sprintf("%-20v %v", tag, format)
+
+	log.Debugf(f, args...)
 }

@@ -11,6 +11,7 @@ import (
 type Checkpoint struct {
 	Queue   []QueueItem `json:"queue"`
 	Folders []folder    `json:"folders"`
+	Files   []file      `json:"files"`
 }
 
 type QueueItem struct {
@@ -18,10 +19,11 @@ type QueueItem struct {
 	Path string `json:"path"`
 }
 
-func checkpoint(file string, queue []QueueItem, folders []folder) error {
+func checkpoint(file string, queue []QueueItem, folders []folder, files []file) error {
 	checkpoint := Checkpoint{
 		Queue:   queue,
 		Folders: folders,
+		Files:   files,
 	}
 
 	if file != "" {
@@ -39,24 +41,24 @@ func checkpoint(file string, queue []QueueItem, folders []folder) error {
 	return nil
 }
 
-func resume(file string, restart bool) ([]QueueItem, []folder, error) {
+func resume(chkpt string, restart bool) ([]QueueItem, []folder, []file, error) {
 	checkpoint := Checkpoint{}
 
-	if file != "" && !restart {
-		if _, err := os.Stat(file); err != nil && !errors.Is(err, fs.ErrNotExist) {
-			return nil, nil, err
+	if chkpt != "" && !restart {
+		if _, err := os.Stat(chkpt); err != nil && !errors.Is(err, fs.ErrNotExist) {
+			return nil, nil, nil, err
 		} else if err != nil {
-			return []QueueItem{}, []folder{}, nil
+			return []QueueItem{}, []folder{}, []file{}, nil
 		}
 
-		if bytes, err := os.ReadFile(file); err != nil {
-			return nil, nil, err
+		if bytes, err := os.ReadFile(chkpt); err != nil {
+			return nil, nil, nil, err
 		} else if err := json.Unmarshal(bytes, &checkpoint); err != nil {
-			return nil, nil, err
+			return nil, nil, nil, err
 		} else {
-			return checkpoint.Queue, checkpoint.Folders, nil
+			return checkpoint.Queue, checkpoint.Folders, checkpoint.Files, nil
 		}
 	}
 
-	return []QueueItem{}, []folder{}, nil
+	return []QueueItem{}, []folder{}, []file{}, nil
 }

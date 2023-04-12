@@ -216,7 +216,7 @@ func (cmd ListFolders) save(folders []folder) error {
 func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool) ([]folder, error) {
 	tail := 0
 
-	if pipe, folders, err := resume(chkpt, restart); err != nil {
+	if pipe, folders, _, err := resume(chkpt, restart); err != nil {
 		return nil, err
 	} else {
 		if len(pipe) > 0 {
@@ -231,26 +231,24 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 			time.Sleep(delay)
 
 			item := pipe[tail]
-			l, err := b.ListFolders(item.ID)
-
-			if err != nil {
-				if errx := checkpoint(chkpt, pipe[tail:], folders); errx != nil {
+			if l, err := b.ListFolders(item.ID); err != nil {
+				if errx := checkpoint(chkpt, pipe[tail:], folders, []file{}); errx != nil {
 					warnf("list-folders", "%v", errx)
 				}
 
 				return folders, err
-			}
+			} else {
+				for _, f := range l {
+					path := item.Path + "/" + f.Name
+					folders = append(folders, folder{
+						ID:   f.ID,
+						Name: f.Name,
+						Tags: f.Tags,
+						Path: path,
+					})
 
-			for _, f := range l {
-				path := item.Path + "/" + f.Name
-				folders = append(folders, folder{
-					ID:   f.ID,
-					Name: f.Name,
-					Tags: f.Tags,
-					Path: path,
-				})
-
-				pipe = append(pipe, QueueItem{ID: f.ID, Path: path})
+					pipe = append(pipe, QueueItem{ID: f.ID, Path: path})
+				}
 			}
 
 			tail++
@@ -258,7 +256,7 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 
 		// ... incomplete?
 		if len(pipe[tail:]) > 0 {
-			if err := checkpoint(chkpt, pipe[tail:], folders); err != nil {
+			if err := checkpoint(chkpt, pipe[tail:], folders, []file{}); err != nil {
 				return folders, err
 			} else {
 				return folders, fmt.Errorf("interrupted")
@@ -266,7 +264,7 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 		}
 
 		// ... complete!
-		if err := checkpoint(chkpt, []QueueItem{}, []folder{}); err != nil {
+		if err := checkpoint(chkpt, []QueueItem{}, []folder{}, []file{}); err != nil {
 			return folders, err
 		}
 

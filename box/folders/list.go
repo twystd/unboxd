@@ -67,7 +67,7 @@ func List(folderID uint64, token string) ([]Folder, error) {
 			}
 		}
 
-		debugf("list", "folder:%v  total:%-4v entries:%-4v  folders:%-4v\n", folderID, reply.TotalCount, len(reply.Entries), len(folders))
+		debugf("folders", "folder:%v  total:%-4v entries:%-4v  folders:%-4v\n", folderID, reply.TotalCount, len(reply.Entries), len(folders))
 
 		if reply.NextMarker == "" {
 			break

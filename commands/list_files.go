@@ -78,20 +78,16 @@ func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
-	args := flagset.Args()[1:]
-	if len(args) < 1 {
-		return fmt.Errorf("missing folder argument")
+	glob := ""
+
+	args := flagset.Args()
+	if len(args) > 0 {
+		glob = args[0]
 	}
 
-	folder := args[0]
-
-	files, err := cmd.exec(b, folder)
+	files, err := cmd.exec(b, glob)
 	if err != nil {
 		return err
-	}
-
-	if len(files) == 0 {
-		return fmt.Errorf("no files")
 	}
 
 	sort.Slice(files, func(i, j int) bool { return files[i].FileName < files[j].FileName })
@@ -128,26 +124,15 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 }
 
 func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
-	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart)
+	list := []file{}
+
+	folders, err := listFiles(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart)
 	if err != nil {
 		return nil, err
 	}
 
-	files := []file{}
-
+	g := lib.NewGlob(glob)
 	for _, f := range folders {
-		l, err := listFiles(b, f.ID, f.Path)
-		if err != nil {
-			return nil, err
-		}
-
-		files = append(files, l...)
-	}
-
-	list := []file{}
-
-	g := lib.NewGlob(glob + "/")
-	for _, f := range files {
 		if g.Match(f.FilePath) {
 			list = append(list, f)
 		}
@@ -156,22 +141,86 @@ func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
 	return list, nil
 }
 
-func listFiles(b box.Box, folderID uint64, prefix string) ([]file, error) {
-	files := []file{}
-
-	l, err := b.ListFiles(folderID)
+func listFiles(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool) ([]file, error) {
+	pipe, folders, files, err := resume(chkpt, restart)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, f := range l {
-		path := prefix + "/" + f.Name
-		files = append(files, file{
-			ID:       f.ID,
-			FileName: f.Name,
-			FilePath: path,
-			Tags:     f.Tags,
-		})
+	if len(pipe) > 0 {
+		infof("list-files", "Resuming last operation")
+	} else {
+		pipe = append(pipe, QueueItem{ID: folderID, Path: prefix})
+	}
+
+	count := 0
+	tail := 0
+	for tail < len(pipe) {
+		time.Sleep(delay)
+
+		item := pipe[tail]
+
+		// get files for current folder
+		if l, err := b.ListFiles(item.ID); err != nil {
+			if errx := checkpoint(chkpt, pipe[tail:], folders, files); errx != nil {
+				warnf("list-files", "%v", errx)
+			}
+
+			return files, err
+		} else {
+			for _, f := range l {
+				path := prefix + "/" + f.Name
+				files = append(files, file{
+					ID:       f.ID,
+					FileName: f.Name,
+					FilePath: path,
+					Tags:     f.Tags,
+				})
+			}
+		}
+
+		// get subfolders for current folder
+		if l, err := b.ListFolders(item.ID); err != nil {
+			if errx := checkpoint(chkpt, pipe[tail:], folders, files); errx != nil {
+				warnf("list-files", "%v", errx)
+			}
+
+			return files, err
+		} else {
+			for _, f := range l {
+				path := item.Path + "/" + f.Name
+				folders = append(folders, folder{
+					ID:   f.ID,
+					Name: f.Name,
+					Tags: f.Tags,
+					Path: path,
+				})
+
+				pipe = append(pipe, QueueItem{ID: f.ID, Path: path})
+			}
+		}
+
+		if count > 5 {
+			break
+		}
+
+		count++
+
+		tail++
+	}
+
+	// ... incomplete?
+	if len(pipe[tail:]) > 0 {
+		if err := checkpoint(chkpt, pipe[tail:], folders, files); err != nil {
+			return files, err
+		} else {
+			return files, fmt.Errorf("interrupted")
+		}
+	}
+
+	// ... complete!
+	if err := checkpoint(chkpt, []QueueItem{}, []folder{}, []file{}); err != nil {
+		return files, err
 	}
 
 	return files, nil

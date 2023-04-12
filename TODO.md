@@ -30,12 +30,18 @@
       - [x] --tags
       - [x] --checkpoint-file
       - [x] --no-resume
-      - [ ] list-files
-      - [ ] Store list-files to TSV
+      - [x] list-files
+      - [ ] --max
       - [ ] Dedupe folders list
       - [ ] Dedupe files list
+      - [ ] Store list-files to TSV
       - [ ] Include account ID + base file ID in checkpoint and verify on resume
+      - [ ] Include command in checkpoint and verify on resume
       - [ ] Don't recurse into folders that can't match the glob
+      - [ ] Move delay to end of loop
+      - [ ] Checkpoint on SIGHUP
+      - (?) Checkpoint on CTRL-C
+      - [ ] SIGINFO
 
       - [ ] Configurable interval between requests
       - [ ] Backoff and retry on HTTP error
