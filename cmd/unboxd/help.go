@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/twystd/unboxd/box"
 )
 
 type Help struct {
@@ -19,7 +21,7 @@ func (h *Help) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 func (h Help) Help() {
 }
 
-func (h Help) Execute(flagset *flag.FlagSet) error {
+func (h Help) Execute(flagset *flag.FlagSet, box box.Box) error {
 	for _, c := range cli {
 		if c.Name() == flagset.Arg(0) {
 			c.Help()

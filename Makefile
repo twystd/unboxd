@@ -9,7 +9,10 @@ FILEID ?= 903401361197
 FILE ?= ./runtime/kandinsky.jpg
 
 .DEFAULT_GOAL = build-all
+
 .PHONY: clean
+.PHONY: update
+.PHONY: format
 
 all: test      \
 	 benchmark \
@@ -59,12 +62,15 @@ build-all: test vet lint
 release: build-all
 
 debug: build
+	$(CLI) help
+	$(CLI) help list-folders
 #	$(CLI) --debug --credentials $(CLIENT) list-folders --tags '/**'
-	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --checkpoint ./runtime/.checkpoint --file "./runtime/folders.tsv" '/**'
-	cat ./runtime/folders.tsv
+#	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --checkpoint ./runtime/.checkpoint --file "./runtime/folders.tsv" '/**'
+#	cat ./runtime/folders.tsv
 
 help: build
 	$(CLI) help
+	$(CLI) help list-folders
 
 version: build
 	$(CLI) version

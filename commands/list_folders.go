@@ -42,16 +42,38 @@ type folder struct {
 }
 
 func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "(optional) include tags in folder information")
-	flagset.StringVar(&cmd.file, "file", cmd.file, "(optional) TSV file to which to write folder information")
-	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "(optional) specifies the path for the checkpoint file")
-	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "(optional) delay between multiple requests to reduce traffic to Box API")
-	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "(optional) retrieves folder list from the beginning")
+	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "Include tags in folder information")
+	flagset.StringVar(&cmd.file, "file", cmd.file, "TSV file to which to write folder information")
+	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "Specifies the path for the checkpoint file")
+	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
+	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "Retrieves folder list from the beginning")
 
 	return flagset
 }
 
 func (cmd ListFolders) Help() {
+	flagset := flag.NewFlagSet("unboxd", flag.ExitOnError)
+
+	fmt.Println()
+	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>")
+	fmt.Println()
+	fmt.Println("  Retrieves a list folders folders that match the folder spec")
+	fmt.Println()
+	fmt.Println("  A folderspec is a glob expression against which to match folder paths e.g.:")
+	fmt.Println("    /          matches top level folders")
+	fmt.Println("    /**        matches all folders recursively")
+	fmt.Println("    /photos/*  matches all folders in the /photos folder")
+	fmt.Println()
+	fmt.Println("  The default folderspec is /** i.e. list all folders recursively")
+	fmt.Println()
+	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
+
+	helpOptions(cmd.Flagset(flagset))
+
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println(`    unboxd --debug --credentials .credentials list-folders --tags --file folders.tsv /**"`)
+	fmt.Println()
 }
 
 func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
@@ -201,7 +223,6 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 			pipe = append(pipe, QueueItem{ID: folderID, Path: prefix})
 		}
 
-		count := 0
 		for tail < len(pipe) {
 			time.Sleep(delay)
 

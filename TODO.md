@@ -4,8 +4,23 @@
 
 - [x] help
 - [ ] help command
+      - [x] list-folders
+      - [ ] list-files
+      - [ ] upload-file
+      - [ ] delete-file
+      - [ ] tag-file
+      - [ ] untag-file
+      - [ ] retag-file
+      - [ ] list-templates
+      - [ ] create-template
+      - [ ] delete-template
+      - [ ] get-template
+      - [ ] version
+      - [ ] help
+
 - [x] version
 - [x] Restructure commands with embedded struct
+- [ ] Restructure commands to remove Box from Execute func
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Resume from last checkpoint
@@ -16,13 +31,14 @@
       - [x] --checkpoint-file
       - [x] --no-resume
       - [ ] list-files
-      - (?) Default checkpoint by account ID + base file ID
-
+      - [ ] Store list-files to TSV
       - [ ] Dedupe folders list
+      - [ ] Dedupe files list
+      - [ ] Include account ID + base file ID in checkpoint and verify on resume
+
       - [ ] Configurable interval between requests
       - [ ] Backoff and retry on HTTP error
       - [ ] Store list-folders to DB
-      - [ ] Store list-files to TSV
       - [ ] Store list-files to DB
 
 - [ ] Restructure so that Box is just a wrapper around the API and the complexity devolves on
@@ -30,9 +46,8 @@
       - [x] list-folders
       - [ ] list-files
             - Glob.HasPrefix or somesuch
-      - [ ] Make IDs uint64
-      - [ ] return error if strconv.ParseUint fails for ID
-
+      - [ ] Make IDs strings
+      - [ ] Return error if strconv.ParseUint fails for ID
 
 - [ ] glob
       - [ ] Rework to rather match on tokenised strings/DFA
@@ -54,16 +69,6 @@
 - [x] Move file funcs to `files` package
       - [ ] (MAYBE) Reinstate FileID type so that maps are typed
 
-- [x] Move folders funcs to `folders` package
-- [x] File tags
-- [x] Make public
-- [x] Move template funcs to `templates` package
-- [x] Replace FileID type with string
-- [x] Authenticate with JWT credentials
-- [x] Github workflow
-- [x] `version` command
-- [x] Move `Credentials` to `box` package
-
 ## TODO
 - [ ] JWT auth
       - [ ] Marshal/unmarshal unit tests
@@ -77,10 +82,7 @@
 - [ ] App auth
 - [ ] List folders by ID/name
 - [ ] Templates for output
-- [ ] Include CHANGELOG in CLI
-      - https://bhupesh-v.github.io/why-how-add-changelog-in-your-next-cli/
-      - http://keepachangelog.com/en/1.0.0
-
+- [x] Include CHANGELOG in CLI
 - [ ] (?) Photo gallery
       https://github.com/anvaka/panzoom
 
@@ -88,3 +90,4 @@
 
 1. https://github.com/youmark/pkcs8
 2. https://github.com/smallstep/crypto/blob/v0.9.2/pemutil/pkcs8.go#L189
+3. http://keepachangelog.com/en/1.0.0

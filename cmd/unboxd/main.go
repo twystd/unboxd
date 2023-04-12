@@ -38,6 +38,8 @@ var cli = []commands.Command{
 	&commands.Version{
 		Version: VERSION,
 	},
+
+	&Help{},
 }
 
 func main() {
@@ -48,20 +50,17 @@ func main() {
 		return
 	}
 
-	// if cmd == "help" {
-	// 	usage()
-	// 	os.Exit(0)
-	// }
-	//
-	// if cmd == "version" {
-	// 	version()
-	// 	os.Exit(0)
-	// }
-
 	if cmd == nil {
 		usage()
 		os.Exit(1)
-	} else if cmd.Name() == "version" {
+	}
+
+	if cmd.Name() == "help" {
+		cmd.Execute(flagset, box.Box{})
+		os.Exit(0)
+	}
+
+	if cmd.Name() == "version" {
 		cmd.Execute(flagset, box.Box{})
 		os.Exit(0)
 	}
@@ -101,7 +100,7 @@ func parse() (commands.Command, *flag.FlagSet, error) {
 	flagset := flag.NewFlagSet("unboxd", flag.ExitOnError)
 
 	flagset.StringVar(&options.credentials, "credentials", options.credentials, "(required) JSON file with Box credentials")
-	flagset.BoolVar(&options.debug, "debug", options.debug, "(optional) enable debugging information")
+	flagset.BoolVar(&options.debug, "debug", options.debug, "(optional) Enable debugging information")
 	flagset.Parse(os.Args[1:])
 
 	args := flagset.Args()

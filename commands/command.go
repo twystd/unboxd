@@ -28,6 +28,25 @@ func (cmd command) Name() string {
 	return cmd.name
 }
 
+func helpOptions(flagset *flag.FlagSet) {
+	count := 0
+	flag.VisitAll(func(f *flag.Flag) {
+		count++
+	})
+
+	flagset.VisitAll(func(f *flag.Flag) {
+		fmt.Printf("    --%-19s %s\n", f.Name, f.Usage)
+	})
+
+	fmt.Println()
+	fmt.Println("  Options:")
+	flag.VisitAll(func(f *flag.Flag) {
+		fmt.Printf("    --%-6s %s\n", f.Name, f.Usage)
+	})
+
+	fmt.Printf("    --%-6s %s\n", "debug", "Enable debugging information")
+}
+
 func clean(s string) string {
 	return regexp.MustCompile(`[\s\t]+`).ReplaceAllString(strings.ToLower(s), "")
 }
