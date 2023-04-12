@@ -24,6 +24,7 @@ var ListFoldersCmd = ListFolders{
 	checkpoint: ".checkpoint",
 	tags:       false,
 	restart:    false,
+	batch:      0,
 }
 
 type ListFolders struct {
@@ -32,6 +33,7 @@ type ListFolders struct {
 	checkpoint string
 	tags       bool
 	restart    bool
+	batch      uint
 }
 
 type folder struct {
@@ -39,16 +41,6 @@ type folder struct {
 	Name string   `json:"name"`
 	Path string   `json:"path"`
 	Tags []string `json:"tags,omitempty"`
-}
-
-func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "Include tags in folder information")
-	flagset.StringVar(&cmd.file, "file", cmd.file, "TSV file to which to write folder information")
-	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "Specifies the path for the checkpoint file")
-	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
-	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "Retrieves folder list from the beginning")
-
-	return flagset
 }
 
 func (cmd ListFolders) Help() {
@@ -69,6 +61,7 @@ func (cmd ListFolders) Help() {
 	fmt.Println("    --file                TSV file to which to write folder information")
 	fmt.Println("    --no-resume           Retrieves folder list from the beginning (default is to continue from the last checkpoint)")
 	fmt.Println("    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)")
+	fmt.Println("    --batch               Maximum number of calls to the Box API (defaults to no limit)")
 	fmt.Println()
 	fmt.Println("  Options:")
 	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
@@ -78,6 +71,17 @@ func (cmd ListFolders) Help() {
 	fmt.Println("  Examples:")
 	fmt.Println(`    unboxd --debug --credentials .credentials list-folders --tags --file folders.tsv /**"`)
 	fmt.Println()
+}
+
+func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
+	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "Include tags in folder information")
+	flagset.StringVar(&cmd.file, "file", cmd.file, "TSV file to which to write folder information")
+	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "Specifies the path for the checkpoint file")
+	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
+	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "Retrieves folder list from the beginning")
+	flagset.UintVar(&cmd.batch, "batch-size", cmd.batch, "Number of calls to the Box API")
+
+	return flagset
 }
 
 func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
@@ -109,7 +113,7 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 	list := []folder{}
 
-	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart)
+	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart, cmd.batch)
 	if err != nil {
 		return nil, err
 	}
@@ -213,61 +217,65 @@ func (cmd ListFolders) save(folders []folder) error {
 	}
 }
 
-func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool) ([]folder, error) {
-	tail := 0
-
-	if pipe, folders, _, err := resume(chkpt, restart); err != nil {
+func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool, batch uint) ([]folder, error) {
+	pipe, folders, _, err := resume(chkpt, restart)
+	if err != nil {
 		return nil, err
-	} else {
-		if len(pipe) > 0 {
-			infof("list-folders", "Resuming last operation")
-		}
-
-		if len(pipe) == 0 {
-			pipe = append(pipe, QueueItem{ID: folderID, Path: prefix})
-		}
-
-		for tail < len(pipe) {
-			time.Sleep(delay)
-
-			item := pipe[tail]
-			if l, err := b.ListFolders(item.ID); err != nil {
-				if errx := checkpoint(chkpt, pipe[tail:], folders, []file{}); errx != nil {
-					warnf("list-folders", "%v", errx)
-				}
-
-				return folders, err
-			} else {
-				for _, f := range l {
-					path := item.Path + "/" + f.Name
-					folders = append(folders, folder{
-						ID:   f.ID,
-						Name: f.Name,
-						Tags: f.Tags,
-						Path: path,
-					})
-
-					pipe = append(pipe, QueueItem{ID: f.ID, Path: path})
-				}
-			}
-
-			tail++
-		}
-
-		// ... incomplete?
-		if len(pipe[tail:]) > 0 {
-			if err := checkpoint(chkpt, pipe[tail:], folders, []file{}); err != nil {
-				return folders, err
-			} else {
-				return folders, fmt.Errorf("interrupted")
-			}
-		}
-
-		// ... complete!
-		if err := checkpoint(chkpt, []QueueItem{}, []folder{}, []file{}); err != nil {
-			return folders, err
-		}
-
-		return folders, nil
 	}
+
+	if len(pipe) > 0 {
+		infof("list-folders", "Resuming last operation")
+	} else {
+		pipe = append(pipe, QueueItem{ID: folderID, Path: prefix})
+	}
+
+	count := uint(0)
+	tail := 0
+	for tail < len(pipe) {
+		time.Sleep(delay)
+
+		item := pipe[tail]
+		if l, err := b.ListFolders(item.ID); err != nil {
+			if errx := checkpoint(chkpt, pipe[tail:], folders, []file{}); errx != nil {
+				warnf("list-folders", "%v", errx)
+			}
+
+			return folders, err
+		} else {
+			for _, f := range l {
+				path := item.Path + "/" + f.Name
+				folders = append(folders, folder{
+					ID:   f.ID,
+					Name: f.Name,
+					Tags: f.Tags,
+					Path: path,
+				})
+
+				pipe = append(pipe, QueueItem{ID: f.ID, Path: path})
+			}
+		}
+
+		count++
+		if batch != 0 && count > batch {
+			break
+		}
+
+		tail++
+	}
+
+	// ... incomplete?
+	if len(pipe[tail:]) > 0 {
+		if err := checkpoint(chkpt, pipe[tail:], folders, []file{}); err != nil {
+			return folders, err
+		} else {
+			return folders, fmt.Errorf("interrupted")
+		}
+	}
+
+	// ... complete!
+	if err := checkpoint(chkpt, []QueueItem{}, []folder{}, []file{}); err != nil {
+		return folders, err
+	}
+
+	return folders, nil
 }

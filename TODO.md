@@ -31,7 +31,7 @@
       - [x] --checkpoint-file
       - [x] --no-resume
       - [x] list-files
-      - [ ] --max
+      - [x] --batch-size
       - [ ] Dedupe folders list
       - [ ] Dedupe files list
       - [ ] Store list-files to TSV

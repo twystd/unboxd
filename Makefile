@@ -62,7 +62,7 @@ build-all: test vet lint
 release: build-all
 
 debug: build
-	$(CLI) --debug --credentials $(CLIENT) list-files
+	$(CLI) --debug --credentials $(CLIENT) list-files --batch-size 5
 #	$(CLI) --debug --credentials $(CLIENT) list-folders
 #	$(CLI) --debug --credentials $(CLIENT) list-folders --tags '/**'
 #	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --checkpoint ./runtime/.checkpoint --file "./runtime/folders.tsv" '/**'

@@ -21,6 +21,7 @@ var ListFilesCmd = ListFiles{
 	checkpoint: ".checkpoint",
 	tags:       false,
 	restart:    false,
+	batch:      0,
 }
 
 type ListFiles struct {
@@ -29,6 +30,7 @@ type ListFiles struct {
 	checkpoint string
 	tags       bool
 	restart    bool
+	batch      uint
 }
 
 type file struct {
@@ -56,6 +58,7 @@ func (cmd ListFiles) Help() {
 	fmt.Println("    --file                TSV file to which to write file information")
 	fmt.Println("    --no-resume           Retrieves file list from the beginning (default is to continue from last checkpoint")
 	fmt.Println("    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)")
+	fmt.Println("    --batch               Maximum number of calls to the Box API (defaults to no limit)")
 	fmt.Println()
 	fmt.Println("  Options:")
 	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
@@ -73,6 +76,7 @@ func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "Specifies the path for the checkpoint file")
 	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
 	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "Retrieves folder list from the beginning")
+	flagset.UintVar(&cmd.batch, "batch-size", cmd.batch, "Number of calls to the Box API")
 
 	return flagset
 }
@@ -126,7 +130,7 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
 	list := []file{}
 
-	folders, err := listFiles(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart)
+	folders, err := listFiles(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart, cmd.batch)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +145,7 @@ func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
 	return list, nil
 }
 
-func listFiles(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool) ([]file, error) {
+func listFiles(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool, batch uint) ([]file, error) {
 	pipe, folders, files, err := resume(chkpt, restart)
 	if err != nil {
 		return nil, err
@@ -153,7 +157,7 @@ func listFiles(b box.Box, folderID uint64, prefix string, chkpt string, delay ti
 		pipe = append(pipe, QueueItem{ID: folderID, Path: prefix})
 	}
 
-	count := 0
+	count := uint(0)
 	tail := 0
 	for tail < len(pipe) {
 		time.Sleep(delay)
@@ -200,11 +204,10 @@ func listFiles(b box.Box, folderID uint64, prefix string, chkpt string, delay ti
 			}
 		}
 
-		if count > 5 {
+		count++
+		if batch != 0 && count > batch {
 			break
 		}
-
-		count++
 
 		tail++
 	}
