@@ -17,13 +17,17 @@ var ListFilesCmd = ListFiles{
 		delay: 500 * time.Millisecond,
 	},
 
+	file:       "",
 	checkpoint: ".checkpoint",
+	tags:       false,
 	restart:    false,
 }
 
 type ListFiles struct {
 	command
+	file       string
 	checkpoint string
+	tags       bool
 	restart    bool
 }
 
@@ -35,12 +39,40 @@ type file struct {
 }
 
 func (cmd ListFiles) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-files [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <filespec>")
+	fmt.Println()
+	fmt.Println("  Retrieves a list of files that match the file spec")
+	fmt.Println()
+	fmt.Println("  A filespec is a glob expression against which to match file paths e.g.:")
+	fmt.Println("    /*         matches files in the top level folder")
+	fmt.Println("    /**        matches all files recursively")
+	fmt.Println("    /photos/*  matches all files in the /photos folder")
+	fmt.Println()
+	fmt.Println("  The default filespec is /** i.e. list all files recursively")
+	fmt.Println()
+	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
+	fmt.Println("    --tags                Include tags in file information")
+	fmt.Println("    --file                TSV file to which to write file information")
+	fmt.Println("    --no-resume           Retrieves file list from the beginning (default is to continue from last checkpoint")
+	fmt.Println("    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)")
+	fmt.Println()
+	fmt.Println("  Options:")
+	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
+	fmt.Println("    --debug  Enable debugging information")
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println(`    unboxd --debug --credentials .credentials list-files --tags --file folders.tsv /**"`)
+	fmt.Println()
 }
 
 func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "(optional) specifies the path for the checkpoint file")
-	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "(optional) delay between multiple requests to reduce traffic to Box API")
-	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "(optional) retrieves folder list from the beginning")
+	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "Include tags in folder information")
+	flagset.StringVar(&cmd.file, "file", cmd.file, "TSV file to which to write folder information")
+	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "Specifies the path for the checkpoint file")
+	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
+	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "Retrieves folder list from the beginning")
 
 	return flagset
 }

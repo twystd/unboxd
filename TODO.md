@@ -5,7 +5,7 @@
 - [x] help
 - [ ] help command
       - [x] list-folders
-      - [ ] list-files
+      - [x] list-files
       - [ ] upload-file
       - [ ] delete-file
       - [ ] tag-file
@@ -35,6 +35,7 @@
       - [ ] Dedupe folders list
       - [ ] Dedupe files list
       - [ ] Include account ID + base file ID in checkpoint and verify on resume
+      - [ ] Don't recurse into folders that can't match the glob
 
       - [ ] Configurable interval between requests
       - [ ] Backoff and retry on HTTP error

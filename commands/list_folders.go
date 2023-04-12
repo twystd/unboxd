@@ -52,12 +52,10 @@ func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd ListFolders) Help() {
-	flagset := flag.NewFlagSet("unboxd", flag.ExitOnError)
-
 	fmt.Println()
 	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>")
 	fmt.Println()
-	fmt.Println("  Retrieves a list folders folders that match the folder spec")
+	fmt.Println("  Retrieves a list of folders that match the folder spec")
 	fmt.Println()
 	fmt.Println("  A folderspec is a glob expression against which to match folder paths e.g.:")
 	fmt.Println("    /          matches top level folders")
@@ -67,9 +65,15 @@ func (cmd ListFolders) Help() {
 	fmt.Println("  The default folderspec is /** i.e. list all folders recursively")
 	fmt.Println()
 	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-
-	helpOptions(cmd.Flagset(flagset))
-
+	fmt.Println("    --tags                Include tags in folder information")
+	fmt.Println("    --file                TSV file to which to write folder information")
+	fmt.Println("    --no-resume           Retrieves folder list from the beginning (default is to continue from the last checkpoint)")
+	fmt.Println("    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)")
+	fmt.Println()
+	fmt.Println("  Options:")
+	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
+	fmt.Println("    --debug  Enable debugging information")
+	fmt.Println()
 	fmt.Println()
 	fmt.Println("  Examples:")
 	fmt.Println(`    unboxd --debug --credentials .credentials list-folders --tags --file folders.tsv /**"`)
