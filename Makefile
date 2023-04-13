@@ -78,15 +78,16 @@ version: build
 	$(CLI) version
 
 list-folders: build
-	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
-	$(CLI) --debug --credentials $(CLIENT) list-folders
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
-	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/pending'
+#	$(CLI) --debug --credentials $(CREDENTIALS) list-folders
+#	$(CLI) --debug --credentials $(CLIENT) list-folders
+#	$(CLI) --debug --credentials $(CLIENT) list-folders '/'
+#	$(CLI) --debug --credentials $(CLIENT) list-folders '/**'
+#	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha'
+#	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/'
+#	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/*'
+#	$(CLI) --debug --credentials $(CLIENT) list-folders '/alpha/pending'
 	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --file "./runtime/folders.tsv" '/**'
+	cat "./runtime/folders.tsv"
 
 list-files: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending

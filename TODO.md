@@ -2,7 +2,6 @@
 
 ## IN PROGRESS
 
-- [x] help
 - [ ] help command
       - [x] list-folders
       - [x] list-files
@@ -18,20 +17,8 @@
       - [ ] version
       - [ ] help
 
-- [x] version
-- [x] Restructure commands with embedded struct
-
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
-      - [x] Resume from last checkpoint
-      - [x] Use logger for reporting errors, progress etc
-      - [x] Store list-folders to TSV
-      - [x] Fix path concatenation
-      - [x] --tags
-      - [x] --checkpoint-file
-      - [x] --no-resume
-      - [x] list-files
-      - [x] --batch-size
-      - [ ] Dedupe folders list
+      - [x] Dedupe folders list
       - [ ] Dedupe files list
       - [ ] Store list-files to TSV
       - [ ] Include account ID + base file ID in checkpoint and verify on resume
@@ -41,15 +28,13 @@
       - [ ] Checkpoint on SIGHUP
       - (?) Checkpoint on CTRL-C
       - [ ] SIGINFO
-
-      - [ ] Configurable interval between requests
+      - [x] Configurable interval between requests
       - [ ] Backoff and retry on HTTP error
       - [ ] Store list-folders to DB
       - [ ] Store list-files to DB
 
 - [ ] Restructure so that Box is just a wrapper around the API and the complexity devolves on
       e.g. the command implementation.
-      - [x] list-folders
       - [ ] list-files
             - Glob.HasPrefix or somesuch
       - [ ] Make IDs strings
@@ -88,7 +73,6 @@
 - [ ] App auth
 - [ ] List folders by ID/name
 - [ ] Templates for output
-- [x] Include CHANGELOG in CLI
 - [ ] (?) Photo gallery
       https://github.com/anvaka/panzoom
 

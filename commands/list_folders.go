@@ -85,24 +85,38 @@ func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
-	folder := ""
+	var base string
 
 	args := flagset.Args()
 	if len(args) > 0 {
-		folder = args[0]
+		base = args[0]
+	} else {
+		base = ""
 	}
 
-	folders, err := cmd.exec(b, folder)
+	// .. get folder list
+	list, err := cmd.exec(b, base)
 	if err != nil {
 		return err
 	}
 
-	if len(folders) == 0 {
-		return fmt.Errorf("no folders matching path '%s", folder)
+	if len(list) == 0 {
+		return fmt.Errorf("no folders matching path '%s", base)
+	}
+
+	// .. dedupe and sort
+	folders := []folder{}
+	dedupe := map[uint64]bool{}
+	for _, f := range list {
+		if duplicate := dedupe[f.ID]; !duplicate {
+			dedupe[f.ID] = true
+			folders = append(folders, f)
+		}
 	}
 
 	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
+	// .. almost done
 	if cmd.file != "" {
 		return cmd.save(folders)
 	} else {
