@@ -44,7 +44,7 @@ func (cmd ListFiles) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-files [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <filespec>")
 	fmt.Println()
-	fmt.Println("  Retrieves a list of files that match the file spec")
+	fmt.Println("  Retrieves a list of files that match the file spec.")
 	fmt.Println()
 	fmt.Println("  A filespec is a glob expression against which to match file paths e.g.:")
 	fmt.Println("    /*         matches files in the top level folder")

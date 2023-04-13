@@ -6,7 +6,7 @@
 - [ ] help command
       - [x] list-folders
       - [x] list-files
-      - [ ] upload-file
+      - [x] upload-file
       - [ ] delete-file
       - [ ] tag-file
       - [ ] untag-file
@@ -20,7 +20,6 @@
 
 - [x] version
 - [x] Restructure commands with embedded struct
-- [ ] Restructure commands to remove Box from Execute func
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Resume from last checkpoint

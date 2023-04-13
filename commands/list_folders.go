@@ -47,7 +47,7 @@ func (cmd ListFolders) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>")
 	fmt.Println()
-	fmt.Println("  Retrieves a list of folders that match the folder spec")
+	fmt.Println("  Retrieves a list of folders that match the folder spec.")
 	fmt.Println()
 	fmt.Println("  A folderspec is a glob expression against which to match folder paths e.g.:")
 	fmt.Println("    /          matches top level folders")

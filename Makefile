@@ -72,6 +72,7 @@ help: build
 	$(CLI) help
 	$(CLI) help list-folders
 	$(CLI) help list-files
+	$(CLI) help upload-file
 
 version: build
 	$(CLI) version
