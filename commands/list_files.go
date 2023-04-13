@@ -1,8 +1,11 @@
 package commands
 
 import (
+	"encoding/csv"
 	"flag"
 	"fmt"
+	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -89,12 +92,49 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 		glob = args[0]
 	}
 
-	files, err := cmd.exec(b, glob)
+	list, err := cmd.exec(b, glob)
 	if err != nil {
 		return err
 	}
 
-	sort.Slice(files, func(i, j int) bool { return files[i].FileName < files[j].FileName })
+	// .. dedupe and sort
+	files := []file{}
+	dedupe := map[uint64]bool{}
+	for _, f := range list {
+		if duplicate := dedupe[f.ID]; !duplicate {
+			files = append(files, f)
+			dedupe[f.ID] = true
+		}
+	}
+
+	// .. save/print
+	if cmd.file != "" {
+		return cmd.save(files)
+	} else {
+		return cmd.print(files)
+	}
+}
+
+func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
+	list := []file{}
+
+	folders, err := listFiles(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart, cmd.batch)
+	if err != nil {
+		return nil, err
+	}
+
+	g := lib.NewGlob(glob)
+	for _, f := range folders {
+		if g.Match(f.FilePath) {
+			list = append(list, f)
+		}
+	}
+
+	return list, nil
+}
+
+func (cmd ListFiles) print(files []file) error {
+	sort.Slice(files, func(i, j int) bool { return files[i].FilePath < files[j].FilePath })
 
 	widths := []int{0, 0, 0}
 	table := [][3]string{}
@@ -127,22 +167,43 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 	return nil
 }
 
-func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
-	list := []file{}
+func (cmd ListFiles) save(files []file) error {
+	infof("list-files", "saving %v files to TSV file %v\n", len(files), cmd.file)
 
-	folders, err := listFiles(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart, cmd.batch)
-	if err != nil {
-		return nil, err
+	sort.Slice(files, func(i, j int) bool { return files[i].FilePath < files[j].FilePath })
+
+	records := [][]string{
+		[]string{"ID", "Path"},
 	}
 
-	g := lib.NewGlob(glob)
-	for _, f := range folders {
-		if g.Match(f.FilePath) {
-			list = append(list, f)
+	if cmd.tags {
+		records = [][]string{
+			[]string{"ID", "Path", "Tags"},
 		}
 	}
 
-	return list, nil
+	for _, f := range files {
+		id := fmt.Sprintf("%v", f.ID)
+		path := fmt.Sprintf("%v", f.FilePath)
+		tags := fmt.Sprintf("%v", strings.Join(f.Tags, ";"))
+
+		if cmd.tags {
+			records = append(records, []string{id, path, tags})
+		} else {
+			records = append(records, []string{id, path})
+		}
+	}
+
+	if err := os.MkdirAll(filepath.Dir(cmd.file), 0750); err != nil {
+		return err
+	} else if f, err := os.Create(cmd.file); err != nil {
+		return err
+	} else {
+		w := csv.NewWriter(f)
+		w.WriteAll(records)
+
+		return w.Error()
+	}
 }
 
 func listFiles(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool, batch uint) ([]file, error) {

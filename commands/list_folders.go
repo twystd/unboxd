@@ -101,10 +101,10 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 	}
 
 	if len(list) == 0 {
-		return fmt.Errorf("no folders matching path '%s", base)
+		warnf("list-folder", "no folders matching '%s", base)
 	}
 
-	// .. dedupe and sort
+	// .. dedupe
 	folders := []folder{}
 	dedupe := map[uint64]bool{}
 	for _, f := range list {
@@ -114,9 +114,7 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 		}
 	}
 
-	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
-
-	// .. almost done
+	// .. save/print
 	if cmd.file != "" {
 		return cmd.save(folders)
 	} else {
@@ -143,8 +141,6 @@ func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 }
 
 func (cmd ListFolders) print(folders []folder) error {
-	infof("list-folders", "saving %v folders to TSV file %v\n", len(folders), cmd.file)
-
 	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
 	widths := []int{0, 0, 0}
@@ -195,6 +191,8 @@ func (cmd ListFolders) print(folders []folder) error {
 }
 
 func (cmd ListFolders) save(folders []folder) error {
+	infof("list-folders", "saving %v folders to TSV file %v\n", len(folders), cmd.file)
+
 	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
 	records := [][]string{

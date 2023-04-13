@@ -19,7 +19,7 @@
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Dedupe folders list
-      - [ ] Dedupe files list
+      - [x] Dedupe files list
       - [ ] Store list-files to TSV
       - [ ] Include account ID + base file ID in checkpoint and verify on resume
       - [ ] Include command in checkpoint and verify on resume
