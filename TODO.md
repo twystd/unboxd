@@ -2,7 +2,7 @@
 
 ## IN PROGRESS
 
-- [ ] help command
+- [x] help command
       - [x] list-folders
       - [x] list-files
       - [x] upload-file
@@ -10,10 +10,10 @@
       - [x] tag-file
       - [x] untag-file
       - [x] retag-file
-      - [ ] list-templates
-      - [ ] create-template
-      - [ ] delete-template
-      - [ ] get-template
+      - [x] list-templates
+      - [x] get-template
+      - [x] create-template
+      - [x] delete-template
       - [x] version
       - [x] help
 

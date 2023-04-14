@@ -79,6 +79,10 @@ help: build
 	$(CLI) help tag-file
 	$(CLI) help untag-file
 	$(CLI) help retag-file
+	$(CLI) help list-templates
+	$(CLI) help get-template
+	$(CLI) help create-template
+	$(CLI) help delete-template
 	$(CLI) help version
 	$(CLI) help help
 

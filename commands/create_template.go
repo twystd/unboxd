@@ -23,11 +23,26 @@ type CreateTemplate struct {
 	command
 }
 
-func (cmd *CreateTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	return flagset
+func (cmd CreateTemplate) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd [--debug] --credentials <file> create-template  <template-file>")
+	fmt.Println()
+	fmt.Println("  Creates a new Box metadata template from the definition in the template file.")
+	fmt.Println()
+	fmt.Println("    <template-file>  JSON metadata template definition")
+	fmt.Println()
+	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
+	fmt.Println()
+	fmt.Println("  Options:")
+	fmt.Println("    --debug  Enable debugging information")
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println("    unboxd --debug --credentials .credentials create-template hogwarts.json")
+	fmt.Println()
 }
 
-func (cmd CreateTemplate) Help() {
+func (cmd *CreateTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
+	return flagset
 }
 
 func (cmd CreateTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
