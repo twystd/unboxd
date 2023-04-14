@@ -2,25 +2,7 @@
 
 ## IN PROGRESS
 
-- [x] help command
-      - [x] list-folders
-      - [x] list-files
-      - [x] upload-file
-      - [x] delete-file
-      - [x] tag-file
-      - [x] untag-file
-      - [x] retag-file
-      - [x] list-templates
-      - [x] get-template
-      - [x] create-template
-      - [x] delete-template
-      - [x] version
-      - [x] help
-
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
-      - [x] Include account ID + base file ID in checkpoint and verify on resume
-      - [x] Include command in checkpoint and verify on resume
-      - [x] Move delay to end of loop
       - [ ] Don't recurse into folders that can't match the glob
       - [ ] Checkpoint on SIGHUP
       - (?) Checkpoint on CTRL-C
@@ -60,7 +42,6 @@
 - [ ] JWT auth
       - [ ] Marshal/unmarshal unit tests
       - [ ] Token refresh
-      - [x] Authenticate
       - (?) Cache tokens to disk
             - With encryption (? GPG)
             - --no-cache option

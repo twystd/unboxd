@@ -2,17 +2,14 @@
 
 # unboxd
 
-A somewhat eclectic Go CLI for managing files and templates in [Box](box.com): 
-
+A somewhat eclectic Go CLI for managing files and templates in [Box](box.com):
 - list-folders
-
 - list-files
 - upload-file
 - delete-file
 - tag-file
 - untag-file
-
-- list-templates  
+- list-templates
 - create-template
 - get-template
 - delete-template
@@ -33,13 +30,13 @@ functionality in a way that was useful for a particular requirement.
 | *Version* | *Description*               |
 | --------- | ----------------------------|
 |           |                             |
-|           |                             |                                                                    
+|           |                             |
 
 ## Installation
 
 ### Building from source
 
-Assuming you have `Go v1.17+` and `make` installed:
+Assuming you have `Go v1.20+` and `make` installed:
 
 ```
 git clone https://github.com/twystd/unboxd.git
@@ -72,9 +69,21 @@ General_ commands:
 - `version`
 
 Folder commands:
-
 - [`list-folders`](#list-folders)
 
+File commands:
+- [`list-files`](#list-files)
+- [`upload-file`](#upload-file)
+- [`delete-file`](#delete-file)
+- [`tag-file`](#tag-file)
+- [`untag-file`](#untag-file)
+- [`retag-file`](#retag-file)
+
+Template commands:
+- [`list-templates`](#list-templates)
+- [`get-template`](#get-template)
+- [`create-template`](#create-template)
+- [`delete-template`](#delete-template)
 
 ### General
 
@@ -117,14 +126,14 @@ Retrieves a list of folders matching the (optionally) supplied path
 ```
 unboxd [options] list-folders [path]
 
-  Options: 
+  Options:
   --credentials <file> Sets the file containing the Box API credentials
   --debug              Displays verbose debugging information
 
   Example:
 
   unboxd --debug --credentials .credentials  list-folders /
-  
+
   123456789 /unboxd
   987654321 /unboxd/photos
   876543219 /unboxd/docs
@@ -132,10 +141,35 @@ unboxd [options] list-folders [path]
   …
 
 ```
+
+
+### File commands
+
+The file commands wrap the Box _File_ API:
+```
+unboxd list-files
+unboxd upload-file
+unboxd delete-file
+unboxd tag-file
+unboxd untag-file
+unboxd retag-file
+```
+
+
+### Template commands
+
+The file commands wrap the Box _Template_ API:
+```
+unboxd list-templates
+unboxd get-template
+unboxd create-template
+unboxd delete-template
+```
+
+
 ## Notes
 
 1. https://github.com/golang/go/issues/8860
 
 
 ## References
-
