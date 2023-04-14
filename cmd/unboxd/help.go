@@ -19,6 +19,16 @@ func (h *Help) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (h Help) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd help [command]")
+	fmt.Println()
+	fmt.Println("  Displays the command line and a list of the available commands. If a command is")
+	fmt.Println("  specified, displays the help information for that command.")
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println("    unboxd help")
+	fmt.Println("    unboxd help list-folders")
+	fmt.Println()
 }
 
 func (h Help) Execute(flagset *flag.FlagSet, box box.Box) error {

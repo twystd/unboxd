@@ -20,6 +20,14 @@ func (cmd *Version) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd Version) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd version")
+	fmt.Println()
+	fmt.Println("  Displays the current version information.")
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println("    unboxd version")
+	fmt.Println()
 }
 
 func (cmd Version) Execute(flagset *flag.FlagSet, b box.Box) error {

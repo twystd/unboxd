@@ -33,7 +33,6 @@ func (cmd TagFile) Help() {
 	fmt.Println("  Options:")
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
-	fmt.Println()
 	fmt.Println("  Examples:")
 	fmt.Println(`    unboxd --debug --credentials .credentials tag-file 135789086421 hogwarts"`)
 	fmt.Println()

@@ -37,7 +37,6 @@ func (cmd UploadFile) Help() {
 	fmt.Println("  Options:")
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
-	fmt.Println()
 	fmt.Println("  Examples:")
 	fmt.Println(`    unboxd --debug --credentials .credentials upload-file photo.jpg /photos"`)
 	fmt.Println()

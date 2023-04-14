@@ -34,7 +34,6 @@ func (cmd RetagFile) Help() {
 	fmt.Println("  Options:")
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
-	fmt.Println()
 	fmt.Println("  Examples:")
 	fmt.Println(`    unboxd --debug --credentials .credentials retag-file 135789086421 hogwarts hogsmeade"`)
 	fmt.Println()

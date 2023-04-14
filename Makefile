@@ -79,6 +79,8 @@ help: build
 	$(CLI) help tag-file
 	$(CLI) help untag-file
 	$(CLI) help retag-file
+	$(CLI) help version
+	$(CLI) help help
 
 version: build
 	$(CLI) version

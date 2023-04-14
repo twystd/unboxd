@@ -67,7 +67,6 @@ func (cmd ListFiles) Help() {
 	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
-	fmt.Println()
 	fmt.Println("  Examples:")
 	fmt.Println(`    unboxd --debug --credentials .credentials list-files --tags --file folders.tsv /**"`)
 	fmt.Println()

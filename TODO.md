@@ -14,8 +14,8 @@
       - [ ] create-template
       - [ ] delete-template
       - [ ] get-template
-      - [ ] version
-      - [ ] help
+      - [x] version
+      - [x] help
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Include account ID + base file ID in checkpoint and verify on resume
