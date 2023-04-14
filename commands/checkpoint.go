@@ -9,6 +9,7 @@ import (
 )
 
 type Checkpoint struct {
+	Hash    string      `json:"id"`
 	Queue   []QueueItem `json:"queue"`
 	Folders []folder    `json:"folders"`
 	Files   []file      `json:"files"`
@@ -19,8 +20,9 @@ type QueueItem struct {
 	Path string `json:"path"`
 }
 
-func checkpoint(file string, queue []QueueItem, folders []folder, files []file) error {
+func checkpoint(file string, queue []QueueItem, folders []folder, files []file, hash string) error {
 	checkpoint := Checkpoint{
+		Hash:    hash,
 		Queue:   queue,
 		Folders: folders,
 		Files:   files,
@@ -41,7 +43,7 @@ func checkpoint(file string, queue []QueueItem, folders []folder, files []file) 
 	return nil
 }
 
-func resume(chkpt string, restart bool) ([]QueueItem, []folder, []file, error) {
+func resume(chkpt string, hash string, restart bool) ([]QueueItem, []folder, []file, error) {
 	checkpoint := Checkpoint{}
 
 	if chkpt != "" && !restart {
@@ -55,6 +57,8 @@ func resume(chkpt string, restart bool) ([]QueueItem, []folder, []file, error) {
 			return nil, nil, nil, err
 		} else if err := json.Unmarshal(bytes, &checkpoint); err != nil {
 			return nil, nil, nil, err
+		} else if checkpoint.Hash != hash {
+			return []QueueItem{}, []folder{}, []file{}, nil
 		} else {
 			return checkpoint.Queue, checkpoint.Folders, checkpoint.Files, nil
 		}

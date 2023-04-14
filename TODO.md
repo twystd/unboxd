@@ -18,20 +18,16 @@
       - [ ] help
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
-      - [x] Dedupe folders list
-      - [x] Dedupe files list
-      - [x] Store list-files to TSV
       - [ ] Include account ID + base file ID in checkpoint and verify on resume
-      - [ ] Include command in checkpoint and verify on resume
-      - [ ] Don't recurse into folders that can't match the glob
+      - [x] Include command in checkpoint and verify on resume
       - [ ] Move delay to end of loop
+      - [ ] Don't recurse into folders that can't match the glob
       - [ ] Checkpoint on SIGHUP
       - (?) Checkpoint on CTRL-C
       - [ ] SIGINFO
-      - [x] Configurable interval between requests
       - [ ] Backoff and retry on HTTP error
-      - [ ] Store list-folders to DB
-      - [ ] Store list-files to DB
+      - [ ] Store list-folders to sqlite3 DB
+      - [ ] Store list-files to sqlite3 DB
 
 - [ ] Restructure so that Box is just a wrapper around the API and the complexity devolves on
       e.g. the command implementation.

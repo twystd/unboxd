@@ -125,7 +125,7 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
 	list := []folder{}
 
-	folders, err := listFolders(b, 0, "", cmd.checkpoint, cmd.delay, cmd.restart, cmd.batch)
+	folders, err := cmd.listFolders(b, 0, "")
 	if err != nil {
 		return nil, err
 	}
@@ -229,8 +229,8 @@ func (cmd ListFolders) save(folders []folder) error {
 	}
 }
 
-func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay time.Duration, restart bool, batch uint) ([]folder, error) {
-	pipe, folders, _, err := resume(chkpt, restart)
+func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string) ([]folder, error) {
+	pipe, folders, _, err := resume(cmd.checkpoint, cmd.hash(), cmd.restart)
 	if err != nil {
 		return nil, err
 	}
@@ -244,11 +244,11 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 	count := uint(0)
 	tail := 0
 	for tail < len(pipe) {
-		time.Sleep(delay)
+		time.Sleep(cmd.delay)
 
 		item := pipe[tail]
 		if l, err := b.ListFolders(item.ID); err != nil {
-			if errx := checkpoint(chkpt, pipe[tail:], folders, []file{}); errx != nil {
+			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, cmd.hash()); errx != nil {
 				warnf("list-folders", "%v", errx)
 			}
 
@@ -268,7 +268,7 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 		}
 
 		count++
-		if batch != 0 && count > batch {
+		if cmd.batch != 0 && count > cmd.batch {
 			break
 		}
 
@@ -277,7 +277,7 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 
 	// ... incomplete?
 	if len(pipe[tail:]) > 0 {
-		if err := checkpoint(chkpt, pipe[tail:], folders, []file{}); err != nil {
+		if err := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, cmd.hash()); err != nil {
 			return folders, err
 		} else {
 			return folders, fmt.Errorf("interrupted")
@@ -285,9 +285,13 @@ func listFolders(b box.Box, folderID uint64, prefix string, chkpt string, delay 
 	}
 
 	// ... complete!
-	if err := checkpoint(chkpt, []QueueItem{}, []folder{}, []file{}); err != nil {
+	if err := checkpoint(cmd.checkpoint, []QueueItem{}, []folder{}, []file{}, ""); err != nil {
 		return folders, err
 	}
 
 	return folders, nil
+}
+
+func (cmd ListFolders) hash() string {
+	return "list-folders"
 }
