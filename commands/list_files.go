@@ -92,7 +92,10 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 		glob = args[0]
 	}
 
-	list, err := cmd.exec(b, glob)
+	hash := cmd.hash("list-files", b.Hash(), glob)
+
+	// .. get files
+	list, err := cmd.exec(b, glob, hash)
 	if err != nil {
 		return err
 	}
@@ -115,10 +118,10 @@ func (cmd ListFiles) Execute(flagset *flag.FlagSet, b box.Box) error {
 	}
 }
 
-func (cmd ListFiles) exec(b box.Box, glob string) ([]file, error) {
+func (cmd ListFiles) exec(b box.Box, glob string, hash string) ([]file, error) {
 	list := []file{}
 
-	folders, err := cmd.listFiles(b, 0, "")
+	folders, err := cmd.listFiles(b, 0, "", hash)
 	if err != nil {
 		return nil, err
 	}
@@ -206,8 +209,8 @@ func (cmd ListFiles) save(files []file) error {
 	}
 }
 
-func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string) ([]file, error) {
-	pipe, folders, files, err := resume(cmd.checkpoint, cmd.hash(), cmd.restart)
+func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string, hash string) ([]file, error) {
+	pipe, folders, files, err := resume(cmd.checkpoint, hash, cmd.restart)
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +230,7 @@ func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string) ([]fil
 
 		// get files for current folder
 		if l, err := b.ListFiles(item.ID); err != nil {
-			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, files, cmd.hash()); errx != nil {
+			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, files, hash); errx != nil {
 				warnf("list-files", "%v", errx)
 			}
 
@@ -246,7 +249,7 @@ func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string) ([]fil
 
 		// get subfolders for current folder
 		if l, err := b.ListFolders(item.ID); err != nil {
-			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, files, cmd.hash()); errx != nil {
+			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, files, hash); errx != nil {
 				warnf("list-files", "%v", errx)
 			}
 
@@ -275,7 +278,7 @@ func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string) ([]fil
 
 	// ... incomplete?
 	if len(pipe[tail:]) > 0 {
-		if err := checkpoint(cmd.checkpoint, pipe[tail:], folders, files, cmd.hash()); err != nil {
+		if err := checkpoint(cmd.checkpoint, pipe[tail:], folders, files, hash); err != nil {
 			return files, err
 		} else {
 			return files, fmt.Errorf("interrupted")
@@ -288,8 +291,4 @@ func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string) ([]fil
 	}
 
 	return files, nil
-}
-
-func (cmd ListFiles) hash() string {
-	return "list-files"
 }

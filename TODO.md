@@ -18,7 +18,7 @@
       - [ ] help
 
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
-      - [ ] Include account ID + base file ID in checkpoint and verify on resume
+      - [x] Include account ID + base file ID in checkpoint and verify on resume
       - [x] Include command in checkpoint and verify on resume
       - [ ] Move delay to end of loop
       - [ ] Don't recurse into folders that can't match the glob

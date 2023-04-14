@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"crypto/sha256"
 	"flag"
 	"fmt"
 	"regexp"
@@ -28,24 +29,12 @@ func (cmd command) Name() string {
 	return cmd.name
 }
 
-// func helpOptions(flagset *flag.FlagSet) {
-// 	count := 0
-// 	flag.VisitAll(func(f *flag.Flag) {
-// 		count++
-// 	})
-//
-// 	flagset.VisitAll(func(f *flag.Flag) {
-// 		fmt.Printf("    --%-19s %s\n", f.Name, f.Usage)
-// 	})
-//
-// 	fmt.Println()
-// 	fmt.Println("  Options:")
-// 	flag.VisitAll(func(f *flag.Flag) {
-// 		fmt.Printf("    --%-6s %s\n", f.Name, f.Usage)
-// 	})
-//
-// 	fmt.Printf("    --%-6s %s\n", "debug", "Enable debugging information")
-// }
+func (cmd command) hash(command string, credentials string, root string) string {
+	s := fmt.Sprintf("%v:%v:%v", command, credentials, root)
+	hash := sha256.Sum256([]byte(s))
+
+	return fmt.Sprintf("%x", hash)
+}
 
 func clean(s string) string {
 	return regexp.MustCompile(`[\s\t]+`).ReplaceAllString(strings.ToLower(s), "")

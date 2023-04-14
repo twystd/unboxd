@@ -6,6 +6,7 @@ import (
 
 type Credentials interface {
 	Authenticate() (*AccessToken, error)
+	Hash() string
 }
 
 type AccessToken struct {

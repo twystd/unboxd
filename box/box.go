@@ -9,6 +9,7 @@ import (
 
 type Box struct {
 	token *credentials.AccessToken
+	hash  string
 }
 
 func NewBox() Box {
@@ -26,8 +27,13 @@ func (b *Box) Authenticate(credentials credentials.Credentials) error {
 	}
 
 	b.token = token
+	b.hash = credentials.Hash()
 
 	return nil
+}
+
+func (b Box) Hash() string {
+	return b.hash
 }
 
 func (b *Box) ListFolders(folderID uint64) ([]folders.Folder, error) {

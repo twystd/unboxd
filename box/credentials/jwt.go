@@ -2,6 +2,7 @@ package credentials
 
 import (
 	"crypto/rsa"
+	"crypto/sha256"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
@@ -42,6 +43,13 @@ func (j *JWT) Authenticate() (*AccessToken, error) {
 	}
 
 	return j.authenticate(token)
+}
+
+func (j JWT) Hash() string {
+	s := fmt.Sprintf("%v:%v:%v", j.clientID, j.publicKeyID, j.enterpriseID)
+	hash := sha256.Sum256([]byte(s))
+
+	return fmt.Sprintf("%x", hash)
 }
 
 func (j *JWT) UnmarshalJSON(bytes []byte) error {

@@ -94,8 +94,10 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 		base = ""
 	}
 
+	hash := cmd.hash("list-folders", b.Hash(), base)
+
 	// .. get folder list
-	list, err := cmd.exec(b, base)
+	list, err := cmd.exec(b, base, hash)
 	if err != nil {
 		return err
 	}
@@ -122,10 +124,10 @@ func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
 	}
 }
 
-func (cmd ListFolders) exec(b box.Box, glob string) ([]folder, error) {
+func (cmd ListFolders) exec(b box.Box, glob string, hash string) ([]folder, error) {
 	list := []folder{}
 
-	folders, err := cmd.listFolders(b, 0, "")
+	folders, err := cmd.listFolders(b, 0, "", hash)
 	if err != nil {
 		return nil, err
 	}
@@ -229,8 +231,8 @@ func (cmd ListFolders) save(folders []folder) error {
 	}
 }
 
-func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string) ([]folder, error) {
-	pipe, folders, _, err := resume(cmd.checkpoint, cmd.hash(), cmd.restart)
+func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string, hash string) ([]folder, error) {
+	pipe, folders, _, err := resume(cmd.checkpoint, hash, cmd.restart)
 	if err != nil {
 		return nil, err
 	}
@@ -248,7 +250,7 @@ func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string) ([
 
 		item := pipe[tail]
 		if l, err := b.ListFolders(item.ID); err != nil {
-			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, cmd.hash()); errx != nil {
+			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, hash); errx != nil {
 				warnf("list-folders", "%v", errx)
 			}
 
@@ -277,7 +279,7 @@ func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string) ([
 
 	// ... incomplete?
 	if len(pipe[tail:]) > 0 {
-		if err := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, cmd.hash()); err != nil {
+		if err := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, hash); err != nil {
 			return folders, err
 		} else {
 			return folders, fmt.Errorf("interrupted")
@@ -290,8 +292,4 @@ func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string) ([
 	}
 
 	return folders, nil
-}
-
-func (cmd ListFolders) hash() string {
-	return "list-folders"
 }

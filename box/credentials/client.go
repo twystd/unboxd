@@ -1,6 +1,7 @@
 package credentials
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -66,6 +67,13 @@ func (c *Client) Authenticate() (*AccessToken, error) {
 		Token:  token.AccessToken,
 		Expiry: time.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
 	}, nil
+}
+
+func (c Client) Hash() string {
+	s := fmt.Sprintf("%v:%v:%v", c.clientID, c.userID, c.enterpriseID)
+	hash := sha256.Sum256([]byte(s))
+
+	return fmt.Sprintf("%x", hash)
 }
 
 func (c *Client) UnmarshalJSON(bytes []byte) error {
