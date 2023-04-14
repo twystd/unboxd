@@ -67,8 +67,8 @@ debug: build
 #	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --checkpoint ./runtime/.checkpoint --file "./runtime/folders.tsv" '/**'
 #	cat ./runtime/folders.tsv
 #	$(CLI) --debug --credentials $(CLIENT) list-files --batch-size 5
-	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --batch-size 5
-	$(CLI) --debug --credentials $(CLIENT) list-files   --tags --batch-size 5
+#	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --batch-size 5 --delay 2.5s
+	$(CLI) --debug --credentials $(CLIENT) list-files   --tags --batch-size 5 --delay 2.5s
 
 help: build
 	$(CLI) help

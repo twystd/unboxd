@@ -76,7 +76,7 @@ func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	flagset.BoolVar(&cmd.tags, "tags", cmd.tags, "Include tags in folder information")
 	flagset.StringVar(&cmd.file, "file", cmd.file, "TSV file to which to write folder information")
 	flagset.StringVar(&cmd.checkpoint, "checkpoint", cmd.checkpoint, "Specifies the path for the checkpoint file")
-	flag.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
+	flagset.DurationVar(&cmd.delay, "delay", cmd.delay, "Delay between multiple requests to reduce traffic to Box API")
 	flagset.BoolVar(&cmd.restart, "no-resume", cmd.restart, "Retrieves folder list from the beginning")
 	flagset.UintVar(&cmd.batch, "batch-size", cmd.batch, "Number of calls to the Box API")
 
@@ -245,8 +245,6 @@ func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string, ha
 	count := uint(0)
 	tail := 0
 	for tail < len(pipe) {
-		time.Sleep(cmd.delay)
-
 		item := pipe[tail]
 		if l, err := b.ListFolders(item.ID); err != nil {
 			if errx := checkpoint(cmd.checkpoint, pipe[tail:], folders, []file{}, hash); errx != nil {
@@ -274,6 +272,9 @@ func (cmd ListFolders) listFolders(b box.Box, folderID uint64, prefix string, ha
 		}
 
 		tail++
+		if tail < len(pipe) {
+			time.Sleep(cmd.delay)
+		}
 	}
 
 	// ... incomplete?
