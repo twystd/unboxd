@@ -75,6 +75,10 @@ help: build
 	$(CLI) help list-folders
 	$(CLI) help list-files
 	$(CLI) help upload-file
+	$(CLI) help delete-file
+	$(CLI) help tag-file
+	$(CLI) help untag-file
+	$(CLI) help retag-file
 
 version: build
 	$(CLI) version

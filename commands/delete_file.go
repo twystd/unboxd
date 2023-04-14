@@ -22,11 +22,26 @@ type DeleteFile struct {
 	command
 }
 
-func (cmd *DeleteFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	return flagset
+func (cmd DeleteFile) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd [--debug] --credentials <file> delete-file <file-id>")
+	fmt.Println()
+	fmt.Println("  Deletes a file stored in a Box folder.")
+	fmt.Println()
+	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
+	fmt.Println("      <file-id>           Box file ID")
+	fmt.Println()
+	fmt.Println("  Options:")
+	fmt.Println("    --debug  Enable debugging information")
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println(`    unboxd --debug --credentials .credentials delete-file 135789086421"`)
+	fmt.Println()
 }
 
-func (cmd DeleteFile) Help() {
+func (cmd *DeleteFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
+	return flagset
 }
 
 func (cmd DeleteFile) Execute(flagset *flag.FlagSet, b box.Box) error {

@@ -6,10 +6,10 @@
       - [x] list-folders
       - [x] list-files
       - [x] upload-file
-      - [ ] delete-file
-      - [ ] tag-file
-      - [ ] untag-file
-      - [ ] retag-file
+      - [x] delete-file
+      - [x] tag-file
+      - [x] untag-file
+      - [x] retag-file
       - [ ] list-templates
       - [ ] create-template
       - [ ] delete-template
@@ -20,7 +20,7 @@
 - [ ] Implement checkpointable pipeline that can be serialized and resumed
       - [x] Dedupe folders list
       - [x] Dedupe files list
-      - [ ] Store list-files to TSV
+      - [x] Store list-files to TSV
       - [ ] Include account ID + base file ID in checkpoint and verify on resume
       - [ ] Include command in checkpoint and verify on resume
       - [ ] Don't recurse into folders that can't match the glob

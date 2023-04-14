@@ -9,7 +9,7 @@ import (
 	"github.com/twystd/unboxd/box"
 )
 
-var RetagFileCmd = TagFile{
+var RetagFileCmd = RetagFile{
 	command: command{
 		name:  "retag-file",
 		delay: 500 * time.Millisecond,
@@ -20,11 +20,28 @@ type RetagFile struct {
 	command
 }
 
-func (cmd *RetagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	return flagset
+func (cmd RetagFile) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd [--debug] --credentials <file> retag-file <file-id> <old-tag> <new-tag>")
+	fmt.Println()
+	fmt.Println("  Replaces a tag on a file stored in a Box folder. The tag is only replaced if it exists.")
+	fmt.Println()
+	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
+	fmt.Println("      <file-id>           Box file ID")
+	fmt.Println("      <old-tag>           Tag to be replaced")
+	fmt.Println("      <new-tag>           Replacement tag")
+	fmt.Println()
+	fmt.Println("  Options:")
+	fmt.Println("    --debug  Enable debugging information")
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println(`    unboxd --debug --credentials .credentials retag-file 135789086421 hogwarts hogsmeade"`)
+	fmt.Println()
 }
 
-func (cmd RetagFile) Help() {
+func (cmd *RetagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
+	return flagset
 }
 
 func (cmd RetagFile) Execute(flagset *flag.FlagSet, b box.Box) error {

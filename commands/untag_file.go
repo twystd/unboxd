@@ -9,7 +9,7 @@ import (
 	"github.com/twystd/unboxd/box"
 )
 
-var UntagFileCmd = TagFile{
+var UntagFileCmd = UntagFile{
 	command: command{
 		name:  "untag-file",
 		delay: 500 * time.Millisecond,
@@ -20,11 +20,27 @@ type UntagFile struct {
 	command
 }
 
-func (cmd *UntagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
-	return flagset
+func (cmd UntagFile) Help() {
+	fmt.Println()
+	fmt.Println("  Usage: unboxd [--debug] --credentials <file> untag-file <file-id> <tag>")
+	fmt.Println()
+	fmt.Println("  Removes a tag from a file stored in a Box folder.")
+	fmt.Println()
+	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
+	fmt.Println("      <file-id>           Box file ID")
+	fmt.Println("      <tag>               Tag to remove from file")
+	fmt.Println()
+	fmt.Println("  Options:")
+	fmt.Println("    --debug  Enable debugging information")
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("  Examples:")
+	fmt.Println(`    unboxd --debug --credentials .credentials untag-file 135789086421 hogwarts"`)
+	fmt.Println()
 }
 
-func (cmd UntagFile) Help() {
+func (cmd *UntagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
+	return flagset
 }
 
 func (cmd UntagFile) Execute(flagset *flag.FlagSet, b box.Box) error {
