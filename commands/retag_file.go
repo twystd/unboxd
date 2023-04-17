@@ -11,8 +11,9 @@ import (
 
 var RetagFileCmd = RetagFile{
 	command: command{
-		name:  "retag-file",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "retag-file",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -22,7 +23,7 @@ type RetagFile struct {
 
 func (cmd RetagFile) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> retag-file <file-id> <old-tag> <new-tag>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> retag-file <file-id> <old-tag> <new-tag>\n", APP)
 	fmt.Println()
 	fmt.Println("  Replaces a tag on a file stored in a Box folder. The tag is only replaced if it exists.")
 	fmt.Println()
@@ -35,7 +36,7 @@ func (cmd RetagFile) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println(`    unboxd --debug --credentials .credentials retag-file 135789086421 hogwarts hogsmeade"`)
+	fmt.Printf("    %v --debug --credentials .credentials retag-file 135789086421 hogwarts hogsmeade\n", APP)
 	fmt.Println()
 }
 

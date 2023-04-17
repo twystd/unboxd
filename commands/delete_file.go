@@ -13,8 +13,9 @@ import (
 
 var DeleteFileCmd = DeleteFile{
 	command: command{
-		name:  "delete-file",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "delete-file",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -24,7 +25,7 @@ type DeleteFile struct {
 
 func (cmd DeleteFile) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> delete-file <file-id>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> delete-file <file-id>\n", APP)
 	fmt.Println()
 	fmt.Println("  Deletes a file stored in a Box folder.")
 	fmt.Println()
@@ -35,7 +36,7 @@ func (cmd DeleteFile) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println(`    unboxd --debug --credentials .credentials delete-file 135789086421"`)
+	fmt.Printf("    %v --debug --credentials .credentials delete-file 135789086421\n", APP)
 	fmt.Println()
 }
 

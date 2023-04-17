@@ -11,8 +11,9 @@ import (
 
 var UploadFileCmd = UploadFile{
 	command: command{
-		name:  "upload-file",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "upload-file",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -26,7 +27,7 @@ func (cmd *UploadFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 
 func (cmd UploadFile) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> upload-file <file> <folder>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> upload-file <file> <folder>\n", APP)
 	fmt.Println()
 	fmt.Println("  Uploads a file to a Box folder.")
 	fmt.Println()
@@ -38,7 +39,7 @@ func (cmd UploadFile) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println(`    unboxd --debug --credentials .credentials upload-file photo.jpg /photos"`)
+	fmt.Printf("    %v --debug --credentials .credentials upload-file photo.jpg /photos\n", APP)
 	fmt.Println()
 }
 

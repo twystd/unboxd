@@ -20,19 +20,19 @@ func (h *Help) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 
 func (h Help) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd help [command]")
+	fmt.Printf("  Usage: %v help [command]\n", APP)
 	fmt.Println()
 	fmt.Println("  Displays the command line and a list of the available commands. If a command is")
 	fmt.Println("  specified, displays the help information for that command.")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println("    unboxd help")
-	fmt.Println("    unboxd help list-folders")
+	fmt.Printf("    %v help\n", APP)
+	fmt.Printf("    %v help list-folders\n", APP)
 	fmt.Println()
 }
 
 func (h Help) Execute(flagset *flag.FlagSet, box box.Box) error {
-	for _, c := range cli {
+	for _, c := range CLI {
 		if c.Name() == flagset.Arg(0) {
 			c.Help()
 			return nil
@@ -46,15 +46,15 @@ func (h Help) Execute(flagset *flag.FlagSet, box box.Box) error {
 
 func (h Help) help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd <command> <options>")
+	fmt.Printf("  Usage: %v <command> <options>\n", APP)
 	fmt.Println()
 	fmt.Println("  Supported commands:")
 
-	for _, c := range cli {
+	for _, c := range CLI {
 		fmt.Printf("    %v\n", c.Name())
 	}
 
 	fmt.Println()
-	fmt.Println("  Use 'unboxd help <command>' for command specific information.")
+	fmt.Printf("  Use '%v help <command>' for command specific information.\n", APP)
 	fmt.Println()
 }

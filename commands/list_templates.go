@@ -11,8 +11,9 @@ import (
 
 var ListTemplatesCmd = ListTemplates{
 	command: command{
-		name:  "list-templates",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "list-templates",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -22,7 +23,7 @@ type ListTemplates struct {
 
 func (cmd ListTemplates) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-templates")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> list-templates\n", APP)
 	fmt.Println()
 	fmt.Println("  Retrieves the full list of metadata templates associated with the account.")
 	fmt.Println()
@@ -30,7 +31,7 @@ func (cmd ListTemplates) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println("    unboxd --debug --credentials .credentials list-templates")
+	fmt.Printf("    %v --debug --credentials .credentials list-templates\n", APP)
 	fmt.Println()
 }
 

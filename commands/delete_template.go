@@ -12,8 +12,9 @@ import (
 
 var DeleteTemplateCmd = DeleteTemplate{
 	command: command{
-		name:  "delete-template",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "delete-template",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -23,7 +24,7 @@ type DeleteTemplate struct {
 
 func (cmd DeleteTemplate) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> delete-template [--exact] [--key] [--out <file>] <template-id>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> delete-template [--exact] [--key] [--out <file>] <template-id>\n", APP)
 	fmt.Println()
 	fmt.Println("  Deletes a Box metadata template associated with the account.")
 	fmt.Println()
@@ -37,7 +38,7 @@ func (cmd DeleteTemplate) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println("    unboxd --debug --credentials .credentials delete-template --exact HOGWARTS")
+	fmt.Printf("    %v --debug --credentials .credentials delete-template --exact HOGWARTS\n", APP)
 	fmt.Println()
 }
 

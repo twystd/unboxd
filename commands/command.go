@@ -13,6 +13,9 @@ import (
 	"github.com/twystd/unboxd/log"
 )
 
+var APP = "unboxd"
+var VERSION = "v0.0.x"
+
 type Command interface {
 	Name() string
 	Flagset(*flag.FlagSet) *flag.FlagSet
@@ -21,8 +24,9 @@ type Command interface {
 }
 
 type command struct {
-	name  string
-	delay time.Duration
+	application string
+	name        string
+	delay       time.Duration
 }
 
 func (cmd command) Name() string {

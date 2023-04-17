@@ -7,12 +7,17 @@ import (
 	"github.com/twystd/unboxd/box"
 )
 
-type Version struct {
-	Version string
+var VersionCmd = Version{
+	command: command{
+		application: APP,
+		name:        "version",
+	},
+	Version: VERSION,
 }
 
-func (cmd Version) Name() string {
-	return "version"
+type Version struct {
+	command
+	Version string
 }
 
 func (cmd *Version) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
@@ -21,18 +26,18 @@ func (cmd *Version) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 
 func (cmd Version) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd version")
+	fmt.Printf("  Usage: %v version\n", APP)
 	fmt.Println()
 	fmt.Println("  Displays the current version information.")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println("    unboxd version")
+	fmt.Printf("    %v version\n", APP)
 	fmt.Println()
 }
 
 func (cmd Version) Execute(flagset *flag.FlagSet, b box.Box) error {
 	fmt.Println()
-	fmt.Printf("   unboxd %v\n", cmd.Version)
+	fmt.Printf("   %v %v\n", APP, cmd.Version)
 	fmt.Println()
 
 	return nil

@@ -14,8 +14,9 @@ import (
 
 var CreateTemplateCmd = CreateTemplate{
 	command: command{
-		name:  "create-template",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "create-template",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -25,7 +26,7 @@ type CreateTemplate struct {
 
 func (cmd CreateTemplate) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> create-template  <template-file>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> create-template  <template-file>\n", APP)
 	fmt.Println()
 	fmt.Println("  Creates a new Box metadata template from the definition in the template file.")
 	fmt.Println()
@@ -37,7 +38,7 @@ func (cmd CreateTemplate) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println("    unboxd --debug --credentials .credentials create-template hogwarts.json")
+	fmt.Printf("    %v --debug --credentials .credentials create-template hogwarts.json\n", APP)
 	fmt.Println()
 }
 

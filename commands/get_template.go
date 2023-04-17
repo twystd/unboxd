@@ -14,8 +14,9 @@ import (
 
 var GetTemplateCmd = GetTemplate{
 	command: command{
-		name:  "get-template",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "get-template",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -25,7 +26,7 @@ type GetTemplate struct {
 
 func (cmd GetTemplate) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> get-template [--exact] [--key] [--out <file>] <template-id>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> get-template [--exact] [--key] [--out <file>] <template-id>\n", APP)
 	fmt.Println()
 	fmt.Println("  Retrieves the metadata template definition.")
 	fmt.Println()
@@ -40,7 +41,7 @@ func (cmd GetTemplate) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println("    unboxd --debug --credentials .credentials get-template --out hogwarts.json HOGWARTS")
+	fmt.Printf("    %v --debug --credentials .credentials get-template --out hogwarts.json HOGWARTS\n", APP)
 	fmt.Println()
 }
 

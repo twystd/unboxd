@@ -16,8 +16,9 @@ import (
 
 var ListFoldersCmd = ListFolders{
 	command: command{
-		name:  "list-folders",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "list-folders",
+		delay:       500 * time.Millisecond,
 	},
 
 	file:       "",
@@ -45,7 +46,7 @@ type folder struct {
 
 func (cmd ListFolders) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>\n", APP)
 	fmt.Println()
 	fmt.Println("  Retrieves a list of folders that match the folder spec.")
 	fmt.Println()
@@ -68,7 +69,7 @@ func (cmd ListFolders) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println(`    unboxd --debug --credentials .credentials list-folders --tags --file folders.tsv /**"`)
+	fmt.Printf("    %v --debug --credentials .credentials list-folders --tags --file folders.tsv /**\n", APP)
 	fmt.Println()
 }
 

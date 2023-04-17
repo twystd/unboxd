@@ -11,8 +11,9 @@ import (
 
 var TagFileCmd = TagFile{
 	command: command{
-		name:  "tag-file",
-		delay: 500 * time.Millisecond,
+		application: APP,
+		name:        "tag-file",
+		delay:       500 * time.Millisecond,
 	},
 }
 
@@ -22,7 +23,7 @@ type TagFile struct {
 
 func (cmd TagFile) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: unboxd [--debug] --credentials <file> tag-file <file-id> <tag>")
+	fmt.Printf("  Usage: %v [--debug] --credentials <file> tag-file <file-id> <tag>\n", APP)
 	fmt.Println()
 	fmt.Println("  Adds a tag to a file stored in a Box folder.")
 	fmt.Println()
@@ -34,7 +35,7 @@ func (cmd TagFile) Help() {
 	fmt.Println("    --debug  Enable debugging information")
 	fmt.Println()
 	fmt.Println("  Examples:")
-	fmt.Println(`    unboxd --debug --credentials .credentials tag-file 135789086421 hogwarts"`)
+	fmt.Printf("    %v --debug --credentials .credentials tag-file 135789086421 hogwarts\n", APP)
 	fmt.Println()
 }
 
