@@ -11,6 +11,8 @@
       - [ ] Store list-folders to sqlite3 DB
       - [ ] Store list-files to sqlite3 DB
 
+- [ ] update-template
+
 - [ ] Restructure so that Box is just a wrapper around the API and the complexity devolves on
       e.g. the command implementation.
       - [ ] list-files
