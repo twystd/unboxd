@@ -115,9 +115,14 @@ func (cmd ListFolders) exec(b box.Box, glob string, hash string) ([]folder, erro
 func (cmd ListFolders) print(folders []folder) error {
 	sort.Slice(folders, func(i, j int) bool { return folders[i].Path < folders[j].Path })
 
-	widths := []int{0, 0, 0}
 	table := [][]string{
 		[]string{"ID", "Path", "Tags"},
+	}
+
+	widths := []int{
+		len(table[0][0]),
+		len(table[0][1]),
+		len(table[0][2]),
 	}
 
 	for _, f := range folders {

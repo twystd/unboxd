@@ -109,8 +109,15 @@ func (cmd ListFiles) exec(b box.Box, glob string, hash string) ([]file, error) {
 func (cmd ListFiles) print(files []file) error {
 	sort.Slice(files, func(i, j int) bool { return files[i].FilePath < files[j].FilePath })
 
-	widths := []int{0, 0, 0}
-	table := [][3]string{}
+	table := [][]string{
+		[]string{"ID", "Filename", "Tags"},
+	}
+
+	widths := []int{
+		len(table[0][0]),
+		len(table[0][1]),
+		len(table[0][2]),
+	}
 
 	for _, f := range files {
 		id := fmt.Sprintf("%v", f.ID)
@@ -129,7 +136,7 @@ func (cmd ListFiles) print(files []file) error {
 			widths[2] = N
 		}
 
-		table = append(table, [3]string{id, filename, tags})
+		table = append(table, []string{id, filename, tags})
 	}
 
 	format := fmt.Sprintf("%%-%vv  %%-%vv  %%-%vv\n", widths[0], widths[1], widths[2])
