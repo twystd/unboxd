@@ -14,35 +14,13 @@ import (
 
 var GetTemplateCmd = GetTemplate{
 	command: command{
-		application: APP,
-		name:        "get-template",
-		delay:       500 * time.Millisecond,
+		name:  "get-template",
+		delay: 500 * time.Millisecond,
 	},
 }
 
 type GetTemplate struct {
 	command
-}
-
-func (cmd GetTemplate) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> get-template [--exact] [--key] [--out <file>] <template-id>\n", APP)
-	fmt.Println()
-	fmt.Println("  Retrieves the metadata template definition.")
-	fmt.Println()
-	fmt.Println("    <template-id>  Metadata template name or Box ID")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("    --exact               Requires that a template name match the template ID exactly (defaults to 'approximately')")
-	fmt.Println("    --key                 Requires that the template Box ID match the template ID")
-	fmt.Println("    --file <file>         JSON file to which to write metadata template definition")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials get-template --out hogwarts.json HOGWARTS\n", APP)
-	fmt.Println()
 }
 
 func (cmd *GetTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

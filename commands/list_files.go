@@ -16,9 +16,8 @@ import (
 
 var ListFilesCmd = ListFiles{
 	command: command{
-		application: APP,
-		name:        "list-files",
-		delay:       500 * time.Millisecond,
+		name:  "list-files",
+		delay: 500 * time.Millisecond,
 	},
 
 	file:       "",
@@ -42,35 +41,6 @@ type file struct {
 	FileName string
 	FilePath string
 	Tags     []string
-}
-
-func (cmd ListFiles) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> list-files [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <filespec>\n", APP)
-	fmt.Println()
-	fmt.Println("  Retrieves a list of files that match the file spec.")
-	fmt.Println()
-	fmt.Println("  A filespec is a glob expression against which to match file paths e.g.:")
-	fmt.Println("    /*         matches files in the top level folder")
-	fmt.Println("    /**        matches all files recursively")
-	fmt.Println("    /photos/*  matches all files in the /photos folder")
-	fmt.Println()
-	fmt.Println("  The default filespec is /** i.e. list all files recursively")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("    --tags                Include tags in file information")
-	fmt.Println("    --file                TSV file to which to write file information")
-	fmt.Println("    --no-resume           Retrieves file list from the beginning (default is to continue from last checkpoint")
-	fmt.Println("    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)")
-	fmt.Println("    --batch               Maximum number of calls to the Box API (defaults to no limit)")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials list-files --tags --file folders.tsv /**\n", APP)
-	fmt.Println()
 }
 
 func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

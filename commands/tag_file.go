@@ -11,32 +11,13 @@ import (
 
 var TagFileCmd = TagFile{
 	command: command{
-		application: APP,
-		name:        "tag-file",
-		delay:       500 * time.Millisecond,
+		name:  "tag-file",
+		delay: 500 * time.Millisecond,
 	},
 }
 
 type TagFile struct {
 	command
-}
-
-func (cmd TagFile) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> tag-file <file-id> <tag>\n", APP)
-	fmt.Println()
-	fmt.Println("  Adds a tag to a file stored in a Box folder.")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("      <file-id>           Box file ID")
-	fmt.Println("      <tag>               Tag to add to file")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials tag-file 135789086421 hogwarts\n", APP)
-	fmt.Println()
 }
 
 func (cmd *TagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

@@ -13,31 +13,13 @@ import (
 
 var DeleteFileCmd = DeleteFile{
 	command: command{
-		application: APP,
-		name:        "delete-file",
-		delay:       500 * time.Millisecond,
+		name:  "delete-file",
+		delay: 500 * time.Millisecond,
 	},
 }
 
 type DeleteFile struct {
 	command
-}
-
-func (cmd DeleteFile) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> delete-file <file-id>\n", APP)
-	fmt.Println()
-	fmt.Println("  Deletes a file stored in a Box folder.")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("      <file-id>           Box file ID")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials delete-file 135789086421\n", APP)
-	fmt.Println()
 }
 
 func (cmd *DeleteFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

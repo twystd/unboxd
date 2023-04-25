@@ -11,32 +11,13 @@ import (
 
 var UntagFileCmd = UntagFile{
 	command: command{
-		application: APP,
-		name:        "untag-file",
-		delay:       500 * time.Millisecond,
+		name:  "untag-file",
+		delay: 500 * time.Millisecond,
 	},
 }
 
 type UntagFile struct {
 	command
-}
-
-func (cmd UntagFile) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> untag-file <file-id> <tag>\n", APP)
-	fmt.Println()
-	fmt.Println("  Removes a tag from a file stored in a Box folder.")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("      <file-id>           Box file ID")
-	fmt.Println("      <tag>               Tag to remove from file")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials untag-file 135789086421 hogwarts\n", APP)
-	fmt.Println()
 }
 
 func (cmd *UntagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

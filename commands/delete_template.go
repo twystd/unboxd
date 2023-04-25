@@ -12,34 +12,13 @@ import (
 
 var DeleteTemplateCmd = DeleteTemplate{
 	command: command{
-		application: APP,
-		name:        "delete-template",
-		delay:       500 * time.Millisecond,
+		name:  "delete-template",
+		delay: 500 * time.Millisecond,
 	},
 }
 
 type DeleteTemplate struct {
 	command
-}
-
-func (cmd DeleteTemplate) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> delete-template [--exact] [--key] [--out <file>] <template-id>\n", APP)
-	fmt.Println()
-	fmt.Println("  Deletes a Box metadata template associated with the account.")
-	fmt.Println()
-	fmt.Println("    <template-id>  Metadata template name or Box ID")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("    --exact               Requires that a template name match the template ID exactly (defaults to 'approximately')")
-	fmt.Println("    --key                 Requires that the template Box ID match the template ID")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials delete-template --exact HOGWARTS\n", APP)
-	fmt.Println()
 }
 
 func (cmd *DeleteTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

@@ -16,9 +16,8 @@ import (
 
 var ListFoldersCmd = ListFolders{
 	command: command{
-		application: APP,
-		name:        "list-folders",
-		delay:       500 * time.Millisecond,
+		name:  "list-folders",
+		delay: 500 * time.Millisecond,
 	},
 
 	file:       "",
@@ -42,35 +41,6 @@ type folder struct {
 	Name string   `json:"name"`
 	Path string   `json:"path"`
 	Tags []string `json:"tags,omitempty"`
-}
-
-func (cmd ListFolders) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>\n", APP)
-	fmt.Println()
-	fmt.Println("  Retrieves a list of folders that match the folder spec.")
-	fmt.Println()
-	fmt.Println("  A folderspec is a glob expression against which to match folder paths e.g.:")
-	fmt.Println("    /          matches top level folders")
-	fmt.Println("    /**        matches all folders recursively")
-	fmt.Println("    /photos/*  matches all folders in the /photos folder")
-	fmt.Println()
-	fmt.Println("  The default folderspec is /** i.e. list all folders recursively")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("    --tags                Include tags in folder information")
-	fmt.Println("    --file                TSV file to which to write folder information")
-	fmt.Println("    --no-resume           Retrieves folder list from the beginning (default is to continue from the last checkpoint)")
-	fmt.Println("    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)")
-	fmt.Println("    --batch               Maximum number of calls to the Box API (defaults to no limit)")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --delay  Delay between multiple requests to reduce traffic to Box API")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials list-folders --tags --file folders.tsv /**\n", APP)
-	fmt.Println()
 }
 
 func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {

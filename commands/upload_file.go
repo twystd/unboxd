@@ -11,9 +11,8 @@ import (
 
 var UploadFileCmd = UploadFile{
 	command: command{
-		application: APP,
-		name:        "upload-file",
-		delay:       500 * time.Millisecond,
+		name:  "upload-file",
+		delay: 500 * time.Millisecond,
 	},
 }
 
@@ -23,24 +22,6 @@ type UploadFile struct {
 
 func (cmd *UploadFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
-}
-
-func (cmd UploadFile) Help() {
-	fmt.Println()
-	fmt.Printf("  Usage: %v [--debug] --credentials <file> upload-file <file> <folder>\n", APP)
-	fmt.Println()
-	fmt.Println("  Uploads a file to a Box folder.")
-	fmt.Println()
-	fmt.Println("    --credentials <file>  JSON file with Box credentials (required)")
-	fmt.Println("      <file>              File to upload")
-	fmt.Println("      <folder>            Destination folder")
-	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println("    --debug  Enable debugging information")
-	fmt.Println()
-	fmt.Println("  Examples:")
-	fmt.Printf("    %v --debug --credentials .credentials upload-file photo.jpg /photos\n", APP)
-	fmt.Println()
 }
 
 func (cmd UploadFile) Execute(flagset *flag.FlagSet, b box.Box) error {

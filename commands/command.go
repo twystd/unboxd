@@ -13,20 +13,15 @@ import (
 	"github.com/twystd/unboxd/log"
 )
 
-var APP = "unboxd"
-var VERSION = "v0.0.x"
-
 type Command interface {
 	Name() string
 	Flagset(*flag.FlagSet) *flag.FlagSet
 	Execute(*flag.FlagSet, box.Box) error
-	Help()
 }
 
 type command struct {
-	application string
-	name        string
-	delay       time.Duration
+	name  string
+	delay time.Duration
 }
 
 func (cmd command) Name() string {

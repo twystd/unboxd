@@ -8,7 +8,7 @@ FOLDERID ?= 147495046780
 FILEID ?= 903401361197
 FILE ?= ./runtime/kandinsky.jpg
 
-.DEFAULT_GOAL = build-all
+.DEFAULT_GOAL = debug
 
 .PHONY: clean
 .PHONY: update
@@ -68,23 +68,25 @@ debug: build
 #	cat ./runtime/folders.tsv
 #	$(CLI) --debug --credentials $(CLIENT) list-files --batch-size 5
 #	$(CLI) --debug --credentials $(CLIENT) list-folders --tags --batch-size 5 --delay 2.5s
-	$(CLI) --debug --credentials $(CLIENT) list-files   --tags --batch-size 5 --delay 2.5s
+#	$(CLI) --debug --credentials $(CLIENT) list-files   --tags --batch-size 5 --delay 2.5s
+	$(CLI) help help
+
 
 help: build
 	$(CLI) help
 	$(CLI) help list-folders
 	$(CLI) help list-files
 	$(CLI) help upload-file
-	$(CLI) help delete-file
-	$(CLI) help tag-file
-	$(CLI) help untag-file
-	$(CLI) help retag-file
-	$(CLI) help list-templates
-	$(CLI) help get-template
-	$(CLI) help create-template
-	$(CLI) help delete-template
-	$(CLI) help version
-	$(CLI) help help
+#	$(CLI) help delete-file
+#	$(CLI) help tag-file
+#	$(CLI) help untag-file
+#	$(CLI) help retag-file
+#	$(CLI) help list-templates
+#	$(CLI) help get-template
+#	$(CLI) help create-template
+#	$(CLI) help delete-template
+#	$(CLI) help version
+#	$(CLI) help help
 
 version: build
 	$(CLI) version

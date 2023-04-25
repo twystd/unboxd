@@ -1,0 +1,245 @@
+{{define "list-folders"}}
+  Usage: {{.APP}} [--debug] --credentials <file> list-folders [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <folderspec>
+
+  Retrieves a list of folders that match the folder spec.
+
+  A folderspec is a glob expression against which to match folder paths e.g.:
+    /          matches top level folders
+    /**        matches all folders recursively
+    /photos/*  matches all folders in the /photos folder
+
+  The default folderspec is /** i.e. list all folders recursively
+
+    --credentials <file>  JSON file with Box credentials (required)
+    --tags                Include tags in folder information
+    --file                TSV file to which to write folder information
+    --no-resume           Retrieves folder list from the beginning (default is to continue from the last checkpoint)
+    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)
+    --batch               Maximum number of calls to the Box API (defaults to no limit)
+
+  Options:
+    --delay  Delay between multiple requests to reduce traffic to Box API
+    --debug  Enable debugging information
+
+  Examples:
+   {{.APP}} --debug --credentials .credentials list-folders --tags --file folders.tsv /**
+
+{{end}}
+
+
+{{define "list-files"}}
+  Usage: {{.APP}} [--debug] --credentials <file> list-files [--tags] [--file <file>] [--checkpoint <file>] [--delay <duration>] [--no-resume] <filespec>
+
+  Retrieves a list of files that match the file spec.
+
+  A filespec is a glob expression against which to match file paths e.g.:
+    /*         matches files in the top level folder
+    /**        matches all files recursively
+    /photos/*  matches all files in the /photos folder
+
+  The default filespec is /** i.e. list all files recursively
+
+    --credentials <file>  JSON file with Box credentials (required)
+    --tags                Include tags in file information
+    --file                TSV file to which to write file information
+    --no-resume           Retrieves file list from the beginning (default is to continue from last checkpoint
+    --checkpoint          Specifies the path for the checkpoint file (default is .checkpoint)
+    --batch               Maximum number of calls to the Box API (defaults to no limit)
+
+  Options:
+    --delay  Delay between multiple requests to reduce traffic to Box API
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials list-files --tags --file folders.tsv /**
+
+{{end}}
+
+
+{{define "upload-file"}}
+  Usage: {{.APP}} [--debug] --credentials <file> upload-file <file> <folder>
+
+  Uploads a file to a Box folder.
+
+    --credentials <file>  JSON file with Box credentials (required)
+      <file>              File to upload
+      <folder>            Destination folder
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials upload-file photo.jpg /photos
+
+{{end}}
+
+
+{{define "delete-file"}}
+  Usage: {{.APP}} [--debug] --credentials <file> delete-file <file-id>
+
+  Deletes a file stored in a Box folder.
+
+    --credentials <file>  JSON file with Box credentials (required)
+      <file-id>           Box file ID
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials delete-file 135789086421
+
+{{end}}
+
+
+{{define "tag-file"}}
+  Usage: {{.APP}} [--debug] --credentials <file> tag-file <file-id> <tag>
+
+  Adds a tag to a file stored in a Box folder.
+
+    --credentials <file>  JSON file with Box credentials (required)
+      <file-id>           Box file ID
+      <tag>               Tag to add to file
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+     {{.APP}} --debug --credentials .credentials tag-file 135789086421 hogwarts
+
+{{end}}
+
+
+{{define "untag-file"}}
+  Usage: {{.APP}} [--debug] --credentials <file> untag-file <file-id> <tag>
+
+  Removes a tag from a file stored in a Box folder.
+
+    --credentials <file>  JSON file with Box credentials (required)
+      <file-id>           Box file ID
+      <tag>               Tag to remove from file
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials untag-file 135789086421 hogwarts
+
+{{end}}
+
+
+{{define "retag-file"}}
+  Usage: {{.APP}} [--debug] --credentials <file> retag-file <file-id> <old-tag> <new-tag>
+
+  Replaces a tag on a file stored in a Box folder. The tag is only replaced if it exists.
+
+    --credentials <file>  JSON file with Box credentials (required)
+      <file-id>           Box file ID
+      <old-tag>           Tag to be replaced
+      <new-tag>           Replacement tag
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials retag-file 135789086421 hogwarts hogsmeade
+
+{{end}}
+
+
+{{define "list-templates"}}
+  Usage: {{.APP}} [--debug] --credentials <file> list-templates
+
+  Retrieves the full list of metadata templates associated with the account.
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials list-templates
+
+{{end}}
+
+
+{{define "get-template"}}
+  Usage: {{.APP}} [--debug] --credentials <file> get-template [--exact] [--key] [--out <file>] <template-id>
+
+  Retrieves the metadata template definition.
+
+    <template-id>  Metadata template name or Box ID
+
+    --credentials <file>  JSON file with Box credentials (required)
+    --exact               Requires that a template name match the template ID exactly (defaults to 'approximately')
+    --key                 Requires that the template Box ID match the template ID
+    --file <file>         JSON file to which to write metadata template definition
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials get-template --out hogwarts.json HOGWARTS
+
+{{end}}
+
+
+{{define "create-template"}}
+  Usage: {{.APP}} [--debug] --credentials <file> create-template  <template-file>
+
+  Creates a new Box metadata template from the definition in the template file.
+
+    <template-file>  JSON metadata template definition
+
+    --credentials <file>  JSON file with Box credentials (required)
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials create-template hogwarts.json
+
+{{end}}
+
+
+{{define "delete-template"}}
+  Usage: {{.APP}} [--debug] --credentials <file> delete-template [--exact] [--key] [--out <file>] <template-id>
+
+  Deletes a Box metadata template associated with the account.
+
+    <template-id>  Metadata template name or Box ID
+
+    --credentials <file>  JSON file with Box credentials (required)
+    --exact               Requires that a template name match the template ID exactly (defaults to 'approximately')
+    --key                 Requires that the template Box ID match the template ID
+
+  Options:
+    --debug  Enable debugging information
+
+  Examples:
+    {{.APP}} --debug --credentials .credentials delete-template --exact HOGWARTS
+
+{{end}}
+
+{{define "version"}}
+  Usage: {{.APP}} version
+
+  Displays the current version information.
+
+  Examples:
+    {{.APP}} version
+
+{{end}}
+
+
+{{define "help"}}
+  Usage: {{.APP}} help [command]
+
+  Displays the command line and a list of the available commands. If a command is
+  specified, displays the help information for that command.
+
+  Examples:
+    {{.APP}} help
+    {{.APP}} help list-folders
+
+{{end}}
+
+
+
