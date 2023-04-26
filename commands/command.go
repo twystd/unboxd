@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/log"
 )
 
@@ -33,6 +34,15 @@ func (cmd command) hash(command string, credentials string, root string) string 
 	hash := sha256.Sum256([]byte(s))
 
 	return fmt.Sprintf("%x", hash)
+}
+
+func Authenticate(credentials credentials.Credentials) (box.Box, error) {
+	box := box.NewBox()
+	if err := box.Authenticate(credentials); err != nil {
+		return box, err
+	} else {
+		return box, nil
+	}
 }
 
 func clean(s string) string {

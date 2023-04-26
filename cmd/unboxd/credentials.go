@@ -15,18 +15,20 @@ func NewCredentials(file string) (credentials.Credentials, error) {
 	}
 
 	credentials := struct {
-		Client *credentials.Client `json:"client,omitempty"`
-		JWT    *credentials.JWT    `json:"jwt,omitempty"`
+		Box struct {
+			Client *credentials.Client `json:"client,omitempty"`
+			JWT    *credentials.JWT    `json:"jwt,omitempty"`
+		} `json:"box"`
 	}{}
 
 	if err := json.Unmarshal(bytes, &credentials); err != nil {
 		return nil, err
 	}
 
-	if credentials.Client != nil {
-		return credentials.Client, nil
-	} else if credentials.JWT != nil {
-		return credentials.JWT, nil
+	if credentials.Box.Client != nil {
+		return credentials.Box.Client, nil
+	} else if credentials.Box.JWT != nil {
+		return credentials.Box.JWT, nil
 	}
 
 	return nil, fmt.Errorf("no valid credentials in file %v", file)
