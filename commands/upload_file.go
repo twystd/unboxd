@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/twystd/unboxd/box"
@@ -25,7 +24,7 @@ func (cmd *UploadFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd UploadFile) Execute(flagset *flag.FlagSet, b box.Box) error {
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 	if len(args) < 1 {
 		return fmt.Errorf("missing file argument")
 	}
@@ -42,7 +41,7 @@ func (cmd UploadFile) Execute(flagset *flag.FlagSet, b box.Box) error {
 		return err
 	}
 
-	log.Printf("%[1]v  %[2]v  %[3]v  uploaded", cmd.Name(), fileID, file)
+	infof("upload-file", "%v  %v  uploaded", fileID, file)
 
 	return nil
 }

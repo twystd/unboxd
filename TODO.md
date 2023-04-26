@@ -10,6 +10,7 @@
       - [ ] Backoff and retry on HTTP error
       - [ ] Store list-folders to sqlite3 DB
       - [ ] Store list-files to sqlite3 DB
+      - [ ] Use cached file/folder lists for queries
 
 - [ ] update-template
 

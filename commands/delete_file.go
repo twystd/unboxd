@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"time"
@@ -27,7 +26,7 @@ func (cmd *DeleteFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd DeleteFile) Execute(flagset *flag.FlagSet, b box.Box) error {
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 	if len(args) == 0 {
 		return fmt.Errorf("missing file ID argument")
 	}
@@ -46,7 +45,7 @@ func (cmd DeleteFile) Execute(flagset *flag.FlagSet, b box.Box) error {
 			return err
 		}
 
-		log.Printf("%v  %v deleted\n", cmd.Name(), file)
+		infof("delete-file", "%v deleted\n", file)
 	}
 
 	return nil
