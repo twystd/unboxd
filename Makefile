@@ -77,16 +77,16 @@ help: build
 	$(CLI) help list-folders
 	$(CLI) help list-files
 	$(CLI) help upload-file
-#	$(CLI) help delete-file
-#	$(CLI) help tag-file
-#	$(CLI) help untag-file
-#	$(CLI) help retag-file
-#	$(CLI) help list-templates
-#	$(CLI) help get-template
-#	$(CLI) help create-template
-#	$(CLI) help delete-template
-#	$(CLI) help version
-#	$(CLI) help help
+	$(CLI) help delete-file
+	$(CLI) help tag-file
+	$(CLI) help untag-file
+	$(CLI) help retag-file
+	$(CLI) help list-templates
+	$(CLI) help get-template
+	$(CLI) help create-template
+	$(CLI) help delete-template
+	$(CLI) help version
+	$(CLI) help help
 
 version: build
 	$(CLI) version
@@ -130,10 +130,13 @@ list-templates: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-templates
 
 create-template: build
-	$(CLI) --debug --credentials $(CREDENTIALS) create-template
+#	$(CLI) --debug --credentials $(CREDENTIALS) create-template
+	$(CLI) --debug --credentials $(CREDENTIALS) create-template ./runtime/templates/QWERTY.json
 
 delete-template: build
-	$(CLI) --debug --credentials $(CREDENTIALS) delete-template XXX
+#	$(CLI) --debug --credentials $(CREDENTIALS) delete-template
+	$(CLI) --debug --credentials $(CREDENTIALS) delete-template QWERTY
 
 get-template: build
-	$(CLI) --debug --credentials $(CREDENTIALS) get-template PWA
+#	$(CLI) --debug --credentials $(CREDENTIALS) get-template
+	$(CLI) --debug --credentials $(CREDENTIALS) get-template QWERTY

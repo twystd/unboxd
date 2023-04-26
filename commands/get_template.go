@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -33,7 +32,7 @@ func (cmd GetTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
 	exactMatch := false
 	byKey := false
 
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 	if len(args) == 1 {
 		template = args[0]
 		args = args[1:]
@@ -120,7 +119,7 @@ func (cmd GetTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
 				return err
 			}
 
-			log.Printf("saved template %v to file %v\n", template, file)
+			infof("get-template", "saved template %v to file %v\n", template, file)
 			return nil
 
 		} else {

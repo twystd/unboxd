@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -28,7 +27,7 @@ func (cmd *CreateTemplate) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 }
 
 func (cmd CreateTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 	if len(args) < 1 {
 		return fmt.Errorf("missing template JSON file argument")
 	}
@@ -48,7 +47,7 @@ func (cmd CreateTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
 		return err
 	}
 
-	log.Printf("%v  %v created\n", cmd.Name(), schema.Name)
+	infof("create-template", "%v created\n", schema.Name)
 
 	return nil
 }

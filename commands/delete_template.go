@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/twystd/unboxd/box"
@@ -30,7 +29,7 @@ func (cmd DeleteTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
 	exactMatch := false
 	byKey := false
 
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 	if len(args) == 1 {
 		template = args[0]
 	} else if len(args) > 1 {
@@ -88,7 +87,7 @@ func (cmd DeleteTemplate) Execute(flagset *flag.FlagSet, b box.Box) error {
 		if err := cmd.exec(b, keys[0]); err != nil {
 			return err
 		} else {
-			log.Printf("%v  %v deleted\n", cmd.Name(), template)
+			infof("delete-template", " %v deleted\n", template)
 			return nil
 		}
 
