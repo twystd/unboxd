@@ -5,7 +5,7 @@ CREDENTIALS ?= .credentials.dev
 CLIENT ?= .credentials.client
 JWT ?= .credentials.jwt
 FOLDERID ?= 147495046780
-FILEID ?= 903401361197
+FILEID ?= 1200261074445
 FILE ?= ./runtime/kandinsky.jpg
 
 .DEFAULT_GOAL = debug
@@ -116,16 +116,16 @@ delete-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) delete-file $(FILEID)
 
 tag-file: build
-	$(CLI) --debug --credentials $(CREDENTIALS) tag-file 907642054572 'woot'
-	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+	$(CLI) --debug --credentials $(CREDENTIALS) tag-file $(FILEID) 'woot'
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files --tags
 
 untag-file: build
-	$(CLI) --debug --credentials $(CREDENTIALS) untag-file 907642054572 'woot'
-	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+	$(CLI) --debug --credentials $(CREDENTIALS) untag-file $(FILEID) 'woot'
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files --tags
 
 retag-file: build
-	$(CLI) --debug --credentials $(CREDENTIALS) retag-file 907642054572 'woot' 'woot2'
-	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
+	$(CLI) --debug --credentials $(CREDENTIALS) retag-file $(FILEID) 'woot' 'wooted'
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files --tags
 
 list-templates: build
 	$(CLI) --debug --credentials $(CREDENTIALS) list-templates

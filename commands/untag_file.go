@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/twystd/unboxd/box"
@@ -28,7 +27,7 @@ func (cmd UntagFile) Execute(flagset *flag.FlagSet, b box.Box) error {
 	var fileID uint64
 	var tag string
 
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 
 	if len(args) < 1 {
 		return fmt.Errorf("missing file ID")
@@ -48,7 +47,7 @@ func (cmd UntagFile) Execute(flagset *flag.FlagSet, b box.Box) error {
 		return err
 	}
 
-	log.Printf("%v  %v removed tag %v\n", cmd.Name(), fileID, tag)
+	infof("untag-file", "%v removed tag %v\n", fileID, tag)
 
 	return nil
 }

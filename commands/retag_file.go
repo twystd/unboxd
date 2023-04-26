@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/twystd/unboxd/box"
@@ -29,7 +28,7 @@ func (cmd RetagFile) Execute(flagset *flag.FlagSet, b box.Box) error {
 	var oldTag string
 	var newTag string
 
-	args := flagset.Args()[1:]
+	args := flagset.Args()
 
 	if len(args) < 1 {
 		return fmt.Errorf("missing file ID")
@@ -55,7 +54,7 @@ func (cmd RetagFile) Execute(flagset *flag.FlagSet, b box.Box) error {
 		return err
 	}
 
-	log.Printf("%v  %v replaced tag %v with %v\n", cmd.Name(), fileID, oldTag, newTag)
+	infof("retag-file", "%v replaced tag %v with %v\n", fileID, oldTag, newTag)
 
 	return nil
 }
