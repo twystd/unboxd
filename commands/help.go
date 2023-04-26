@@ -11,11 +11,12 @@ import (
 )
 
 //go:embed help.txt
-var helptext string
+var HelpText string
 
 type Help struct {
-	APP string
-	CLI []Command
+	APP      string
+	CLI      []Command
+	HelpText string
 }
 
 func (cmd Help) Name() string {
@@ -30,6 +31,11 @@ func (h Help) Execute(flagset *flag.FlagSet, box box.Box) error {
 	command := flagset.Arg(0)
 	info := map[string]string{
 		"APP": h.APP,
+	}
+
+	helptext := HelpText
+	if h.HelpText != "" {
+		helptext = h.HelpText
 	}
 
 	templates := template.Must(template.New("help").Parse(helptext))
