@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
-	"github.com/twystd/unboxd/box/credentials"
 )
 
 var DeleteFileCmd = DeleteFile{
@@ -26,9 +25,11 @@ func (cmd *DeleteFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd DeleteFile) Execute(c any, flagset *flag.FlagSet) error {
+func (cmd DeleteFile) Execute(flagset *flag.FlagSet, c ICredentials) error {
+	credentials := c["box"].(box.Credentials)
+
 	b := box.NewBox()
-	if err := b.Authenticate(c.(credentials.Credentials)); err != nil {
+	if err := b.Authenticate(credentials); err != nil {
 		return err
 	}
 

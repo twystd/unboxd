@@ -31,12 +31,12 @@ func exec(cli []commands.Command) {
 	}
 
 	if cmd.Name() == "help" {
-		cmd.Execute(nil, flagset)
+		cmd.Execute(flagset, nil)
 		os.Exit(0)
 	}
 
 	if cmd.Name() == "version" {
-		cmd.Execute(nil, flagset)
+		cmd.Execute(flagset, nil)
 		os.Exit(0)
 	}
 
@@ -44,12 +44,15 @@ func exec(cli []commands.Command) {
 		log.SetLevel("debug")
 	}
 
-	credentials, err := NewCredentials(options.credentials)
-	if err != nil {
+	credentials := commands.ICredentials{}
+
+	if c, err := NewCredentials(options.credentials); err != nil {
 		log.Fatalf("Error reading credentials from %s (%v)", options.credentials, err)
+	} else {
+		credentials["box"] = c
 	}
 
-	if err := cmd.Execute(credentials, flagset); err != nil {
+	if err := cmd.Execute(flagset, credentials); err != nil {
 		log.Fatalf("%v  %v", cmd.Name(), err)
 	}
 }

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/twystd/unboxd/box/credentials"
+	"github.com/twystd/unboxd/box"
 )
 
-func NewCredentials(file string) (credentials.Credentials, error) {
+func NewCredentials(file string) (box.Credentials, error) {
 	bytes, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
@@ -16,8 +16,8 @@ func NewCredentials(file string) (credentials.Credentials, error) {
 
 	credentials := struct {
 		Box struct {
-			Client *credentials.Client `json:"client,omitempty"`
-			JWT    *credentials.JWT    `json:"jwt,omitempty"`
+			Client *box.Client `json:"client,omitempty"`
+			JWT    *box.JWT    `json:"jwt,omitempty"`
 		} `json:"box"`
 	}{}
 

@@ -1,0 +1,12 @@
+{
+  "boxAppSettings": {
+    "clientID": "v9t4rr8lqktnij13okgr810lgnqlivl6",
+    "clientSecret": "qLELNQDcqArCY7Dl8OCR7i9fdIOMOtqd",
+    "appAuth": {
+      "publicKeyID": "h5v5qkrb",
+      "privateKey": "-----BEGIN ENCRYPTED PRIVATE KEY-----\nMIIFDjBABgkqhkiG9w0BBQ0wMzAbBgkqhkiG9w0BBQwwDgQIXty4bA0gpdACAggA\nMBQGCCqGSIb3DQMHBAjfQxRLNwSijgSCBMjRJsLogIlxXpWKxXNd7buNSIOn3ATZ\nA8bAhoN54VhoD3loaDOlctmKg+9m6usIILp8bzvVrb1BUjCmPjhJsIJbMlFedx/e\n9YC08qhNjW8nQw3irGDW+hv7V/I65WiYiR/r93uZHuS6KxUbRJH82Z/j6LnoMFvJ\nGjDj9lKpT780Hwq94gljwc8niLWpx4Q1wsB0UeVL2rcnqAqlLEQ5bSG/xwntu93T\nMHYRHjhdxglTXc5/h+M7S1wjzOkgVm34rK4JV6Q+gvIt6Mu/1sEGZ7SRCqfICoTn\n66Yi0poMiVOg+LgPMat0G5RDiLe6p//kiybtAF8GL+FW/ywTDcBgXAKe2ictfPtK\ntU3BDUUMKk9dyYgFjV8y7DftP6zBvUC8sRQnuzS2EmwPedHxERdA3mCe3yyBMGby\nz4WhIPttbYxvmZQmTxH4uEeKiMiu53uUKCCXFxJu0qEPuVkV9ml18DLhpKEq2xwL\ndRjUxj0P0M1aq8EG2JI2aGutUYcVYtlQYzJSWG6cwkkSuIRH+Vvv1whTSjlO2vFM\nFbiwVvvD6viRjZvA6nzuAVgFIwS+Qlwu225rA8Gwt3VqqvN4U6JhsIC7LK17nnjR\natGhM3gVJhZ8pnvVRvQRbu4lUnvmoenwKOSy4QS+pLIxHzVSmD6w+31ylWLUm4Ng\nnaz1Uq+wI8XEmO8CYSf56I/Eb1EZQjYhA+fOkCqOeV8mMprlbFINqaKEkeAPqa/a\nZ0FD2S5WgTOJM0V4oSKMXKWzBVXy8/gyb42RhNHzXwE1HpRRZ+Tj61UWtDUKXH+v\nDWBy1Ae23xnj935a+yOcz3zSUOiLmEUxLpQDLE24PDH1SFUtDs2xarXtqVW5mhq/\n/GP8lGvJN/wVD7yehOumHgwAwoLde0VHNf15LHC4z2I4RvuK/PyT4GeT/2FTljm4\nMQ1+2aj0iWs3cLjRPM+YgdSdTQAfjnUY7K6tJWzTh4fXqg1jNi48EiZ8o4seA3Fw\nY8gHRL32YkYVwUq4K5w0xJ45CdHB8bsN6vKPC7ycnty9+miW3HAujoAmzOath6EC\n8cdkoi8ImudFKIfOACRzstOcLqHoq/TwmQOfgh6bXUlS7ighaQBfumMIefA1I1Uh\npTrq2GP1BQku6toA7cGN9+G04jmY1M/jqVmsRdor8SfffkFPkMN5lJE0ocVbCwDC\n1mqjpsVW4GaxeshunbSGLXsGuoczkc1Mr2pxpoaSxslBF1jjfPJFRxrLZ/WbKA2s\nbIIs9dIoQIA/I5aAYtl5Nx/bSnOi3RgcwdaAmWof8MNII8se9nuQbBVHhStRFJv3\nx3CJhgpIrwy0ScIwtvvOoL2AyQBCh/yiPHjv3pzNrj/UxGQvHePUbxA+s0vBXVkY\n8edWcNDNHgAWRxxQYbYJpW9vm89SsZ+c+hkvz207CloMfYJxcasSUxHO6xZBiPSS\ngpYHQaASWahL+FaDACFsB9HMK9tECBhHyVJw0kPtBWvgmKDxnVQ271Zccoz6kP+n\n/9WUFw2otnnlgHSui8WjdwpfZo5pvlx7GXw3HdnFTlNuG28sZ70eFkuCo+ZDUZzd\n9+azb8xlDnsHH86+lyl6O7K+Z2n/Cu3K+AeojBEWUALs2NzqFxOdWEQoPVlF2Ymq\ntyk=\n-----END ENCRYPTED PRIVATE KEY-----\n",
+      "passphrase": "503d64dfbca5485ba9e9ebc2f6070c83"
+    }
+  },
+  "enterpriseID": "850058937"
+}

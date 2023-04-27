@@ -1,14 +1,13 @@
 package box
 
 import (
-	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/box/files"
 	"github.com/twystd/unboxd/box/folders"
 	"github.com/twystd/unboxd/box/templates"
 )
 
 type Box struct {
-	token *credentials.AccessToken
+	token *AccessToken
 	hash  string
 }
 
@@ -16,7 +15,7 @@ func NewBox() Box {
 	return Box{}
 }
 
-func (b *Box) Authenticate(credentials credentials.Credentials) error {
+func (b *Box) Authenticate(credentials Credentials) error {
 	if b.token != nil && b.token.IsValid() {
 		return nil
 	}

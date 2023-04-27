@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
-	"github.com/twystd/unboxd/box/credentials"
 )
 
 var UntagFileCmd = UntagFile{
@@ -24,9 +23,11 @@ func (cmd *UntagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd UntagFile) Execute(c any, flagset *flag.FlagSet) error {
+func (cmd UntagFile) Execute(flagset *flag.FlagSet, c ICredentials) error {
+	credentials := c["box"].(box.Credentials)
+
 	b := box.NewBox()
-	if err := b.Authenticate(c.(credentials.Credentials)); err != nil {
+	if err := b.Authenticate(credentials); err != nil {
 		return err
 	}
 

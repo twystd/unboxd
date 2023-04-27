@@ -1,4 +1,4 @@
-package credentials
+package box
 
 import (
 	"crypto/rsa"

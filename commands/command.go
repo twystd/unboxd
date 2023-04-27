@@ -10,14 +10,15 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
-	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/log"
 )
+
+type ICredentials map[string]any
 
 type Command interface {
 	Name() string
 	Flagset(flagset *flag.FlagSet) *flag.FlagSet
-	Execute(credentials any, flagset *flag.FlagSet) error
+	Execute(flagset *flag.FlagSet, credentials ICredentials) error
 }
 
 type command struct {
@@ -36,7 +37,7 @@ func (cmd command) hash(command string, credentials string, root string) string 
 	return fmt.Sprintf("%x", hash)
 }
 
-func Authenticate(credentials credentials.Credentials) (box.Box, error) {
+func Authenticate(credentials box.Credentials) (box.Box, error) {
 	box := box.NewBox()
 	if err := box.Authenticate(credentials); err != nil {
 		return box, err
