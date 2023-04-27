@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/credentials"
 )
 
 var TagFileCmd = TagFile{
@@ -23,7 +24,12 @@ func (cmd *TagFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd TagFile) Execute(flagset *flag.FlagSet, b box.Box) error {
+func (cmd TagFile) Execute(c any, flagset *flag.FlagSet) error {
+	b := box.NewBox()
+	if err := b.Authenticate(c.(credentials.Credentials)); err != nil {
+		return err
+	}
+
 	var fileID uint64
 	var tag string
 

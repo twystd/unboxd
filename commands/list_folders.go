@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/box/lib"
 )
 
@@ -54,7 +55,12 @@ func (cmd *ListFolders) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd ListFolders) Execute(flagset *flag.FlagSet, b box.Box) error {
+func (cmd ListFolders) Execute(c any, flagset *flag.FlagSet) error {
+	b := box.NewBox()
+	if err := b.Authenticate(c.(credentials.Credentials)); err != nil {
+		return err
+	}
+
 	var base string
 
 	args := flagset.Args()

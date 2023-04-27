@@ -16,8 +16,8 @@ import (
 
 type Command interface {
 	Name() string
-	Flagset(*flag.FlagSet) *flag.FlagSet
-	Execute(*flag.FlagSet, box.Box) error
+	Flagset(flagset *flag.FlagSet) *flag.FlagSet
+	Execute(credentials any, flagset *flag.FlagSet) error
 }
 
 type command struct {

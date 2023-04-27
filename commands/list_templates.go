@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/credentials"
 	"github.com/twystd/unboxd/box/templates"
 )
 
@@ -24,7 +25,12 @@ func (cmd *ListTemplates) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd ListTemplates) Execute(flagset *flag.FlagSet, b box.Box) error {
+func (cmd ListTemplates) Execute(c any, flagset *flag.FlagSet) error {
+	b := box.NewBox()
+	if err := b.Authenticate(c.(credentials.Credentials)); err != nil {
+		return err
+	}
+
 	if templates, err := cmd.exec(b); err != nil {
 		return err
 	} else if len(templates) == 0 {

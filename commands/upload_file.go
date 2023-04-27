@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/box/credentials"
 )
 
 var UploadFileCmd = UploadFile{
@@ -23,7 +24,12 @@ func (cmd *UploadFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd UploadFile) Execute(flagset *flag.FlagSet, b box.Box) error {
+func (cmd UploadFile) Execute(c any, flagset *flag.FlagSet) error {
+	b := box.NewBox()
+	if err := b.Authenticate(c.(credentials.Credentials)); err != nil {
+		return err
+	}
+
 	args := flagset.Args()
 	if len(args) < 1 {
 		return fmt.Errorf("missing file argument")

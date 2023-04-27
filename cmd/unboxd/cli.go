@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/twystd/unboxd/box"
 	"github.com/twystd/unboxd/commands"
 	"github.com/twystd/unboxd/log"
 )
@@ -32,12 +31,12 @@ func exec(cli []commands.Command) {
 	}
 
 	if cmd.Name() == "help" {
-		cmd.Execute(flagset, box.Box{})
+		cmd.Execute(nil, flagset)
 		os.Exit(0)
 	}
 
 	if cmd.Name() == "version" {
-		cmd.Execute(flagset, box.Box{})
+		cmd.Execute(nil, flagset)
 		os.Exit(0)
 	}
 
@@ -50,10 +49,7 @@ func exec(cli []commands.Command) {
 		log.Fatalf("Error reading credentials from %s (%v)", options.credentials, err)
 	}
 
-	box := box.NewBox()
-	if err := box.Authenticate(credentials); err != nil {
-		log.Fatalf("%v", err)
-	} else if err := cmd.Execute(flagset, box); err != nil {
+	if err := cmd.Execute(credentials, flagset); err != nil {
 		log.Fatalf("%v  %v", cmd.Name(), err)
 	}
 }
