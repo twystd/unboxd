@@ -208,6 +208,7 @@ func (cmd ListFolders) save(folders []folder) error {
 		return err
 	} else {
 		w := csv.NewWriter(f)
+		w.Comma ='\t'
 		w.WriteAll(records)
 
 		return w.Error()
