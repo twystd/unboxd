@@ -60,13 +60,13 @@ func getFileID(arg string) (uint64, error) {
 }
 
 func infof(tag string, format string, args ...any) {
-	f := fmt.Sprintf("%-20v %v", tag, format)
+	f := fmt.Sprintf("%-16v %v", tag, format)
 
 	log.Infof(f, args...)
 }
 
 func warnf(tag string, format string, args ...any) {
-	f := fmt.Sprintf("%-20v %v", tag, format)
+	f := fmt.Sprintf("%-16v %v", tag, format)
 
 	log.Warnf(f, args...)
 }
