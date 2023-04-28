@@ -10,15 +10,14 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/credentials"
 	"github.com/twystd/unboxd/log"
 )
-
-type ICredentials map[string]any
 
 type Command interface {
 	Name() string
 	Flagset(flagset *flag.FlagSet) *flag.FlagSet
-	Execute(flagset *flag.FlagSet, credentials ICredentials) error
+	Execute(flagset *flag.FlagSet, credentials credentials.ICredentials) error
 }
 
 type command struct {

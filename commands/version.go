@@ -3,6 +3,8 @@ package commands
 import (
 	"flag"
 	"fmt"
+
+	"github.com/twystd/unboxd/credentials"
 )
 
 type Version struct {
@@ -18,7 +20,7 @@ func (cmd *Version) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd Version) Execute(flagset *flag.FlagSet, c ICredentials) error {
+func (cmd Version) Execute(flagset *flag.FlagSet, c credentials.ICredentials) error {
 	fmt.Println()
 	fmt.Printf("   %v %v\n", cmd.APP, cmd.Version)
 	fmt.Println()

@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/twystd/unboxd/commands"
+	"github.com/twystd/unboxd/credentials"
 	"github.com/twystd/unboxd/log"
 )
 
@@ -44,7 +45,7 @@ func exec(cli []commands.Command) {
 		log.SetLevel("debug")
 	}
 
-	credentials := commands.ICredentials{}
+	credentials := credentials.ICredentials{}
 
 	if c, err := NewCredentials(options.credentials); err != nil {
 		log.Fatalf("Error reading credentials from %s (%v)", options.credentials, err)

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"text/template"
+
+	"github.com/twystd/unboxd/credentials"
 )
 
 //go:embed help.txt
@@ -25,7 +27,7 @@ func (h *Help) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (h Help) Execute(flagset *flag.FlagSet, c ICredentials) error {
+func (h Help) Execute(flagset *flag.FlagSet, c credentials.ICredentials) error {
 	command := flagset.Arg(0)
 	info := map[string]string{
 		"APP": h.APP,

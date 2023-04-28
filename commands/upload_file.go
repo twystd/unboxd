@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/twystd/unboxd/box"
+	"github.com/twystd/unboxd/credentials"
 )
 
 var UploadFileCmd = UploadFile{
@@ -23,7 +24,7 @@ func (cmd *UploadFile) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
 	return flagset
 }
 
-func (cmd UploadFile) Execute(flagset *flag.FlagSet, c ICredentials) error {
+func (cmd UploadFile) Execute(flagset *flag.FlagSet, c credentials.ICredentials) error {
 	credentials := c["box"].(box.Credentials)
 
 	b := box.NewBox()
