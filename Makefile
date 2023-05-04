@@ -107,7 +107,7 @@ list-files: build
 #	$(CLI) --debug --credentials $(CREDENTIALS) list-files /alpha/pending
 #	$(CLI) --debug --credentials $(CLIENT)      list-files /alpha/pending
 #	$(CLI) --debug --credentials $(JWT)         list-files /alpha/pending
-	$(CLI) --debug --credentials $(CREDENTIALS) list-files
+	$(CLI) --debug --credentials $(CREDENTIALS) list-files --file "./runtime/files.tsv"
 
 upload-file: build
 	$(CLI) --debug --credentials $(CREDENTIALS) upload-file $(FILE) $(FOLDERID)

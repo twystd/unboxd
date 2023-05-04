@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -42,6 +43,14 @@ type file struct {
 	FileName string
 	FilePath string
 	Tags     []string
+}
+
+var header = struct {
+	normal   []string
+	withTags []string
+}{
+	normal:   []string{"ID", "Folder", "Filename"},
+	withTags: []string{"ID", "Folder", "Filename", "Tags"},
 }
 
 func (cmd *ListFiles) Flagset(flagset *flag.FlagSet) *flag.FlagSet {
@@ -117,39 +126,44 @@ func (cmd ListFiles) exec(b box.Box, glob string, hash string) ([]file, error) {
 func (cmd ListFiles) print(files []file) error {
 	sort.Slice(files, func(i, j int) bool { return files[i].FilePath < files[j].FilePath })
 
-	table := [][]string{
-		[]string{"ID", "Filename", "Tags"},
-	}
-
-	widths := []int{
-		len(table[0][0]),
-		len(table[0][1]),
-		len(table[0][2]),
-	}
-
-	for _, f := range files {
-		id := fmt.Sprintf("%v", f.ID)
-		filename := fmt.Sprintf("%v", f.FileName)
-		tags := strings.Join(f.Tags, ",")
-
-		if N := len(id); N > widths[0] {
-			widths[0] = N
+	recalc := func(widths []int, record []string) []int {
+		for i, field := range record {
+			if N := len(field); N > widths[i] {
+				widths[i] = N
+			}
 		}
 
-		if N := len(filename); N > widths[1] {
-			widths[1] = N
-		}
-
-		if N := len(tags); N > widths[2] {
-			widths[2] = N
-		}
-
-		table = append(table, []string{id, filename, tags})
+		return widths
 	}
 
-	format := fmt.Sprintf("%%-%vv  %%-%vv  %%-%vv\n", widths[0], widths[1], widths[2])
+	var hdr []string
+	if cmd.tags {
+		hdr = header.normal
+	} else {
+		hdr = header.withTags
+	}
+
+	widths := recalc(make([]int, len(hdr)), hdr)
+	table := [][]string{hdr}
+	for _, file := range files {
+		record := cmd.toRecord(file)
+		widths = recalc(widths, record)
+		table = append(table, record)
+	}
+
+	columns := []string{}
+	for _, w := range widths {
+		columns = append(columns, fmt.Sprintf("%%-%vv", w))
+	}
+
+	format := fmt.Sprintf("%v\n", strings.Join(columns, "  "))
 	for _, row := range table {
-		fmt.Printf(format, row[0], row[1], row[2])
+		args := []any{}
+		for _, v := range row {
+			args = append(args, v)
+		}
+
+		fmt.Printf(format, args...)
 	}
 
 	return nil
@@ -160,26 +174,17 @@ func (cmd ListFiles) save(files []file) error {
 
 	sort.Slice(files, func(i, j int) bool { return files[i].FilePath < files[j].FilePath })
 
-	records := [][]string{
-		[]string{"ID", "Path"},
-	}
-
+	var hdr []string
 	if cmd.tags {
-		records = [][]string{
-			[]string{"ID", "Path", "Tags"},
-		}
+		hdr = header.normal
+	} else {
+		hdr = header.withTags
 	}
 
-	for _, f := range files {
-		id := fmt.Sprintf("%v", f.ID)
-		path := fmt.Sprintf("%v", f.FilePath)
-		tags := fmt.Sprintf("%v", strings.Join(f.Tags, ";"))
-
-		if cmd.tags {
-			records = append(records, []string{id, path, tags})
-		} else {
-			records = append(records, []string{id, path})
-		}
+	table := [][]string{hdr}
+	for _, file := range files {
+		record := cmd.toRecord(file)
+		table = append(table, record)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(cmd.file), 0750); err != nil {
@@ -188,8 +193,8 @@ func (cmd ListFiles) save(files []file) error {
 		return err
 	} else {
 		w := csv.NewWriter(f)
-		w.Comma ='\t'
-		w.WriteAll(records)
+		w.Comma = '\t'
+		w.WriteAll(table)
 
 		return w.Error()
 	}
@@ -278,4 +283,29 @@ func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string, hash s
 	}
 
 	return files, nil
+}
+
+func (cmd ListFiles) toRecord(f file) []string {
+	id := fmt.Sprintf("%v", f.ID)
+	folder := path.Dir(f.FilePath)
+	filename := f.FileName
+	tags := strings.Join(f.Tags, "; ")
+
+	var record []string
+	if cmd.tags {
+		record = []string{
+			id,
+			folder,
+			filename,
+		}
+	} else {
+		record = []string{
+			id,
+			folder,
+			filename,
+			tags,
+		}
+	}
+
+	return record
 }
