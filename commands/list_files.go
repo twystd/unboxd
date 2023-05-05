@@ -226,7 +226,7 @@ func (cmd ListFiles) listFiles(b box.Box, folderID uint64, prefix string, hash s
 			return files, err
 		} else {
 			for _, f := range l {
-				path := prefix + "/" + f.Name
+				path := item.Path + "/" + f.Name
 				files = append(files, file{
 					ID:       f.ID,
 					FileName: f.Name,
