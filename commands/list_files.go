@@ -138,9 +138,9 @@ func (cmd ListFiles) print(files []file) error {
 
 	var hdr []string
 	if cmd.tags {
-		hdr = header.normal
-	} else {
 		hdr = header.withTags
+	} else {
+		hdr = header.normal
 	}
 
 	widths := recalc(make([]int, len(hdr)), hdr)
@@ -297,13 +297,13 @@ func (cmd ListFiles) toRecord(f file) []string {
 			id,
 			folder,
 			filename,
+			tags,
 		}
 	} else {
 		record = []string{
 			id,
 			folder,
 			filename,
-			tags,
 		}
 	}
 
