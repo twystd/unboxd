@@ -176,9 +176,9 @@ func (cmd ListFiles) save(files []file) error {
 
 	var hdr []string
 	if cmd.tags {
-		hdr = header.normal
-	} else {
 		hdr = header.withTags
+	} else {
+		hdr = header.normal
 	}
 
 	table := [][]string{hdr}
